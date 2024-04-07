@@ -1,5 +1,6 @@
-﻿
-using Application.Common.Models;
+﻿using Application.Common.Models;
+using Application.Models.TypeProperties.Create;
+using Application.Models.TypeProperties.Update;
 using Domain.Entities;
 
 namespace Application.Common.Interfaces
@@ -8,6 +9,10 @@ namespace Application.Common.Interfaces
     {
         Task<Result<List<TypeProperty>>> GetPropertiesByTypeId(long typeId);
 
+        Task<Result> AddProperty(TypePropertyCreateDto createDto);
 
+        Task<Result> DeleteProperty(long propertyId);
+
+        Task<Result> UpdateProperty(TypePropertyUpdateDto updateDto);
     }
 }

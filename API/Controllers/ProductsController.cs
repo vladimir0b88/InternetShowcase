@@ -20,7 +20,7 @@ namespace API.Controllers
             return result switch
             {
                 SuccessResult<List<Product>> => Ok(result.Data),
-                ErrorResult<List<Product>> errorResult => BadRequest(errorResult.Errors),
+                ErrorResult<List<Product>> errorResult => BadRequest(errorResult),
                 _ => throw new ApplicationException()
             };
         }
@@ -46,13 +46,12 @@ namespace API.Controllers
 
             return result switch
             {
-                SuccessResult => Ok(),
+                SuccessResult => Created(),
                 ValidationErrorResult errorResult => BadRequest(errorResult),
                 ErrorResult errorResult => BadRequest(errorResult),
                 _ => throw new ApplicationException()
             };
         }
-
 
 
         [HttpPut]

@@ -46,7 +46,7 @@ namespace API.Controllers
 
             return result switch
             {
-                SuccessResult => Ok(),
+                SuccessResult => Created(),
                 ValidationErrorResult errorResult => BadRequest(errorResult),
                 ErrorResult errorResult => BadRequest(errorResult),
                 _ => throw new ApplicationException()
