@@ -2,7 +2,6 @@
 using Application.Common.Errors;
 using Application.Common.Interfaces;
 using Application.Common.Models;
-using Domain.Abstractions;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 

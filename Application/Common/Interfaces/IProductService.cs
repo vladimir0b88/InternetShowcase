@@ -1,7 +1,7 @@
 ﻿using Application.Common.Models;
 using Application.Models.Products.Create;
 using Application.Models.Products.Update;
-using Domain.Abstractions;
+using Domain.Entities;
 
 namespace Application.Common.Interfaces
 {

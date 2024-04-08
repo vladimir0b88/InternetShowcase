@@ -1,5 +1,4 @@
-﻿using Domain.Abstractions;
-using Domain.Entities;
+﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Persistence.EnityTypeConfiguration;
 
@@ -22,6 +21,7 @@ namespace Persistence
             builder.ApplyConfiguration(new ProductConfiguration());
             builder.ApplyConfiguration(new ProductTypeConfiguration());
             builder.ApplyConfiguration(new TypePropertyConfiguration());
+            builder.ApplyConfiguration(new PropertyValueConfiguration());
 
             base.OnModelCreating(builder);
         }

@@ -3,7 +3,7 @@ using Application.Common.Interfaces;
 using Application.Common.Models;
 using Application.Models.Products.Create;
 using Application.Models.Products.Update;
-using Domain.Abstractions;
+using Domain.Entities;
 using FluentValidation;
 
 namespace Application.Services

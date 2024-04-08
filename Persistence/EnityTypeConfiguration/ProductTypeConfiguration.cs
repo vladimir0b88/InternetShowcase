@@ -13,8 +13,21 @@ namespace Persistence.EnityTypeConfiguration
             builder.HasKey(p => p.Id);
             builder.HasIndex(p => p.Id).IsUnique();
 
+            // Поля
             builder.Property(p => p.Name)
-                   .HasMaxLength(64);
+                   .HasMaxLength(64)
+                   .IsRequired();
+
+            // Внешние ключи
+            builder.HasMany(type => type.Products)
+                   .WithOne(product => product.Type)
+                   .HasForeignKey(product => product.TypeId)
+                   .OnDelete(DeleteBehavior.SetNull);
+
+            builder.HasMany(type => type.Properties)
+                   .WithOne(properties => properties.Type)
+                   .HasForeignKey(properties => properties.TypeId)
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

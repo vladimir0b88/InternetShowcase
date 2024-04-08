@@ -1,5 +1,5 @@
 ﻿using Application.Common.Models;
-using Domain.Abstractions;
+using Domain.Entities;
 
 namespace Application.Common.Interfaces
 {

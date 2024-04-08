@@ -1,6 +1,5 @@
-﻿using Domain.Entities;
-
-namespace Domain.Abstractions
+﻿
+namespace Domain.Entities
 {
     public class Product
     {
@@ -10,6 +9,8 @@ namespace Domain.Abstractions
         public long Cost { get; set; }
 
         public long? TypeId { get; set; }
-        public ProductType? Type { get; set; } = null!;
+        public virtual ProductType? Type { get; set; } = null!;
+
+        public virtual IList<PropertyValue> PropertyValues { get; set; } = null!;
     }
 }

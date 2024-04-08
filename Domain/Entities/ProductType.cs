@@ -1,5 +1,4 @@
-﻿using Domain.Abstractions;
-
+﻿
 namespace Domain.Entities
 {
     public class ProductType
@@ -7,6 +6,8 @@ namespace Domain.Entities
         public long Id { get; set; }
         public string Name { get; set; } = string.Empty;
 
-        public IList<Product> Products { get; private set; } = new List<Product>();
+        public virtual IList<Product> Products { get; set; } = new List<Product>();
+
+        public virtual IList<TypeProperty> Properties { get; set; } = new List<TypeProperty>();
     }
 }
