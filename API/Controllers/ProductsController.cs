@@ -25,6 +25,20 @@ namespace API.Controllers
             };
         }
 
+        [HttpGet("ProductType/{id}")]
+        public async Task<IActionResult> GetProductsByProductTypeId(long id)
+        {
+            var result = await productService.GetByProductTypeId(id);
+
+            return result switch
+            {
+                SuccessResult<List<Product>> => Ok(result.Data),
+                NotFoundErrorResult<List<Product>> errorResult => NotFound(errorResult),
+                ErrorResult<List<Product>> errorResult => BadRequest(errorResult),
+                _ => throw new ApplicationException()
+            };
+        }
+
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProductById(long id)
@@ -80,20 +94,6 @@ namespace API.Controllers
                 SuccessResult => Ok(),
                 NotFoundErrorResult errorResult => NotFound(errorResult),
                 ErrorResult errorResult => BadRequest(errorResult),
-                _ => throw new ApplicationException()
-            };
-        }
-
-        [HttpGet("ProductType/{id}")]
-        public async Task<IActionResult> GetProductsByProductTypeId(long id)
-        {
-            var result = await productService.GetByProductTypeId(id);
-
-            return result switch
-            {
-                SuccessResult<List<Product>> => Ok(result.Data),
-                NotFoundErrorResult<List<Product>> errorResult => NotFound(errorResult),
-                ErrorResult<List<Product>> errorResult => BadRequest(errorResult),
                 _ => throw new ApplicationException()
             };
         }

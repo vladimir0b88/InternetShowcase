@@ -19,6 +19,8 @@ namespace Persistence.Repositories
         public async Task<Result<ProductType>> GetProductTypeById(long id)
         {
             ProductType? productType = await context.ProductTypes.AsNoTracking()
+                                                                 .Include(pt => pt.Products)
+                                                                 .Include(pt => pt.Properties)
                                                                  .FirstOrDefaultAsync(pt => pt.Id == id);
 
             if(productType is null)

@@ -23,6 +23,7 @@ namespace Persistence
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductTypeRepository, ProductTypeRepository>();
             services.AddScoped<ITypePropertyRepository, TypePropertyRepository>();
+            services.AddScoped<IPropertyValueRepository, PropertyValueRepository>();
 
 
             return services;

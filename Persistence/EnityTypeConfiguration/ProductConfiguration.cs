@@ -22,7 +22,8 @@ namespace Persistence.EnityTypeConfiguration
                    .IsRequired();
 
             builder.Property(p => p.Description)
-                   .HasMaxLength(512);
+                   .HasMaxLength(512)
+                   .HasDefaultValue(string.Empty);
 
             builder.Property(p => p.TypeId);
 

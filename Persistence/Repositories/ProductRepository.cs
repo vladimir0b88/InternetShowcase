@@ -12,6 +12,9 @@ namespace Persistence.Repositories
         public async Task<Result<Product>> GetProductById(long id)
         {
             Product? product = await context.Products.AsNoTracking()
+                                                     .Include(p => p.PropertyValues)
+                                                     .ThenInclude(pv => pv.TypeProperty)
+                                                     .Include(p => p.Type)
                                                      .FirstOrDefaultAsync(p => p.Id == id);
 
             if (product is null)

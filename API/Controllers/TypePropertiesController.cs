@@ -15,9 +15,9 @@ namespace API.Controllers
     {
 
         [HttpGet("ProductType/{id}")]
-        public async Task<IActionResult> GetPropertiesByTypeId(long id)
+        public async Task<IActionResult> GetPropertiesByProductTypeId(long id)
         {
-            var result = await propertyService.GetPropertiesByTypeId(id);
+            var result = await propertyService.GetPropertiesByProductTypeId(id);
 
             return result switch
             {

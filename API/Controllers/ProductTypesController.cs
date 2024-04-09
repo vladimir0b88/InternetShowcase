@@ -27,7 +27,7 @@ namespace API.Controllers
 
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetProductById(long id)
+        public async Task<IActionResult> GetProductTypeById(long id)
         {
             var result = await productTypeService.GetProductTypeById(id);
 

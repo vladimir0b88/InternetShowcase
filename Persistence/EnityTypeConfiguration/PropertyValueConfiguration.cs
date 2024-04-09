@@ -19,7 +19,7 @@ namespace Persistence.EnityTypeConfiguration
 
             builder.Property(p => p.Value)
                    .HasMaxLength(64)
-                   .IsRequired();
+                   .HasDefaultValue(string.Empty);
 
             // Внешние ключи
             builder.HasOne(propertyValue => propertyValue.TypeProperty)

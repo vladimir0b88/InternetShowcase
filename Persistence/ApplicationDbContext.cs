@@ -11,6 +11,8 @@ namespace Persistence
 
         public DbSet<TypeProperty> TypeProperties { get; set; }
 
+        public DbSet<PropertyValue> PropertyValues { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
             //Database.EnsureCreated();
