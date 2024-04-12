@@ -15,5 +15,9 @@ namespace Application
         public static readonly Error FailedValidation = new Error(
             code: nameof(FailedValidation),
             description: "Объект не прошел валидацию");
+
+        public static readonly Error ServerUnavailable = new Error(
+            code: nameof(ServerUnavailable),
+            description: "Ответ от сервера не получен");
     }
 }

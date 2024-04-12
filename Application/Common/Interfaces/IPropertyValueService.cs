@@ -1,5 +1,4 @@
 ﻿using Application.Common.Models;
-using Application.Models.PropertyValues.Create;
 using Application.Models.PropertyValues.Update;
 using Domain.Entities;
 

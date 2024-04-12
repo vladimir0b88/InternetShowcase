@@ -3,7 +3,6 @@ using Application.Models.Products.Create;
 using Application.Models.Products.Update;
 using Application.Models.ProductTypes.Create;
 using Application.Models.ProductTypes.Update;
-using Application.Models.PropertyValues.Create;
 using Application.Models.PropertyValues.Update;
 using Application.Models.TypeProperties.Create;
 using Application.Models.TypeProperties.Update;
@@ -41,7 +40,6 @@ namespace Application
             services.AddScoped<IValidator<TypePropertyUpdateDto>, TypePropertyUpdateDtoValidator>();
 
             // PropertyValue
-            services.AddScoped<IValidator<PropertyValueCreateDto>, PropertyValueCreateDtoValidator>();
             services.AddScoped<IValidator<PropertyValueUpdateDto>, PropertyValueUpdateDtoValidator>();
 
             #endregion

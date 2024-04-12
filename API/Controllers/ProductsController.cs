@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class ProductsController(IProductService productService) : ControllerBase
     {
         [HttpGet]
@@ -19,7 +19,7 @@ namespace API.Controllers
 
             return result switch
             {
-                SuccessResult<List<Product>> => Ok(result.Data),
+                SuccessResult<List<Product>> successResult=> Ok(successResult),
                 ErrorResult<List<Product>> errorResult => BadRequest(errorResult),
                 _ => throw new ApplicationException()
             };

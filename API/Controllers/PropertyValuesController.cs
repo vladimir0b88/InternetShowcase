@@ -1,7 +1,6 @@
 ﻿using Application.Common.Errors;
 using Application.Common.Interfaces;
 using Application.Common.Models;
-using Application.Models.PropertyValues.Create;
 using Application.Models.PropertyValues.Update;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;

@@ -1,0 +1,27 @@
+﻿@page "/products"
+
+
+<PageTitle>Products</PageTitle>
+
+@inject IProductService productService
+
+<h3>Products</h3>
+
+@if(_product is not null)
+{
+    <p>@_product.Name</p>
+}
+
+
+
+@code {
+    private Product? _product = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await productService.GetProductById(9);
+
+        if (result is SuccessResult<Product> successResult)
+            _product = successResult.Data;
+    }
+}
