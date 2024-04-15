@@ -19,8 +19,8 @@ namespace API.Controllers
 
             return result switch
             {
-                SuccessResult<List<Product>> successResult=> Ok(successResult),
-                ErrorResult<List<Product>> errorResult => BadRequest(errorResult),
+                SuccessResult<List<Product>> => Ok(result),
+                ErrorResult<List<Product>> => BadRequest(result),
                 _ => throw new ApplicationException()
             };
         }
@@ -32,9 +32,9 @@ namespace API.Controllers
 
             return result switch
             {
-                SuccessResult<List<Product>> => Ok(result.Data),
-                NotFoundErrorResult<List<Product>> errorResult => NotFound(errorResult),
-                ErrorResult<List<Product>> errorResult => BadRequest(errorResult),
+                SuccessResult<List<Product>> => Ok(result),
+                NotFoundErrorResult<List<Product>> => NotFound(result),
+                ErrorResult<List<Product>> => BadRequest(result),
                 _ => throw new ApplicationException()
             };
         }
@@ -47,22 +47,22 @@ namespace API.Controllers
 
             return result switch
             {
-                SuccessResult<Product> => Ok(result.Data),
-                NotFoundErrorResult<Product> notFoundResult => NotFound(notFoundResult),
+                SuccessResult<Product> => Ok(result),
+                NotFoundErrorResult<Product> => NotFound(result),
                 _ => throw new ApplicationException()
             };
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddProduct([FromBody]ProductCreateDto createDto)
+        public async Task<IActionResult> AddProduct([FromBody] ProductCreateDto createDto)
         {
             var result = await productService.AddProduct(createDto);
 
             return result switch
             {
                 SuccessResult => Created(),
-                ValidationErrorResult errorResult => BadRequest(errorResult),
-                ErrorResult errorResult => BadRequest(errorResult),
+                ValidationErrorResult => StatusCode(422,result),
+                ErrorResult => BadRequest(result),
                 _ => throw new ApplicationException()
             };
         }
@@ -75,10 +75,10 @@ namespace API.Controllers
 
             return result switch
             {
-                SuccessResult => Ok(),
-                ValidationErrorResult errorResult => BadRequest(errorResult),
-                NotFoundErrorResult errorResult => NotFound(errorResult),
-                ErrorResult errorResult => BadRequest(errorResult),
+                SuccessResult => Ok(result),
+                ValidationErrorResult => StatusCode(422,result),
+                NotFoundErrorResult => NotFound(result),
+                ErrorResult => BadRequest(result),
                 _ => throw new ApplicationException()
             };
         }
@@ -91,9 +91,9 @@ namespace API.Controllers
 
             return result switch
             {
-                SuccessResult => Ok(),
-                NotFoundErrorResult errorResult => NotFound(errorResult),
-                ErrorResult errorResult => BadRequest(errorResult),
+                SuccessResult => Ok(result),
+                NotFoundErrorResult => NotFound(result),
+                ErrorResult => BadRequest(result),
                 _ => throw new ApplicationException()
             };
         }

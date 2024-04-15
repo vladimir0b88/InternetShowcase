@@ -1,4 +1,5 @@
 ﻿using Application;
+using Application.Common.Errors;
 using Application.Common.Interfaces;
 using Application.Common.Models;
 using Application.Models.Products.Create;
@@ -18,6 +19,15 @@ namespace BlazorWebAssembly.Services
             var response = await httpClient.PostAsJsonAsync(_controllerUri, productDto);
 
             var result = await response.Content.ReadFromJsonAsync<Result>();
+
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.UnprocessableEntity:
+                    break;
+
+                case HttpStatusCode.OK:
+                    break;
+            }
 
             if (result is null)
                 return new ErrorResult(message: "Ответ от сервера не получен",
@@ -60,17 +70,28 @@ namespace BlazorWebAssembly.Services
 
         public async Task<Result<Product>> GetProductById(long id)
         {
-            var response = await httpClient.GetAsync(_controllerUri + $"/{id}");
+            var response = await httpClient.GetAsync($"{_controllerUri}/{id}");
 
-            if (response.IsSuccessStatusCode)
+            Result<Product> result;
+
+            switch (response.StatusCode)
             {
-                var product = await response.Content.ReadFromJsonAsync<Product>();
+                case HttpStatusCode.OK:
+                    result = await response.Content.ReadFromJsonAsync<SuccessResult<Product>>();
+                    break;
 
-                return new SuccessResult<Product>(new Product() { Name = product.Name });
+                case HttpStatusCode.NotFound:
+                    result = await response.Content.ReadFromJsonAsync<NotFoundErrorResult<Product>>();
+                    break;
+
+                case HttpStatusCode.BadRequest:
+                    result = await response.Content.ReadFromJsonAsync<ErrorResult<Product>>();
+                    break;
+
+                default: throw new NotImplementedException();
             }
 
-
-            return new ErrorResult<Product>("1");
+            return result!;
         }
 
         public Task<Result> UpdateProduct(ProductUpdateDto updateDto)

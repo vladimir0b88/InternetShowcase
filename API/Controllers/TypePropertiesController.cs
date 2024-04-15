@@ -10,7 +10,7 @@ namespace API.Controllers
 {
 
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class TypePropertiesController(ITypePropertyService propertyService) : ControllerBase
     {
 
@@ -21,8 +21,8 @@ namespace API.Controllers
 
             return result switch
             {
-                SuccessResult<List<TypeProperty>> => Ok(result.Data),
-                ErrorResult<List<TypeProperty>> errorResult => BadRequest(errorResult),
+                SuccessResult<List<TypeProperty>> => Ok(result),
+                ErrorResult<List<TypeProperty>> => BadRequest(result),
                 _ => throw new ApplicationException()
             };
         }
