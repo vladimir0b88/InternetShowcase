@@ -19,8 +19,8 @@ namespace API.Controllers
 
             return result switch
             {
-                SuccessResult<List<PropertyValue>> => Ok(result.Data),
-                ErrorResult<List<PropertyValue>> errorResult => BadRequest(errorResult),
+                SuccessResult<List<PropertyValue>> => Ok(result),
+                ErrorResult<List<PropertyValue>> => BadRequest(result),
                 _ => throw new ApplicationException()
             };
         }
@@ -33,8 +33,8 @@ namespace API.Controllers
             return result switch
             {
                 SuccessResult => Ok(),
-                ValidationErrorResult errorResult => BadRequest(errorResult),
-                NotFoundErrorResult errorResult => NotFound(errorResult),
+                ValidationErrorResult => StatusCode(422, result),
+                NotFoundErrorResult => NotFound(result),
                 ErrorResult errorResult => BadRequest(errorResult),
                 _ => throw new ApplicationException()
             };

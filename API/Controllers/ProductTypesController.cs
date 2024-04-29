@@ -19,8 +19,8 @@ namespace API.Controllers
 
             return result switch
             {
-                SuccessResult<List<ProductType>> => Ok(result.Data),
-                ErrorResult<List<ProductType>> errorResult => BadRequest(errorResult),
+                SuccessResult<List<ProductType>> => Ok(result),
+                ErrorResult<List<ProductType>> => BadRequest(result),
                 _ => throw new ApplicationException()
             };
         }
@@ -33,8 +33,8 @@ namespace API.Controllers
 
             return result switch
             {
-                SuccessResult<ProductType> => Ok(result.Data),
-                NotFoundErrorResult<ProductType> errorResult => BadRequest(errorResult),
+                SuccessResult<ProductType> => Ok(result),
+                NotFoundErrorResult<ProductType> => NotFound(result),
                 _ => throw new ApplicationException()
             };
         }
@@ -47,8 +47,8 @@ namespace API.Controllers
             return result switch
             {
                 SuccessResult => Created(),
-                ValidationErrorResult errorResult => BadRequest(errorResult),
-                ErrorResult errorResult => BadRequest(errorResult),
+                ValidationErrorResult => StatusCode(422, result),
+                ErrorResult => BadRequest(result),
                 _ => throw new ApplicationException()
             };
         }
@@ -61,9 +61,9 @@ namespace API.Controllers
             return result switch
             {
                 SuccessResult => Ok(),
-                ValidationErrorResult errorResult => BadRequest(errorResult),
-                NotFoundErrorResult errorResult => NotFound(errorResult),
-                ErrorResult errorResult => BadRequest(errorResult),
+                ValidationErrorResult => StatusCode(422, result),
+                NotFoundErrorResult => NotFound(result),
+                ErrorResult => BadRequest(result),
                 _ => throw new ApplicationException()
             };
         }
@@ -76,8 +76,8 @@ namespace API.Controllers
             return result switch
             {
                 SuccessResult => Ok(),
-                NotFoundErrorResult errorResult => NotFound(errorResult),
-                ErrorResult errorResult => BadRequest(errorResult),
+                NotFoundErrorResult => NotFound(result),
+                ErrorResult => BadRequest(result),
                 _ => throw new ApplicationException()
             };
         }

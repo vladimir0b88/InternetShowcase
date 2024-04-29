@@ -36,8 +36,8 @@ namespace API.Controllers
             return result switch
             {
                 SuccessResult => Created(),
-                ValidationErrorResult errorResult => BadRequest(errorResult),
-                ErrorResult errorResult => BadRequest(errorResult),
+                ValidationErrorResult => StatusCode(422, result),
+                ErrorResult => BadRequest(result),
                 _ => throw new ApplicationException()
             };
         }
@@ -50,7 +50,7 @@ namespace API.Controllers
             return result switch
             {
                 SuccessResult => Ok(),
-                ValidationErrorResult errorResult => BadRequest(errorResult),
+                ValidationErrorResult => StatusCode(422, result),
                 ErrorResult errorResult => BadRequest(errorResult),
                 _ => throw new ApplicationException()
             };
@@ -64,8 +64,8 @@ namespace API.Controllers
             return result switch
             {
                 SuccessResult => Ok(),
-                NotFoundErrorResult errorResult => BadRequest(errorResult),
-                ErrorResult errorResult => BadRequest(errorResult),
+                NotFoundErrorResult => NotFound(result),
+                ErrorResult => BadRequest(result),
                 _ => throw new ApplicationException()
             };
         }
