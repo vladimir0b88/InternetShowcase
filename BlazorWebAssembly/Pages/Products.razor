@@ -7,24 +7,59 @@
 
 <h3>Products</h3>
 
-@if(_product is not null)
+@if (_AllProducts is not null)
 {
-    <p>@_product.Name</p>
-    <p>@_product.Cost</p>
-    <p>@_product.Description</p>
-    <p>@_product.Type?.Name</p>
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Cost</th>
+                <th>TypeId</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Product product in _AllProducts)
+            {
+                <tr>
+                    <td>@product.Id</td>
+                    <td>@product.Name</td>
+                    <td>@product.Description</td>
+                    <td>@product.Cost</td>
+                    <td>@product.TypeId</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h3>@errorMessage</h3>
 }
 
 
 
 @code {
-    private Product? _product = null;
+    private List<Product>? _AllProducts = null;
+
+    private string? errorMessage = null;
 
     protected override async Task OnInitializedAsync()
     {
-        var result = await productService.GetProductById(9);
+        var result = await productService.GetAllProducts();
 
-        if (result is SuccessResult<Product> successResult)
-            _product = successResult.Data;
+        if (result is SuccessResult<List<Product>> successResult)
+        {
+            _AllProducts = successResult.Data;
+            errorMessage = null;
+        }
+
+        else
+        {
+            if (result is ErrorResult<List<Product>> errorResult)
+                errorMessage = errorResult.Message;
+        }
+
     }
 }

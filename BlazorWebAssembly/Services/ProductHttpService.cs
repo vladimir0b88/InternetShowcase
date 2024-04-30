@@ -4,99 +4,129 @@ using Application.Common.Interfaces;
 using Application.Common.Models;
 using Application.Models.Products.Create;
 using Application.Models.Products.Update;
+using BlazorWebAssembly.Common;
 using Domain.Entities;
-using System.Net;
+using FluentValidation;
 using System.Net.Http.Json;
 
 namespace BlazorWebAssembly.Services
 {
-    public class ProductHttpService(HttpClient httpClient) : IProductService
+    public class ProductHttpService(HttpClient httpClient,
+                                    IValidator<ProductCreateDto> createValidator,
+                                    IValidator<ProductUpdateDto> updateValidator) : IProductService
     {
         private const string _controllerUri = "api/Products";
 
-        public async Task<Result> AddProduct(ProductCreateDto productDto)
+        public async Task<Result<List<Product>>> GetAllProducts()
         {
-            var response = await httpClient.PostAsJsonAsync(_controllerUri, productDto);
-
-            var result = await response.Content.ReadFromJsonAsync<Result>();
-
-            switch (response.StatusCode)
+            Result<List<Product>> result;
+            try
             {
-                case HttpStatusCode.UnprocessableEntity:
-                    break;
+                var response = await httpClient.GetAsync(_controllerUri);
 
-                case HttpStatusCode.OK:
-                    break;
+                result = await HttpResponseHandler.GetResult<List<Product>>(response);
             }
-
-            if (result is null)
-                return new ErrorResult(message: "Ответ от сервера не получен",
-                                       errors: [ErrorList.ServerUnavailable]);
+            catch
+            {
+                result = new ErrorResult<List<Product>>("API не отвечает");
+            }
 
             return result;
         }
 
-        public Task<Result> DeleteProductById(long id)
+        public async Task<Result<List<Product>>> GetByProductTypeId(long productTypeId)
         {
-            throw new NotImplementedException();
-        }
-
-        public async Task<Result<List<Product>>> GetAllProducts()
-        {
-            var response = await httpClient.GetAsync(_controllerUri);
-
-            Result<List<Product>>? result;
-
-            switch (response.StatusCode)
+            Result<List<Product>> result;
+            try
             {
-                case HttpStatusCode.OK:
-                    result = await response.Content.ReadFromJsonAsync<SuccessResult<List<Product>>>();
-                    break;
+                var response = await httpClient.GetAsync($"{_controllerUri}/ProductType/{productTypeId}");
 
-                case HttpStatusCode.BadRequest:
-                    result = await response.Content.ReadFromJsonAsync<ErrorResult<List<Product>>>();
-                    break;
-
-                default: throw new NotImplementedException();
+                result = await HttpResponseHandler.GetResult<List<Product>>(response);
+            }
+            catch
+            {
+                result = new ErrorResult<List<Product>>("API не отвечает");
             }
 
-            return result!;
-        }
-
-        public Task<Result<List<Product>>> GetByProductTypeId(long productTypeId)
-        {
-            throw new NotImplementedException();
+            return result;
         }
 
         public async Task<Result<Product>> GetProductById(long id)
         {
-            var response = await httpClient.GetAsync($"{_controllerUri}/{id}");
-
             Result<Product> result;
-
-            switch (response.StatusCode)
+            try
             {
-                case HttpStatusCode.OK:
-                    result = await response.Content.ReadFromJsonAsync<SuccessResult<Product>>();
-                    break;
+                var response = await httpClient.GetAsync($"{_controllerUri}/{id}");
 
-                case HttpStatusCode.NotFound:
-                    result = await response.Content.ReadFromJsonAsync<NotFoundErrorResult<Product>>();
-                    break;
-
-                case HttpStatusCode.BadRequest:
-                    result = await response.Content.ReadFromJsonAsync<ErrorResult<Product>>();
-                    break;
-
-                default: throw new NotImplementedException();
+                result = await HttpResponseHandler.GetResult<Product>(response);
+            }
+            catch
+            {
+                result = new ErrorResult<Product>("API не отвечает");
             }
 
-            return result!;
+            return result;
         }
 
-        public Task<Result> UpdateProduct(ProductUpdateDto updateDto)
+        public async Task<Result> AddProduct(ProductCreateDto productDto)
         {
-            throw new NotImplementedException();
+            Result result;
+
+            try
+            {
+                var response = await httpClient.PostAsJsonAsync(_controllerUri, productDto);
+
+                result = await HttpResponseHandler.GetResult(response);
+            }
+            catch
+            {
+                result = new ErrorResult<List<Product>>("API не отвечает");
+            }
+
+            return result;
+        }
+
+        public async Task<Result> UpdateProduct(ProductUpdateDto updateDto)
+        {
+            var validationResult = await updateValidator.ValidateAsync(updateDto);
+
+            if (!validationResult.IsValid)
+                return new ValidationErrorResult(message: "Продукт для модификации не прошел валидацию",
+                                                 errors: [ErrorList.FailedValidation],
+                                                 validationErrors: validationResult.Errors);
+
+            Result result;
+
+            try
+            {
+                var response = await httpClient.PutAsJsonAsync(_controllerUri, updateDto);
+
+                result = await HttpResponseHandler.GetResult(response);
+            }
+            catch
+            {
+                result = new ErrorResult("API не отвечает");
+            }
+
+            return result;
+        }
+
+        public async Task<Result> DeleteProductById(long id)
+        {
+            Result result;
+
+            try
+            {
+                var response = await httpClient.DeleteAsync($"{_controllerUri}/{id}");
+
+                result = await HttpResponseHandler.GetResult(response);
+            }
+            catch
+            {
+                result = new ErrorResult("API не отвечает");
+            }
+
+            return result;
         }
     }
 }
