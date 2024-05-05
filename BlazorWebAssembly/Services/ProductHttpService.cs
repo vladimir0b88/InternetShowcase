@@ -28,7 +28,8 @@ namespace BlazorWebAssembly.Services
             }
             catch
             {
-                result = new ErrorResult<List<Product>>("API не отвечает");
+                result = new ErrorResult<List<Product>>(message: "API не отвечает",
+                                                        errors: [ErrorList.ServerUnavailable]);
             }
 
             return result;
@@ -45,7 +46,8 @@ namespace BlazorWebAssembly.Services
             }
             catch
             {
-                result = new ErrorResult<List<Product>>("API не отвечает");
+                result = new ErrorResult<List<Product>>(message: "API не отвечает",
+                                                        errors: [ErrorList.ServerUnavailable]);
             }
 
             return result;
@@ -62,7 +64,8 @@ namespace BlazorWebAssembly.Services
             }
             catch
             {
-                result = new ErrorResult<Product>("API не отвечает");
+                result = new ErrorResult<Product>(message: "API не отвечает",
+                                                  errors: [ErrorList.ServerUnavailable]);
             }
 
             return result;
@@ -70,6 +73,13 @@ namespace BlazorWebAssembly.Services
 
         public async Task<Result> AddProduct(ProductCreateDto productDto)
         {
+            var validationResult = await createValidator.ValidateAsync(productDto);
+
+            if (!validationResult.IsValid)
+                return new ValidationErrorResult(message: "Продукт для создания не прошел валидацию",
+                                                 errors: [ErrorList.FailedValidation],
+                                                 validationErrors: validationResult.Errors);
+            
             Result result;
 
             try
@@ -80,7 +90,8 @@ namespace BlazorWebAssembly.Services
             }
             catch
             {
-                result = new ErrorResult<List<Product>>("API не отвечает");
+                result = new ErrorResult(message: "API не отвечает",
+                                         errors: [ErrorList.ServerUnavailable]);
             }
 
             return result;
@@ -105,7 +116,8 @@ namespace BlazorWebAssembly.Services
             }
             catch
             {
-                result = new ErrorResult("API не отвечает");
+                result = new ErrorResult(message: "API не отвечает",
+                                         errors: [ErrorList.ServerUnavailable]);
             }
 
             return result;
@@ -123,7 +135,8 @@ namespace BlazorWebAssembly.Services
             }
             catch
             {
-                result = new ErrorResult("API не отвечает");
+                result = new ErrorResult(message: "API не отвечает",
+                                         errors: [ErrorList.ServerUnavailable]);
             }
 
             return result;

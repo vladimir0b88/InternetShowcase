@@ -2,6 +2,7 @@
 using Application.Common.Models;
 using System.Net.Http.Json;
 using System.Net;
+using Application;
 
 namespace BlazorWebAssembly.Common
 {
@@ -10,7 +11,8 @@ namespace BlazorWebAssembly.Common
         public static async Task<Result> GetResult(HttpResponseMessage? response)
         {
             if (response is null)
-                return new ErrorResult("Ответ от сервера не получен");
+                return new ErrorResult(message: "Ответ от сервера не получен",
+                                       errors: [ErrorList.ServerUnavailable]);
 
             Result? result;
 
@@ -33,12 +35,12 @@ namespace BlazorWebAssembly.Common
                     break;
 
                 default:
-                    result = new ErrorResult("Непредусмотренный ответ от сервера");
+                    result = new ErrorResult(message: "Непредусмотренный ответ от сервера");
                     break;
             }
 
             if (result is null)
-                result = new ErrorResult("Пришел пустой json или ошибка при преобразовании json в объект");
+                result = new ErrorResult(message: "Пришел пустой json или ошибка при преобразовании json в объект");
 
             return result;
         }
@@ -47,7 +49,8 @@ namespace BlazorWebAssembly.Common
         public static async Task<Result<T>> GetResult<T>(HttpResponseMessage? response)
         {
             if (response is null)
-                return new ErrorResult<T>("Ответ от сервера не получен");
+                return new ErrorResult<T>(message: "Ответ от сервера не получен",
+                                          errors: [ErrorList.ServerUnavailable]);
 
             Result<T>? result;
 
@@ -70,12 +73,12 @@ namespace BlazorWebAssembly.Common
                     break;
 
                 default:
-                    result = new ErrorResult<T>("Непредусмотренный ответ от сервера");
+                    result = new ErrorResult<T>(message: "Непредусмотренный ответ от сервера");
                     break;
             }
 
             if (result is null)
-                result = new ErrorResult<T>("Пришел пустой json или ошибка при преобразовании json в объект");
+                result = new ErrorResult<T>(message: "Пришел пустой json или ошибка при преобразовании json в объект");
 
             return result;
         }
