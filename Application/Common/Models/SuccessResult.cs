@@ -1,4 +1,7 @@
 ﻿
+using System.Text.Json.Serialization;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
 namespace Application.Common.Models
 {
     public class SuccessResult : Result
@@ -7,6 +10,12 @@ namespace Application.Common.Models
         {
             Success = true;
         }
+
+        [JsonConstructor]
+        public SuccessResult(bool success)
+        {
+            Success = success;
+        }
     }
 
     public class SuccessResult<T> : Result<T>
@@ -14,6 +23,13 @@ namespace Application.Common.Models
         public SuccessResult(T data) : base(data)
         {
             Success = true;
+        }
+
+
+        [JsonConstructor]
+        public SuccessResult(bool success, T data) : base(data)
+        {
+            Success = success;
         }
     }
 }

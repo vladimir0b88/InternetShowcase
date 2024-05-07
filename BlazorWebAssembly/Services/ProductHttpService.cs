@@ -19,54 +19,27 @@ namespace BlazorWebAssembly.Services
 
         public async Task<Result<List<Product>>> GetAllProducts()
         {
-            Result<List<Product>> result;
-            try
-            {
-                var response = await httpClient.GetAsync(_controllerUri);
+            var response = await httpClient.GetAsync(_controllerUri);
 
-                result = await HttpResponseHandler.GetResult<List<Product>>(response);
-            }
-            catch
-            {
-                result = new ErrorResult<List<Product>>(message: "API не отвечает",
-                                                        errors: [ErrorList.ServerUnavailable]);
-            }
+            var result = await HttpResponseHandler.GetResult<List<Product>>(response);
 
             return result;
         }
 
         public async Task<Result<List<Product>>> GetByProductTypeId(long productTypeId)
         {
-            Result<List<Product>> result;
-            try
-            {
-                var response = await httpClient.GetAsync($"{_controllerUri}/ProductType/{productTypeId}");
+            var response = await httpClient.GetAsync($"{_controllerUri}/ProductType/{productTypeId}");
 
-                result = await HttpResponseHandler.GetResult<List<Product>>(response);
-            }
-            catch
-            {
-                result = new ErrorResult<List<Product>>(message: "API не отвечает",
-                                                        errors: [ErrorList.ServerUnavailable]);
-            }
+            var result = await HttpResponseHandler.GetResult<List<Product>>(response);
 
             return result;
         }
 
         public async Task<Result<Product>> GetProductById(long id)
         {
-            Result<Product> result;
-            try
-            {
-                var response = await httpClient.GetAsync($"{_controllerUri}/{id}");
+            var response = await httpClient.GetAsync($"{_controllerUri}/{id}");
 
-                result = await HttpResponseHandler.GetResult<Product>(response);
-            }
-            catch
-            {
-                result = new ErrorResult<Product>(message: "API не отвечает",
-                                                  errors: [ErrorList.ServerUnavailable]);
-            }
+            var result = await HttpResponseHandler.GetResult<Product>(response);
 
             return result;
         }
@@ -79,20 +52,10 @@ namespace BlazorWebAssembly.Services
                 return new ValidationErrorResult(message: "Продукт для создания не прошел валидацию",
                                                  errors: [ErrorList.FailedValidation],
                                                  validationErrors: validationResult.Errors);
-            
-            Result result;
 
-            try
-            {
-                var response = await httpClient.PostAsJsonAsync(_controllerUri, productDto);
+            var response = await httpClient.PostAsJsonAsync(_controllerUri, productDto);
 
-                result = await HttpResponseHandler.GetResult(response);
-            }
-            catch
-            {
-                result = new ErrorResult(message: "API не отвечает",
-                                         errors: [ErrorList.ServerUnavailable]);
-            }
+            var result = await HttpResponseHandler.GetResult(response);
 
             return result;
         }
@@ -106,38 +69,19 @@ namespace BlazorWebAssembly.Services
                                                  errors: [ErrorList.FailedValidation],
                                                  validationErrors: validationResult.Errors);
 
-            Result result;
 
-            try
-            {
-                var response = await httpClient.PutAsJsonAsync(_controllerUri, updateDto);
+            var response = await httpClient.PutAsJsonAsync(_controllerUri, updateDto);
 
-                result = await HttpResponseHandler.GetResult(response);
-            }
-            catch
-            {
-                result = new ErrorResult(message: "API не отвечает",
-                                         errors: [ErrorList.ServerUnavailable]);
-            }
+            var result = await HttpResponseHandler.GetResult(response);
 
             return result;
         }
 
         public async Task<Result> DeleteProductById(long id)
         {
-            Result result;
+            var response = await httpClient.DeleteAsync($"{_controllerUri}/{id}");
 
-            try
-            {
-                var response = await httpClient.DeleteAsync($"{_controllerUri}/{id}");
-
-                result = await HttpResponseHandler.GetResult(response);
-            }
-            catch
-            {
-                result = new ErrorResult(message: "API не отвечает",
-                                         errors: [ErrorList.ServerUnavailable]);
-            }
+            var result = await HttpResponseHandler.GetResult(response);
 
             return result;
         }

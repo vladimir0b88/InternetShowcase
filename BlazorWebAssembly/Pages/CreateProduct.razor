@@ -1,0 +1,76 @@
+﻿@page "/createProduct"
+<PageTitle>CreateProduct</PageTitle>
+
+@inject IProductService productService
+
+<h3>CreateProduct</h3>
+
+<div class="col-auto">
+    <label class="form-label">
+        Наименование продукта
+        <InputText @bind-Value="@createDto.Name" class="form-control"></InputText>
+    </label>
+</div>
+
+
+<div class="col-auto">
+    <label class="form-label">
+        Описание
+        <InputTextArea @bind-Value="@createDto.Description" class="form-control"></InputTextArea>
+    </label>
+</div>
+
+
+<div class="col-auto">
+    <label class="form-label">
+        Стоимость
+        <NumberInput @bind-Value="@createDto.Cost"></NumberInput>
+    </label>
+</div>
+
+
+<div class="col-auto">
+    <label class="form-label">
+        Тип товара
+        <NumberInput @bind-Value="@createDto.TypeId"></NumberInput>
+    </label>
+</div>
+
+<div class="col-auto">
+    <Button Color="ButtonColor.Success" @onclick="AddProduct">Создать</Button>
+</div>
+
+@if(errorMessage is not null)
+{
+    <div class="col-auto">
+        <h3>@errorMessage</h3>
+    </div>
+}
+
+
+@code {
+    private ProductCreateDto createDto;
+
+    private string? errorMessage = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        createDto = new ProductCreateDto()
+            {
+                Name = string.Empty,
+                Description = string.Empty,
+            };
+    }
+
+    private async Task AddProduct()
+    {
+        var result = await productService.AddProduct(createDto);
+
+        if (result is ErrorResult errorResult)
+        {
+            errorMessage = errorResult.Message;
+        }
+        else
+            errorMessage = null;
+    }
+}

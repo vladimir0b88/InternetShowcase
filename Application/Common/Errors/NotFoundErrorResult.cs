@@ -1,4 +1,5 @@
 ﻿using Application.Common.Models;
+using System.Text.Json.Serialization;
 
 namespace Application.Common.Errors
 {
@@ -11,6 +12,12 @@ namespace Application.Common.Errors
         public NotFoundErrorResult(string message, IReadOnlyCollection<Error> errors) : base(message, errors)
         {
         }
+
+        [JsonConstructor]
+        public NotFoundErrorResult(string message, bool success, IReadOnlyCollection<Error> errors) : base(message, success, errors)
+        {
+            
+        }
     }
 
     public class NotFoundErrorResult<T> : ErrorResult<T>
@@ -21,6 +28,12 @@ namespace Application.Common.Errors
 
         public NotFoundErrorResult(string message, IReadOnlyCollection<Error> errors) : base(message, errors)
         {
+        }
+
+        [JsonConstructor]
+        public NotFoundErrorResult(string message, bool success, IReadOnlyCollection<Error> errors, T data) : base(message, success, errors, data)
+        {
+
         }
     }
 

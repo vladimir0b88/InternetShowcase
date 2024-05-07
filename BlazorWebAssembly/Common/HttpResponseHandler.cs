@@ -18,16 +18,20 @@ namespace BlazorWebAssembly.Common
 
             switch (response.StatusCode)
             {
-                case HttpStatusCode.OK or HttpStatusCode.Created:
+                case HttpStatusCode.OK:
                     result = await response.Content.ReadFromJsonAsync<SuccessResult>();
                     break;
 
-                case HttpStatusCode.UnprocessableEntity:
-                    result = await response.Content.ReadFromJsonAsync<ValidationErrorResult>();
+                case HttpStatusCode.Created or HttpStatusCode.NoContent:
+                    result = new SuccessResult();
                     break;
 
                 case HttpStatusCode.NotFound:
                     result = await response.Content.ReadFromJsonAsync<NotFoundErrorResult>();
+                    break;
+
+                case HttpStatusCode.UnprocessableEntity:
+                    result = await response.Content.ReadFromJsonAsync<ValidationErrorResult>();
                     break;
 
                 case HttpStatusCode.BadRequest:
@@ -60,12 +64,12 @@ namespace BlazorWebAssembly.Common
                     result = await response.Content.ReadFromJsonAsync<SuccessResult<T>>();
                     break;
 
-                case HttpStatusCode.UnprocessableEntity:
-                    result = await response.Content.ReadFromJsonAsync<ValidationErrorResult<T>>();
-                    break;
-
                 case HttpStatusCode.NotFound:
                     result = await response.Content.ReadFromJsonAsync<NotFoundErrorResult<T>>();
+                    break;
+
+                case HttpStatusCode.UnprocessableEntity:
+                    result = await response.Content.ReadFromJsonAsync<ValidationErrorResult<T>>();
                     break;
 
                 case HttpStatusCode.BadRequest:
