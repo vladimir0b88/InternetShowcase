@@ -7,9 +7,9 @@ namespace Application.Models.TypeProperties.Create
     {
         public TypePropertyCreateDtoValidator(IProductTypeRepository productTypeRepository)
         {
-            RuleFor(p => p.Name).NotEmpty().MaximumLength(64);
+            RuleFor(tp => tp.Name).NotEmpty().MaximumLength(64);
 
-            RuleFor(p => p.TypeId).Custom(async (typeId, context) =>
+            RuleFor(tp => tp.TypeId).Custom(async (typeId, context) =>
             {
                 if (typeId is not null)
                 {

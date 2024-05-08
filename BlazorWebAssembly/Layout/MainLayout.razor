@@ -37,8 +37,9 @@
         {
             new NavItem { Id = "1", Href = "/", IconName = IconName.HouseDoorFill, Text = "Home", Match=NavLinkMatch.All},
             new NavItem { Id = "2", Href = "/counter", IconName = IconName.PlusSquareFill, Text = "Counter"},
-            new NavItem { Id = "3", Href = "/products", IconName = IconName.Cart3, Text = "Products"},
-            new NavItem { Id = "4", Href = "createProduct", IconName = IconName.PatchPlus, Text = "Create product"}
+            new NavItem { Id = "3", IconName = IconName.Cart3, Text = "Products"},
+            new NavItem { Id = "4",  ParentId = "3",Href = "/Products", IconName = IconName.ListOl, Text = "List"},
+            new NavItem { Id = "5",  ParentId = "3",Href = "/createProduct", IconName = IconName.PatchPlus, Text = "Create product"},
         };
 
         return navItems;

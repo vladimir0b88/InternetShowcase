@@ -1,9 +1,4 @@
 ﻿using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Models.TypeProperties.Update
 {
@@ -11,9 +6,9 @@ namespace Application.Models.TypeProperties.Update
     {
         public TypePropertyUpdateDtoValidator()
         {
-            RuleFor(p => p.Name).NotEmpty();
+            RuleFor(tp => tp.Name).NotEmpty();
 
-            RuleFor(p => p.Name).NotEmpty().MaximumLength(64);
+            RuleFor(tp => tp.Name).NotEmpty().MaximumLength(64);
         }
     }
 }
