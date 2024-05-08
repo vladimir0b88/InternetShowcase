@@ -1,9 +1,12 @@
 using Application.Common.Interfaces;
 using Application.Models.Products.Create;
 using Application.Models.Products.Update;
+using Application.Models.ProductTypes.Create;
+using Application.Models.ProductTypes.Update;
 using BlazorWebAssembly;
 using BlazorWebAssembly.Services;
 using BlazorWebAssembly.Validators.Products;
+using BlazorWebAssembly.Validators.ProductTypes;
 using FluentValidation;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -23,6 +26,7 @@ builder.Services.AddScoped(sp => new HttpClient
 
 #region Services
 builder.Services.AddScoped<IProductService, ProductHttpService>();
+builder.Services.AddScoped<IProductTypeService, ProductTypeHttpService>();
 
 #endregion
 
@@ -30,6 +34,10 @@ builder.Services.AddScoped<IProductService, ProductHttpService>();
 // Product
 builder.Services.AddScoped<IValidator<ProductCreateDto>,ProductCreateDtoClientValidator>();
 builder.Services.AddScoped<IValidator<ProductUpdateDto>,ProductUpdateDtoClientValidator>();
+
+// ProductType
+builder.Services.AddScoped<IValidator<ProductTypeCreateDto>, ProductTypeCreateDtoClientValidator>();
+builder.Services.AddScoped<IValidator<ProductTypeUpdateDto>, ProductTypeUpdateDtoClientValidator>();
 
 #endregion
 

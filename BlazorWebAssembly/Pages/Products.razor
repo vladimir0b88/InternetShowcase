@@ -3,6 +3,7 @@
 
 
 @inject IProductService productService
+@inject NavigationManager navManager
 
 <h3>Products table</h3>
 
@@ -16,6 +17,8 @@
                 <th class="px-2">Description</th>
                 <th class="px-2">Cost</th>
                 <th class="px-2">TypeId</th>
+                <th class="px-2"></th>
+                <th class="px-2"></th>
             </tr>
         </thead>
         <tbody>
@@ -27,6 +30,16 @@
                     <td class="px-2">@product.Description</td>
                     <td class="px-2">@product.Cost</td>
                     <td class="px-2">@product.TypeId</td>
+                    <td class="px-2">
+                        <Button Type="ButtonType.Link" Color="ButtonColor.Secondary" To="@($"changeProduct/{product.Id}")">
+                            Изменить
+                        </Button>
+                    </td>
+                    <td class="px-2">
+                        <Button Color="ButtonColor.Danger" @onclick="() => DeleteProduct(product.Id)">
+                            Удалить
+                        </Button>
+                    </td>
                 </tr>
             }
         </tbody>
@@ -95,7 +108,7 @@ else
             _product = null;
             return;
         }
-        
+
 
         var result = await productService.GetProductById((long)_productId);
 
@@ -116,5 +129,12 @@ else
                 errorMessageProduct = errorResult.Message;
                 break;
         }
+    }
+
+    private async Task DeleteProduct(long productId)
+    {
+        var result = await productService.DeleteProductById(productId);
+
+        
     }
 }

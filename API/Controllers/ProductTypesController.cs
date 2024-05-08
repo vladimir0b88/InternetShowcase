@@ -60,7 +60,7 @@ namespace API.Controllers
 
             return result switch
             {
-                SuccessResult => Ok(),
+                SuccessResult => Ok(result),
                 ValidationErrorResult => StatusCode(422, result),
                 NotFoundErrorResult => NotFound(result),
                 ErrorResult => BadRequest(result),
@@ -75,7 +75,7 @@ namespace API.Controllers
 
             return result switch
             {
-                SuccessResult => Ok(),
+                SuccessResult => Ok(result),
                 NotFoundErrorResult => NotFound(result),
                 ErrorResult => BadRequest(result),
                 _ => throw new ApplicationException()

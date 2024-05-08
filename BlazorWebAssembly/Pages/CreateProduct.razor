@@ -2,6 +2,7 @@
 <PageTitle>CreateProduct</PageTitle>
 
 @inject IProductService productService
+@inject NavigationManager navManager
 
 <h3>CreateProduct</h3>
 
@@ -49,7 +50,7 @@
 
 
 @code {
-    private ProductCreateDto createDto;
+    private ProductCreateDto createDto = new ProductCreateDto();
 
     private string? errorMessage = null;
 
@@ -64,13 +65,16 @@
 
     private async Task AddProduct()
     {
-        var result = await productService.AddProduct(createDto);
+        var result = await productService.AddProduct(createDto!);
 
         if (result is ErrorResult errorResult)
         {
             errorMessage = errorResult.Message;
         }
         else
+        {
             errorMessage = null;
+            navManager.NavigateTo("products");
+        }
     }
 }

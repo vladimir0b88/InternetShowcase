@@ -1,0 +1,96 @@
+﻿@page "/changeProduct/{productId:long}"
+<PageTitle>ChangeProduct</PageTitle>
+
+@inject IProductService productService
+@inject NavigationManager navManager
+
+<h3>ChangeProduct</h3>
+
+@if(errorMessage is not null || updateDto is null)
+{
+    <h3>@errorMessage</h3>
+}
+else
+{
+    <div class="col-auto">
+        <label class="form-label">
+            Наименование продукта
+            <InputText @bind-Value="@updateDto.Name" class="form-control"></InputText>
+        </label>
+    </div>
+
+
+    <div class="col-auto">
+        <label class="form-label">
+            Описание
+            <InputTextArea @bind-Value="@updateDto.Description" class="form-control"></InputTextArea>
+        </label>
+    </div>
+
+
+    <div class="col-auto">
+        <label class="form-label">
+            Стоимость
+            <NumberInput @bind-Value="@updateDto.Cost"></NumberInput>
+        </label>
+    </div>
+
+
+    <div class="col-auto">
+        <label class="form-label">
+            Тип товара
+            <NumberInput @bind-Value="@updateDto.TypeId"></NumberInput>
+        </label>
+    </div>
+
+    <div class="col-auto">
+        <Button Color="ButtonColor.Success" @onclick="UpdateProduct">Изменить</Button>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public long ProductId { get; set; }
+
+    private ProductUpdateDto? updateDto = null;
+
+    private string? errorMessage = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await productService.GetProductById(ProductId);
+
+        if (result is ErrorResult<Product> errorResult)
+        {
+            errorMessage = errorResult.Message;
+            return;
+        }
+
+        if (result.Data is null)
+            return;
+
+        Product product = result.Data;
+
+        updateDto = new ProductUpdateDto()
+        {
+            Id = product.Id,
+            Name = product.Name,
+            Description = product.Description,
+            Cost = product.Cost,
+            TypeId = product.TypeId,
+        };
+    }
+
+    private async Task UpdateProduct()
+    {
+        var result = await productService.UpdateProduct(updateDto!);
+
+        if(result is ErrorResult errorResult)
+        {
+            errorMessage = errorResult.Message;
+            return;
+        }
+
+        navManager.NavigateTo("products");
+    }
+}

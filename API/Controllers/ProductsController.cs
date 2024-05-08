@@ -91,7 +91,7 @@ namespace API.Controllers
 
             return result switch
             {
-                SuccessResult => Ok(),
+                SuccessResult => Ok(result),
                 NotFoundErrorResult => NotFound(result),
                 ErrorResult => BadRequest(result),
                 _ => throw new ApplicationException()
