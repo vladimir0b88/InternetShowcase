@@ -10,7 +10,13 @@ namespace Application.Services
     public class PropertyValueService(IPropertyValueRepository repository,
                                       IValidator<PropertyValueUpdateDto> updateValidator) : IPropertyValueService
     {
-        
+        public async Task<Result<List<PropertyValue>>> GetAllPropertyValues()
+        {
+            var result = await repository.GetAllPropertyValues();
+
+            return result;
+        }
+
         public async Task<Result<List<PropertyValue>>> GetPropertyValuesByProductId(long productId)
         {
             var result = await repository.GetPropertyValuesByProductId(productId);

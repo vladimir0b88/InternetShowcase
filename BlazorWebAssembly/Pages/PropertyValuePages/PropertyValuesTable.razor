@@ -1,0 +1,32 @@
+﻿@page "/PropertyValuesTable"
+<PageTitle>Таблица значений свойств</PageTitle>
+
+@inject IPropertyValueService propertyValueService
+
+<h3>Значения свойств</h3>
+
+<QuickGrid Items="_propertyValues">
+    <PropertyColumn Property="@(p => p.Id)"></PropertyColumn>
+
+    <PropertyColumn Property="@(p => p.ProductId)" Title="id продукта" Sortable="true" IsDefaultSortColumn></PropertyColumn>
+
+    <PropertyColumn Property="@(p => p.Value)" Title="Значение свойства"></PropertyColumn>
+</QuickGrid>
+
+@code {
+    private IQueryable<PropertyValue>? _propertyValues = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetPropertyValues();
+    }
+
+
+    async Task GetPropertyValues()
+    {
+        var result = await propertyValueService.GetAllPropertyValues();
+
+        if (result is SuccessResult<List<PropertyValue>> successResult)
+            _propertyValues = successResult.Data.AsQueryable();
+    }
+}

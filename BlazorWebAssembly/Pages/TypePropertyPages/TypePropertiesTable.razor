@@ -1,0 +1,32 @@
+﻿@page "/TypePropertiesTable"
+<PageTitle>Таблица свойств</PageTitle>
+
+@inject ITypePropertyService typePropertyService
+
+<h3>Свойства</h3>
+
+<QuickGrid Items="_typeProperties">
+    <PropertyColumn Property="@(p => p.Id)"></PropertyColumn>
+
+    <PropertyColumn Property="@(p => p.Name)" Title="Наименование" Sortable="true"></PropertyColumn>
+
+    <PropertyColumn Property="@(p => p.TypeId)" Title="id типа"></PropertyColumn>
+</QuickGrid>
+
+@code {
+    private IQueryable<TypeProperty>? _typeProperties = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetTypeProperties();
+    }
+
+
+    async Task GetTypeProperties()
+    {
+        var result = await typePropertyService.GetAllTypeProperties();
+
+        if (result is SuccessResult<List<TypeProperty>> successResult)
+            _typeProperties = successResult.Data.AsQueryable();
+    }
+}

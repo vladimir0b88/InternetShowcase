@@ -35,6 +35,14 @@ namespace Persistence.Repositories
             return new SuccessResult();
         }
 
+        public async Task<Result<List<PropertyValue>>> GetAllPropertyValues()
+        {
+            List<PropertyValue> list = await context.PropertyValues.AsNoTracking()
+                                                                   .ToListAsync();
+
+            return new SuccessResult<List<PropertyValue>>(list);
+        }
+
         public async Task<Result<List<PropertyValue>>> GetPropertyValuesByProductId(long productId)
         {
             Product? product = await context.Products.AsNoTracking()

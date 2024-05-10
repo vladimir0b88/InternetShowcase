@@ -1,5 +1,4 @@
 ﻿@page "/ProductTypes"
-
 <PageTitle>Типы товаров</PageTitle>
 
 @inject IProductTypeService productTypeService
@@ -53,7 +52,7 @@
 }
 else
 {
-    <h3>@_allProductTypesErrorMessage</h3>
+    <h3>@_errorMessage</h3>
 }
 
 
@@ -62,7 +61,7 @@ else
 
     private GridSort<ProductType> _sortByName = GridSort<ProductType>.ByAscending(pt => pt.Name);
 
-    private string? _allProductTypesErrorMessage = null;
+    private string? _errorMessage = null;
 
     protected override async Task OnInitializedAsync()
     {
@@ -84,12 +83,12 @@ else
         {
             case SuccessResult<List<ProductType>> successResult:
                 _allProductTypes = successResult.Data?.AsQueryable();
-                _allProductTypesErrorMessage = null;
+                _errorMessage = null;
                 break;
 
             case ErrorResult<List<ProductType>> errorResult:
                 _allProductTypes = null;
-                _allProductTypesErrorMessage = errorResult.Message;
+                _errorMessage = errorResult.Message;
                 break;
         }
     }

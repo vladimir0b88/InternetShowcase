@@ -7,6 +7,8 @@ namespace Application.Common.Interfaces
 {
     public interface ITypePropertyService
     {
+        Task<Result<List<TypeProperty>>> GetAllTypeProperties();
+
         Task<Result<List<TypeProperty>>> GetPropertiesByProductTypeId(long typeId);
 
         Task<Result> AddProperty(TypePropertyCreateDto createDto);

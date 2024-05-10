@@ -12,6 +12,13 @@ namespace Application.Services
                                      IValidator<TypePropertyCreateDto> createValidator,
                                      IValidator<TypePropertyUpdateDto> updateValidator) : ITypePropertyService
     {
+        public async Task<Result<List<TypeProperty>>> GetAllTypeProperties()
+        {
+            var result = await repository.GetAllTypeProperties();
+
+            return result;
+        }
+
         public async Task<Result> AddProperty(TypePropertyCreateDto createDto)
         {
             var validationResult = await createValidator.ValidateAsync(createDto);
@@ -38,6 +45,7 @@ namespace Application.Services
 
             return result;
         }
+
 
         public async Task<Result<List<TypeProperty>>> GetPropertiesByProductTypeId(long typeId)
         {

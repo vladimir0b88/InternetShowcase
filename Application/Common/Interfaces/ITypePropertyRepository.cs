@@ -1,11 +1,12 @@
-﻿
-using Application.Common.Models;
+﻿using Application.Common.Models;
 using Domain.Entities;
 
 namespace Application.Common.Interfaces
 {
     public interface ITypePropertyRepository
     {
+        Task<Result<List<TypeProperty>>> GetAllTypeProperties();
+
         Task<Result<List<TypeProperty>>> GetPropertiesByTypeId(long typeId);
 
         Task<Result> AddProperty(TypeProperty property);

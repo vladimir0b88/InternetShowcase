@@ -16,6 +16,20 @@ else
     <h3>Информация о типе товара: <b>@_productType.Name</b></h3>
 
     <h4>Свойства</h4>
+
+    <div class="col-md-2 m-2">
+        <Button Color="ButtonColor.Success"
+                Type="ButtonType.Link"
+                To="@($"CreateTypeProperty/{_productType.Id}")">
+            Создать
+        </Button>
+
+        <Button Color="ButtonColor.Primary"
+                @onclick="GetTypeProperties">
+            Обновить
+        </Button>
+    </div>
+
     if (_typeProperties is not null)
     {
         <QuickGrid Items="_typeProperties">

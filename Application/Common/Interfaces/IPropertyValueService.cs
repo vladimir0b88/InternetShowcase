@@ -6,6 +6,7 @@ namespace Application.Common.Interfaces
 {
     public interface IPropertyValueService
     {
+        Task<Result<List<PropertyValue>>> GetAllPropertyValues();
         Task<Result<List<PropertyValue>>> GetPropertyValuesByProductId(long productId);
         Task<Result> UpdatePropertyValue(PropertyValueUpdateDto updateDto);
     }

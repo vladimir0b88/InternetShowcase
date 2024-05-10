@@ -13,6 +13,18 @@ namespace API.Controllers
     [Route("api/[controller]")]
     public class TypePropertiesController(ITypePropertyService propertyService) : ControllerBase
     {
+        [HttpGet]
+        public async Task<IActionResult> GetAllTypeProperties()
+        {
+            var result = await propertyService.GetAllTypeProperties();
+
+            return result switch
+            {
+                SuccessResult<List<TypeProperty>> => Ok(result),
+                ErrorResult<List<TypeProperty>> => BadRequest(result),
+                _ => throw new ApplicationException()
+            };
+        }
 
         [HttpGet("ProductType/{id}")]
         public async Task<IActionResult> GetPropertiesByProductTypeId(long id)

@@ -15,6 +15,15 @@ namespace BlazorWebAssembly.Services
     {
         private const string _controllerUri = "api/PropertyValues";
 
+        public async Task<Result<List<PropertyValue>>> GetAllPropertyValues()
+        {
+            var response = await httpClient.GetAsync(_controllerUri);
+
+            var result = await HttpResponseHandler.GetResult<List<PropertyValue>>(response);
+
+            return result;
+        }
+
         public async Task<Result<List<PropertyValue>>> GetPropertyValuesByProductId(long productId)
         {
             var response = await httpClient.GetAsync($"{_controllerUri}/{productId}");

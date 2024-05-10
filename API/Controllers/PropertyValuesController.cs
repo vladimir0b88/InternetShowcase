@@ -11,6 +11,19 @@ namespace API.Controllers
     [Route("api/[controller]")]
     public class PropertyValuesController(IPropertyValueService propertyValueService) : ControllerBase
     {
+        [HttpGet]
+        public async Task<IActionResult> GetAllPropertyValues()
+        {
+            var result = await propertyValueService.GetAllPropertyValues();
+
+            return result switch
+            {
+                SuccessResult<List<PropertyValue>> => Ok(result),
+                ErrorResult<List<PropertyValue>> => BadRequest(result),
+                _ => throw new ApplicationException()
+            };
+        }
+
 
         [HttpGet("Product/{id}")]
         public async Task<IActionResult> GetPropertyValuesByProductId(long id)

@@ -1,0 +1,30 @@
+﻿@page "/ProductTypesTable"
+<PageTitle>Таблица типов товара</PageTitle>
+
+@inject IProductTypeService productTypeService
+
+<h3>Типы товаров</h3>
+
+<QuickGrid Items="_productTypes">
+    <PropertyColumn Property="@(p => p.Id)"></PropertyColumn>
+
+    <PropertyColumn Property="@(p => p.Name)" Title="Наименование" Sortable="true"></PropertyColumn>
+</QuickGrid>
+
+@code {
+    private IQueryable<ProductType>? _productTypes = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetProducts();
+    }
+
+
+    async Task GetProducts()
+    {
+        var result = await productTypeService.GetAllProductTypes();
+
+        if (result is SuccessResult<List<ProductType>> successResult)
+            _productTypes = successResult.Data.AsQueryable();
+    }
+}
