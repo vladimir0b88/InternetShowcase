@@ -1,0 +1,68 @@
+﻿@page "/ChangeProductType/{typeId:long}"
+<PageTitle>Изменение типа товара</PageTitle>
+
+@inject IProductTypeService productTypeService
+@inject NavigationManager navManager
+
+<h3>Изменение типа товара</h3>
+
+<EditForm Model="_updateDto" OnValidSubmit="Submit">
+
+    <FluentValidationValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+
+        <label class="col-form-label">Название типа товара</label>
+        <div class="col-md-2">
+            <InputText @bind-Value="@_updateDto.Name" class="form-control"></InputText>
+        </div>
+
+        <div class="col-md-2 mt-2">
+            <Button Type="ButtonType.Submit" Color="ButtonColor.Success">Изменить</Button>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public long TypeId{ get; set; }
+
+    private ProductTypeUpdateDto _updateDto = new();
+    private string? errorMessage = null;
+
+    async Task Submit()
+    {
+        await productTypeService.UpdateProductType(_updateDto);
+
+        navManager.NavigateTo("ProductTypes");
+    }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetUpdateDto();
+    }
+
+    async Task GetUpdateDto()
+    {
+        var result = await productTypeService.GetProductTypeById(TypeId);
+
+        switch (result)
+        {
+            case SuccessResult<ProductType> successResult:
+                ProductType productType = successResult.Data!;
+                _updateDto = new ProductTypeUpdateDto()
+                {
+                    Id = productType.Id,
+                    Name = productType.Name,
+                };
+                errorMessage = null;
+                break;
+
+            case ErrorResult<ProductType> errorResult:
+                errorMessage = errorResult.Message;
+                break;
+        }
+    }
+}

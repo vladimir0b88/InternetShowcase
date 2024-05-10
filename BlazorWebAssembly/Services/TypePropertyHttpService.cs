@@ -19,7 +19,7 @@ namespace BlazorWebAssembly.Services
 
         public async Task<Result<List<TypeProperty>>> GetPropertiesByProductTypeId(long typeId)
         {
-            var response = await httpClient.GetAsync($"{_controllerUri}/{typeId}");
+            var response = await httpClient.GetAsync($"{_controllerUri}/ProductType/{typeId}");
 
             var result = await HttpResponseHandler.GetResult<List<TypeProperty>>(response);
 

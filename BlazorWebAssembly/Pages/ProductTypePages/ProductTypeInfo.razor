@@ -1,0 +1,96 @@
+﻿@page "/ProductType/{typeId:long}"
+<PageTitle>Информация о типе товара</PageTitle>
+
+@inject IProductTypeService productTypeService
+@inject IProductService productService
+@inject ITypePropertyService typePropertyService
+@inject NavigationManager navManager
+
+
+@if (errorMessage is not null)
+{
+    <h3>@errorMessage</h3>
+}
+else
+{
+    <h3>Информация о типе товара: <b>@_productType.Name</b></h3>
+
+    <h4>Свойства</h4>
+    if (_typeProperties is not null)
+    {
+        <QuickGrid Items="_typeProperties">
+            <PropertyColumn Property="@(tp => tp.Id)"></PropertyColumn>
+
+            <PropertyColumn Property="@(tp => tp.Name)" Title="Наименование" Sortable="true"></PropertyColumn>
+        </QuickGrid>
+    }
+
+
+    <h4>Продукты</h4>
+    if (_products is not null)
+    {
+        <QuickGrid Items="_products">
+            <PropertyColumn Property="@(p => p.Id)"></PropertyColumn>
+
+            <PropertyColumn Property="@(p => p.Name)" Title="Наименование" Sortable="true"></PropertyColumn>
+
+            <PropertyColumn Property="@(p => p.Cost)" Title="Стоимость" Sortable="true"></PropertyColumn>
+
+            <PropertyColumn Property="@(p => p.Description)" Title="Описание"></PropertyColumn>
+        </QuickGrid>
+    }
+}
+
+
+@code {
+    [Parameter]
+    public long TypeId { get; set; }
+
+    private ProductType _productType = new();
+    private string? errorMessage = null;
+
+    private IQueryable<TypeProperty>? _typeProperties = null;
+
+    private IQueryable<Product>? _products = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetProductType();
+
+        await GetTypeProperties();
+
+        await GetProducts();
+    }
+
+    async Task GetProductType()
+    {
+        var result = await productTypeService.GetProductTypeById(TypeId);
+
+        switch (result)
+        {
+            case SuccessResult<ProductType> successResult:
+                _productType = successResult.Data;
+                break;
+
+            case ErrorResult<ProductType> errorResult:
+                errorMessage = errorResult.Message;
+                break;
+        }
+    }
+
+    async Task GetTypeProperties()
+    {
+        var result = await typePropertyService.GetPropertiesByProductTypeId(TypeId);
+
+        if (result is SuccessResult<List<TypeProperty>> successResult)
+            _typeProperties = successResult.Data.AsQueryable();
+    }
+
+    async Task GetProducts()
+    {
+        var result = await productService.GetByProductTypeId(TypeId);
+
+        if (result is SuccessResult<List<Product>> successResult)
+            _products = successResult.Data.AsQueryable();
+    }
+}

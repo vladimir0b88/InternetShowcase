@@ -1,0 +1,96 @@
+﻿@page "/ProductTypes"
+
+<PageTitle>Типы товаров</PageTitle>
+
+@inject IProductTypeService productTypeService
+@inject NavigationManager navManager
+
+
+<h3>Типы товаров</h3>
+
+<div class="col-md-2 m-2">
+    <Button Color="ButtonColor.Success"
+            Type="ButtonType.Link"
+            To="CreateProductType">
+        Создать
+    </Button>
+
+    <Button Color="ButtonColor.Primary"
+            @onclick="GetProductTypes">
+        Обновить
+    </Button>
+</div>
+
+@if (_allProductTypes is not null)
+{
+    <QuickGrid Items="@_allProductTypes">
+
+        <PropertyColumn Property="@(pt => pt.Id)" />
+
+        <TemplateColumn Title="Наименование" SortBy="_sortByName" Sortable="true">
+            <Button Color="ButtonColor.Light"
+                    Type="ButtonType.Link"
+                    To="@($"ProductType/{context.Id}")">
+                    @context.Name
+            </Button>
+        </TemplateColumn>
+
+        <TemplateColumn>
+            <Button Color="ButtonColor.Secondary"
+                    Type="ButtonType.Link"
+                    To="@($"ChangeProductType/{context.Id}")">
+                <Icon Name="IconName.Pencil" Size="IconSize.x6"></Icon>
+            </Button>
+
+            <Button Color="ButtonColor.Danger"
+                    @onclick="() => DeleteProductType(context.Id)">
+                <Icon Name="IconName.X" Size="IconSize.x6"></Icon>
+            </Button>
+
+        </TemplateColumn>
+
+    </QuickGrid>
+}
+else
+{
+    <h3>@_allProductTypesErrorMessage</h3>
+}
+
+
+@code {
+    private IQueryable<ProductType>? _allProductTypes = null;
+
+    private GridSort<ProductType> _sortByName = GridSort<ProductType>.ByAscending(pt => pt.Name);
+
+    private string? _allProductTypesErrorMessage = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetProductTypes();
+    }
+
+    async Task DeleteProductType(long id)
+    {
+        await productTypeService.DeleteProductTypeById(id);
+
+        await GetProductTypes();
+    }
+
+    async Task GetProductTypes()
+    {
+        var result = await productTypeService.GetAllProductTypes();
+
+        switch (result)
+        {
+            case SuccessResult<List<ProductType>> successResult:
+                _allProductTypes = successResult.Data?.AsQueryable();
+                _allProductTypesErrorMessage = null;
+                break;
+
+            case ErrorResult<List<ProductType>> errorResult:
+                _allProductTypes = null;
+                _allProductTypesErrorMessage = errorResult.Message;
+                break;
+        }
+    }
+}
