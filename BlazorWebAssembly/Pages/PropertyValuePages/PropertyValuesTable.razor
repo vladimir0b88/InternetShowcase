@@ -10,6 +10,8 @@
 
     <PropertyColumn Property="@(p => p.ProductId)" Title="id продукта" Sortable="true" IsDefaultSortColumn></PropertyColumn>
 
+    <PropertyColumn Property="@(pv => pv.PropertyId)" Title="id свойства"></PropertyColumn>
+
     <PropertyColumn Property="@(p => p.Value)" Title="Значение свойства"></PropertyColumn>
 </QuickGrid>
 
