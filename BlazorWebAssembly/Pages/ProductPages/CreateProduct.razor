@@ -1,76 +1,103 @@
-﻿@page "/createProduct"
+﻿@page "/CreateProduct/{typeId:long}"
 <PageTitle>Создание продукта</PageTitle>
 
 @inject IProductService productService
+@inject IProductTypeService productTypeService
 @inject NavigationManager navManager
 
 <h3>Создание продукта</h3>
 
-<div class="form-group">
+@if (_productType is not null)
+{
+    <EditForm Model="_createDto" OnValidSubmit="Submit">
 
-    <label class="col-form-label">Наименование продукта</label>
-    <div class="col-md-2">
-        <InputText @bind-Value="@createDto.Name" class="form-control"></InputText>
-    </div>
+        <FluentValidationValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+
+            <label class="col-form-label">Название</label>
+            <div class="col-md-2">
+                <p class="form-control">@_productType.Name</p>
+            </div>
+
+            <label class="col-form-label">Название</label>
+            <div class="col-md-2">
+                <InputText @bind-Value="@_createDto.Name" class="form-control"></InputText>
+            </div>
+
+            <label class="col-form-label">Описание</label>
+            <div class="col-md-2">
+                <InputTextArea @bind-Value="@_createDto.Description" class="form-control"></InputTextArea>
+            </div>
+
+            <label class="col-form-label">Стоимость</label>
+            <div class="col-md-2">
+                <InputNumber @bind-Value="@_createDto.Cost" class="form-control"></InputNumber>
+            </div>
+
+            <div class="col-md-2 mt-2">
+                <Button Type="ButtonType.Submit" Color="ButtonColor.Success">Создать</Button>
+            </div>
+        </div>
+    </EditForm>
+}
 
 
-    <label class="col-form-label">Описание</label>
-    <div class="col-md-2">
-        <InputTextArea @bind-Value="@createDto.Description" class="form-control"></InputTextArea>
-    </div>
-
-
-    <label class="col-form-label">Стоимость</label>
-    <div class="col-md-2">
-        <NumberInput @bind-Value="@createDto.Cost"></NumberInput>
-    </div>
-
-
-    <label class="col-form-label">Тип товара</label>
-    <div class="col-md-2">
-        <NumberInput @bind-Value="@createDto.TypeId"></NumberInput>
-    </div>
-    
-    <div class="col-md-2 mt-2">
-        <Button Color="ButtonColor.Success" @onclick="AddProduct">Создать</Button>
-    </div>
-    
-</div>
-
-@if (errorMessage is not null)
+@if (_errorMessage is not null)
 {
     <div class="col-auto">
-        <h3>@errorMessage</h3>
+        <h3>@_errorMessage</h3>
     </div>
 }
 
 
+
 @code {
-    private ProductCreateDto createDto = new ProductCreateDto();
+    [Parameter]
+    public long TypeId { get; set; }
 
-    private string? errorMessage = null;
+    private ProductCreateDto _createDto = new ProductCreateDto();
+    private ProductType? _productType = null;
 
-    protected override void OnInitialized()
+    private string? _errorMessage = null;
+
+    protected override async void OnInitialized()
     {
-        createDto = new ProductCreateDto()
-            {
-                Name = string.Empty,
-                Description = string.Empty,
-            };
+        await GetProductType();
     }
 
-    private async Task AddProduct()
+    async Task GetProductType()
     {
-        var result = await productService.AddProduct(createDto!);
+        var result = await productTypeService.GetProductTypeById(TypeId);
+
+        switch (result)
+        {
+            case SuccessResult<ProductType> successResult:
+                _productType = successResult.Data;
+                _createDto.TypeId = _productType.Id;
+                _errorMessage = null;
+                break;
+
+            case ErrorResult<ProductType> errorResult:
+                _errorMessage = errorResult.Message;
+                break;
+        }
+    }
+
+
+    private async Task Submit()
+    {
+        var result = await productService.AddProduct(_createDto!);
 
         if (result is ErrorResult errorResult)
         {
-            errorMessage = errorResult.Message;
+            _errorMessage = errorResult.Message;
         }
         else
         {
-            errorMessage = null;
-            navManager.NavigateTo("products");
+            _errorMessage = null;
+            navManager.NavigateTo($"ProductType/{_productType!.Id}");
         }
     }
 }

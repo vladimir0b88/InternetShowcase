@@ -50,6 +50,25 @@ namespace Persistence.Repositories
             await context.Products.AddAsync(product);
             await context.SaveChangesAsync();
 
+            if(product.TypeId is not null)
+            {
+                List<long> propertiesId = await context.TypeProperties.AsNoTracking()
+                                                                      .Where(tp => tp.TypeId == product.TypeId)
+                                                                      .Select(tp => tp.Id)
+                                                                      .ToListAsync();
+
+                foreach(long id in propertiesId)
+                {
+                    await context.PropertyValues.AddAsync(new PropertyValue()
+                    {
+                        ProductId = product.Id,
+                        PropertyId = id,
+                        Value = ""
+                    });
+                }
+            }
+            await context.SaveChangesAsync();
+
             return new SuccessResult();
         }
 

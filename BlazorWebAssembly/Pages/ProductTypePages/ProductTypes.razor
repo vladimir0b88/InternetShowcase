@@ -5,24 +5,24 @@
 @inject NavigationManager navManager
 
 
-<h3>Типы товаров</h3>
-
-<div class="col-md-2 m-2">
+<h3>
+    Типы товаров 
     <Button Color="ButtonColor.Success"
-            Type="ButtonType.Link"
-            To="CreateProductType">
-        Создать
+                         Type="ButtonType.Link"
+                         To="CreateProductType">
+        <Icon Name="IconName.PlusLg" Size="IconSize.x5"></Icon>
     </Button>
 
     <Button Color="ButtonColor.Primary"
             @onclick="GetProductTypes">
-        Обновить
+        <Icon Name="IconName.ArrowRepeat" Size="IconSize.x5"></Icon>
     </Button>
-</div>
+</h3>
+
 
 @if (_allProductTypes is not null)
 {
-    <QuickGrid Items="@_allProductTypes" Class="table table-striped">
+    <QuickGrid Items="@_allProductTypes" Class="w-auto table table-striped table-bordered">
 
         <PropertyColumn Property="@(pt => pt.Id)" />
 
@@ -43,7 +43,7 @@
 
             <Button Color="ButtonColor.Danger"
                     @onclick="() => DeleteProductType(context.Id)">
-                <Icon Name="IconName.X" Size="IconSize.x6"></Icon>
+                <Icon Name="IconName.XLg" Size="IconSize.x6"></Icon>
             </Button>
 
         </TemplateColumn>

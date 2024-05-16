@@ -35,14 +35,11 @@
     {
         navItems = new List<NavItem>
         {
-            new NavItem { Id = "1",                    Href = "/",                    Text = "Home",           IconName = IconName.HouseDoorFill,  Match=NavLinkMatch.All},
-            new NavItem { Id = "2",                    Href = "/counter",             Text = "Counter",        IconName = IconName.PlusSquareFill},
-                                                                                      
-            new NavItem { Id = "3",                                                   Text = "Products"},
-            new NavItem { Id = "301",  ParentId = "3", Href = "/Products",            Text = "Список",         IconName = IconName.ListOl},
-            new NavItem { Id = "302",  ParentId = "3", Href = "/CreateProduct",       Text = "Создать",        IconName = IconName.PatchPlus},
-                                                                                      
-            new NavItem { Id = "4",                                                   Text = "ProductTypes"},
+            new NavItem { Id = "1",                    Href = "/",                    Text = "Каталог",        IconName = IconName.HouseDoorFill,  Match=NavLinkMatch.All},
+                                                                                                  
+            new NavItem { Id = "3",                    Href = "/Products",            Text = "Продукты",       IconName = IconName.ListOl},
+                                                                                                  
+            new NavItem { Id = "4",                                                   Text = "Типы продуктов"},
             new NavItem { Id = "401",  ParentId = "4", Href = "/ProductTypes",        Text = "Список"},
             new NavItem { Id = "402",  ParentId = "4", Href = "/CreateProductType",   Text = "Создать"},
                                                                                       

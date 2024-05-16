@@ -7,8 +7,6 @@
 @inject NavigationManager navManager
 
 
-<h3>Категории товаров</h3>
-
 @if (_productTypes is not null)
 {
     <div class="row g-1 align-items-start">
@@ -17,7 +15,7 @@
         {
             <a class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2" href="@($"ProductType/{productType.Id}")">
                 <div class="category-item d-flex justify-content-center align-items-center overflow-hidden">
-                    <h5>@productType.Name</h5>
+                    <h5 class="text-center mt-1">@productType.Name</h5>
                 </div>
             </a>
         }
