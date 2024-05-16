@@ -7,6 +7,8 @@ namespace Application.Common.Interfaces
     {
         Task<Result<List<TypeProperty>>> GetAllTypeProperties();
 
+        Task<Result<TypeProperty>> GetPropertyById(long propertyId);
+
         Task<Result<List<TypeProperty>>> GetPropertiesByTypeId(long typeId);
 
         Task<Result> AddProperty(TypeProperty property);

@@ -5,8 +5,10 @@
 
 <h3>Продукты</h3>
 
-<QuickGrid Items="_products">
+<QuickGrid Items="_products" Class="table table-striped">
     <PropertyColumn Property="@(p => p.Id)"></PropertyColumn>
+
+    <PropertyColumn Property="@(p => p.TypeId)" Title="Тип товара"></PropertyColumn>
 
     <PropertyColumn Property="@(p => p.Name)" Title="Наименование" Sortable="true"></PropertyColumn>
 

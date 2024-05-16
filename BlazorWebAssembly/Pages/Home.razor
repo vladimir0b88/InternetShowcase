@@ -1,7 +1,50 @@
 ﻿@page "/"
+<PageTitle>Каталог</PageTitle>
 
-<PageTitle>Home</PageTitle>
+@inject IProductTypeService productTypeService
+@inject IProductService productService
+@inject ITypePropertyService typePropertyService
+@inject NavigationManager navManager
 
-<h1>Hello, world!</h1>
 
-Welcome to your new app.
+<h3>Категории товаров</h3>
+
+@if (_productTypes is not null)
+{
+    <div class="row g-1 align-items-start">
+
+        @foreach (ProductType productType in _productTypes)
+        {
+            <a class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2" href="@($"ProductType/{productType.Id}")">
+                <div class="category-item d-flex justify-content-center align-items-center overflow-hidden">
+                    <h5>@productType.Name</h5>
+                </div>
+            </a>
+        }
+    </div>
+}
+
+@code {
+    private List<ProductType>? _productTypes = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetProductTypes();
+    }
+
+    async Task GetProductTypes()
+    {
+        var result = await productTypeService.GetAllProductTypes();
+
+        switch (result)
+        {
+            case SuccessResult<List<ProductType>> successResult:
+                _productTypes = successResult.Data;
+                break;
+
+            case ErrorResult<List<ProductType>> errorResult:
+                _productTypes = null;
+                break;
+        }
+    }
+}

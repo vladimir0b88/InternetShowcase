@@ -26,6 +26,20 @@ namespace API.Controllers
             };
         }
 
+        [HttpGet("{propertyId}")]
+        public async Task<IActionResult> GetPropertyById(long propertyId)
+        {
+            var result = await propertyService.GetPropertyById(propertyId);
+
+            return result switch
+            {
+                SuccessResult<TypeProperty> => Ok(result),
+                NotFoundErrorResult<TypeProperty> => NotFound(result),
+                ErrorResult<TypeProperty> => BadRequest(result),
+                _ => throw new ApplicationException()
+            };
+        }
+
         [HttpGet("ProductType/{id}")]
         public async Task<IActionResult> GetPropertiesByProductTypeId(long id)
         {
@@ -61,7 +75,7 @@ namespace API.Controllers
 
             return result switch
             {
-                SuccessResult => Ok(),
+                SuccessResult => Ok(result),
                 ValidationErrorResult => StatusCode(422, result),
                 ErrorResult errorResult => BadRequest(errorResult),
                 _ => throw new ApplicationException()
@@ -75,7 +89,7 @@ namespace API.Controllers
 
             return result switch
             {
-                SuccessResult => Ok(),
+                SuccessResult => Ok(result),
                 NotFoundErrorResult => NotFound(result),
                 ErrorResult => BadRequest(result),
                 _ => throw new ApplicationException()

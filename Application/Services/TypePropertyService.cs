@@ -73,5 +73,12 @@ namespace Application.Services
 
             return result;
         }
+
+        public async Task<Result<TypeProperty>> GetPropertyById(long propertyId)
+        {
+            var result = await repository.GetPropertyById(propertyId);
+
+            return result;
+        }
     }
 }

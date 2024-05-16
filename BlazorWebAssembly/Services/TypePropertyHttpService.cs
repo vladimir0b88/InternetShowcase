@@ -73,5 +73,14 @@ namespace BlazorWebAssembly.Services
 
             return result;
         }
+
+        public async Task<Result<TypeProperty>> GetPropertyById(long propertyId)
+        {
+            var response = await httpClient.GetAsync($"{_controllerUri}/{propertyId}");
+
+            var result = await HttpResponseHandler.GetResult<TypeProperty>(response);
+
+            return result;
+        }
     }
 }

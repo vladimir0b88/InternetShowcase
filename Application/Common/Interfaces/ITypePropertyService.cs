@@ -11,6 +11,8 @@ namespace Application.Common.Interfaces
 
         Task<Result<List<TypeProperty>>> GetPropertiesByProductTypeId(long typeId);
 
+        Task<Result<TypeProperty>> GetPropertyById(long propertyId);
+
         Task<Result> AddProperty(TypePropertyCreateDto createDto);
 
         Task<Result> DeleteProperty(long propertyId);

@@ -74,13 +74,25 @@ namespace Persistence.Repositories
             return new SuccessResult<List<TypeProperty>>(list);
         }
 
+        public async Task<Result<TypeProperty>> GetPropertyById(long propertyId)
+        {
+            TypeProperty? typeProperty = await context.TypeProperties.AsNoTracking()
+                                                                     .FirstOrDefaultAsync (tp => tp.Id == propertyId);
+
+            if(typeProperty is null)
+                return new NotFoundErrorResult<TypeProperty>(message: $"Свойство с id: {propertyId} не найден",
+                                                             errors: [ErrorList.NotFound]);
+
+            return new SuccessResult<TypeProperty>(typeProperty);
+        }
+
         public async Task<Result> UpdateProperty(TypeProperty property)
         {
             if(property is null)
                 return new ErrorResult(message: "Свойство типа продукта для изменения не может быть пустым",
                                        errors: [ErrorList.IsNull]);
 
-            TypeProperty? modifyingProperty = await context.TypeProperties.FirstOrDefaultAsync(p => p.Id ==  property.Id);
+            TypeProperty? modifyingProperty = await context.TypeProperties.FirstOrDefaultAsync(p => p.Id == property.Id);
 
             if(modifyingProperty is null)
                 return new NotFoundErrorResult(message: $"Свойство типа товара для изменения с id: {property.Id} не было найдено",
@@ -88,7 +100,7 @@ namespace Persistence.Repositories
 
             modifyingProperty.Name = property.Name;
 
-            context.Update(property);
+            context.Update(modifyingProperty);
             await context.SaveChangesAsync();
 
             return new SuccessResult();

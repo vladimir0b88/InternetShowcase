@@ -101,3 +101,25 @@ a, .btn-link {
 code {
     color: #c02d76;
 }
+
+.category-item {
+    margin: 5px;
+    padding: 5px;
+    min-height: 70px;
+    max-height: 70px;
+    background: #cdcdcd;
+    border-radius: 10px;
+    color: #3b3b3b;
+    box-shadow: darkgray 3px 3px;
+}
+
+
+    .category-item:hover {
+        color: darkgreen;
+        background: lightgreen;
+        box-shadow: green 3px 3px;
+    }
+
+a {
+    text-decoration: none;
+}

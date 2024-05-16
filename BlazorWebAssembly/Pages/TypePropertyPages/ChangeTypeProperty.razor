@@ -1,0 +1,82 @@
+﻿@page "/ChangeTypeProperty/{productTypeId:long}/{propertyId:long}"
+
+<PageTitle>Изменение свойства</PageTitle>
+
+@inject ITypePropertyService typePropertyService
+@inject NavigationManager navManager
+
+<h3>Изменение свойства</h3>
+
+@if(errorMessage is not null)
+{
+    <h3>@errorMessage</h3>
+}
+
+<EditForm Model="_updateDto" OnValidSubmit="Submit">
+
+    <FluentValidationValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+
+        <label class="col-form-label">Название свойства</label>
+        <div class="col-md-2">
+            <InputText @bind-Value="@_updateDto.Name" class="form-control"></InputText>
+        </div>
+
+        <div class="col-md-2 mt-2">
+            <Button Type="ButtonType.Submit" Color="ButtonColor.Success">Изменить</Button>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public long ProductTypeId{ get; set; }
+
+    [Parameter]
+    public long PropertyId{ get; set; }
+
+    private TypePropertyUpdateDto _updateDto = new();
+    private string? errorMessage = null;
+
+    async Task Submit()
+    {
+        var result = await typePropertyService.UpdateProperty(_updateDto);
+
+        if(result is ErrorResult errorResult)
+        {
+            errorMessage = errorResult.Message;
+            return;
+        }
+
+        navManager.NavigateTo($"ProductType/{ProductTypeId}");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetUpdateDto();
+    }
+
+    async Task GetUpdateDto()
+    {
+        var result = await typePropertyService.GetPropertyById(PropertyId);
+
+        switch (result)
+        {
+            case SuccessResult<TypeProperty> successResult:
+                TypeProperty typeProperty = successResult.Data!;
+                _updateDto = new TypePropertyUpdateDto()
+                    {
+                        Id = typeProperty.Id,
+                        Name = typeProperty.Name,
+                    };
+                errorMessage = null;
+                break;
+
+            case ErrorResult<TypeProperty> errorResult:
+                errorMessage = errorResult.Message;
+                break;
+        }
+    }
+}

@@ -22,7 +22,7 @@
 
 @if (_allProductTypes is not null)
 {
-    <QuickGrid Items="@_allProductTypes">
+    <QuickGrid Items="@_allProductTypes" Class="table table-striped">
 
         <PropertyColumn Property="@(pt => pt.Id)" />
 
