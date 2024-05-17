@@ -1,0 +1,63 @@
+﻿@page "/Product/{productId:long}"
+<PageTitle>Просмотр продукта</PageTitle>
+
+@inject IProductService productService
+@inject NavigationManager navManager
+
+@if(_product is not null)
+{
+    <h3>Наименование: @_product.Name</h3>
+
+    <p class="fs-4">Тип продукта: @_product.Type?.Name</p>
+
+    <p class="fs-3">Стоимость: @_product.Cost</p>
+
+    <h4>Описание</h4>
+    <p class="fs-6 text-break text-wrap">@_product.Description</p>
+    
+
+    <table class="w-auto table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Характеристика</th>
+                <th>Значение</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(PropertyValue propertyValue in _product.PropertyValues)
+            {
+                <tr>
+                    <td>@propertyValue.TypeProperty.Name</td>
+                    <td>@propertyValue.Value</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    [Parameter]
+    public long ProductId { get; set; }
+
+    private Product? _product = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetProduct();
+    }
+
+    async Task GetProduct()
+    {
+        var result = await productService.GetProductById(ProductId);
+
+        switch (result)
+        {
+            case SuccessResult<Product> successResult:
+                _product = successResult.Data;
+                break;
+
+            case ErrorResult<Product> errorResult:
+                break;
+        }
+    }
+}

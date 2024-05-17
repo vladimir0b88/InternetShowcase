@@ -7,7 +7,7 @@ namespace BlazorWebAssembly.Validators.ProductTypes
     {
         public ProductTypeCreateDtoClientValidator()
         {
-            RuleFor(pt => pt.Name).NotEmpty().MaximumLength(64);
+            RuleFor(pt => pt.Name).NotEmpty().MaximumLength(30);
         }
     }
 }

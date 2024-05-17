@@ -9,7 +9,7 @@ namespace BlazorWebAssembly.Validators.PropertyValues
         {
             RuleFor(pv => pv.Id).NotEmpty();
 
-            RuleFor(pv => pv.Value).MaximumLength(64);
+            RuleFor(pv => pv.Value).MaximumLength(30);
         }
     }
 }

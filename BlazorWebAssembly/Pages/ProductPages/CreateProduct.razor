@@ -16,9 +16,9 @@
 
         <div class="form-group">
 
-            <label class="col-form-label">Название</label>
+            <label class="col-form-label">Тип товара</label>
             <div class="col-md-2">
-                <p class="form-control">@_productType.Name</p>
+                <input class="form-control" placeholder="@_productType.Name" disabled>
             </div>
 
             <label class="col-form-label">Название</label>
@@ -62,7 +62,7 @@
 
     private string? _errorMessage = null;
 
-    protected override async void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         await GetProductType();
     }

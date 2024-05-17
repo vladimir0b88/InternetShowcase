@@ -7,7 +7,7 @@ namespace BlazorWebAssembly.Validators.TypeProperties
     {
         public TypePropertyCreateDtoClientValidator()
         {
-            RuleFor(tp => tp.Name).NotEmpty().MaximumLength(64);
+            RuleFor(tp => tp.Name).NotEmpty().MaximumLength(30);
         }
     }
 }

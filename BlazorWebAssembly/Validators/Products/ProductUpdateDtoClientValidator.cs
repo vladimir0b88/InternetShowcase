@@ -9,7 +9,7 @@ namespace BlazorWebAssembly.Validators.Products
         {
             RuleFor(p => p.Id).NotEmpty();
 
-            RuleFor(p => p.Name).NotEmpty().MaximumLength(64);
+            RuleFor(p => p.Name).NotEmpty().MaximumLength(30);
 
             RuleFor(p => p.Description).NotEmpty().MaximumLength(512);
 
