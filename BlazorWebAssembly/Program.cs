@@ -1,3 +1,4 @@
+global using Microsoft.AspNetCore.Components.Authorization;
 using Application.Common.Interfaces;
 using Application.Models.Products.Create;
 using Application.Models.Products.Update;
@@ -7,6 +8,7 @@ using Application.Models.PropertyValues.Update;
 using Application.Models.TypeProperties.Create;
 using Application.Models.TypeProperties.Update;
 using BlazorWebAssembly;
+using BlazorWebAssembly.Common;
 using BlazorWebAssembly.Services;
 using BlazorWebAssembly.Validators.Products;
 using BlazorWebAssembly.Validators.ProductTypes;
@@ -27,6 +29,8 @@ builder.Services.AddScoped(sp => new HttpClient
 {
     BaseAddress = new Uri("http://localhost:5297")
 });
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
+builder.Services.AddAuthorizationCore();
 
 
 #region Services
