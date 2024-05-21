@@ -6,6 +6,7 @@ using Application.Models.ProductTypes.Update;
 using Application.Models.PropertyValues.Update;
 using Application.Models.TypeProperties.Create;
 using Application.Models.TypeProperties.Update;
+using Application.Models.Users.Register;
 using Application.Services;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,11 +18,13 @@ namespace Application
         public static IServiceCollection AddApplication(
             this IServiceCollection services)
         {
+            
             #region Services
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IProductTypeService, ProductTypeService>();
             services.AddScoped<ITypePropertyService, TypePropertyService>();
             services.AddScoped<IPropertyValueService, PropertyValueService>();
+            services.AddScoped<IUserService, UserService>();
 
             #endregion
 
@@ -41,6 +44,9 @@ namespace Application
 
             // PropertyValue
             services.AddScoped<IValidator<PropertyValueUpdateDto>, PropertyValueUpdateDtoValidator>();
+
+            // User
+            services.AddScoped<IValidator<UserRegisterDto>, UserRegisterDtoValidator>();
 
             #endregion
 

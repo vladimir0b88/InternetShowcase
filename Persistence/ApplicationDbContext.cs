@@ -9,6 +9,8 @@ namespace Persistence
         public DbSet<ProductType> ProductTypes { get; set; }
         public DbSet<Product> Products { get; set; }
 
+        public DbSet<User> Users { get; set; }
+
         public DbSet<TypeProperty> TypeProperties { get; set; }
 
         public DbSet<PropertyValue> PropertyValues { get; set; }

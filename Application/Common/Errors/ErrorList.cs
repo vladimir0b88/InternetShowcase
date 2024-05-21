@@ -19,5 +19,9 @@ namespace Application
         public static readonly Error ServerUnavailable = new Error(
             code: nameof(ServerUnavailable),
             description: "Ответ от сервера не получен");
+
+        public static readonly Error AuthError = new Error(
+            code: nameof(AuthError),
+            description: "Ошибка аутентификации");
     }
 }
