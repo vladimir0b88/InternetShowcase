@@ -30,13 +30,16 @@ namespace API.Controllers
         {
             var result = await userService.Login(loginDto);
 
+            if (result is SuccessResult<string> successResult)
+                Response.Cookies.Append("jwt-token", successResult.Data);
+            
             return result switch
             {
                 SuccessResult<string> => Ok(result),
                 ValidationErrorResult<string> => StatusCode(422, result),
                 ErrorResult<string> => BadRequest(result),
                 _ => throw new ApplicationException()
-            };
+            }; ;
         }
     }
 }
