@@ -77,7 +77,7 @@ namespace API.Controllers
             {
                 SuccessResult => Ok(result),
                 ValidationErrorResult => StatusCode(422, result),
-                ErrorResult errorResult => BadRequest(errorResult),
+                ErrorResult  => BadRequest(result),
                 _ => throw new ApplicationException()
             };
         }

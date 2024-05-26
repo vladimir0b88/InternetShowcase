@@ -52,6 +52,7 @@ builder.Services.AddScoped<IValidator<TypePropertyUpdateDto>, TypePropertyUpdate
 
 // PropertyValue
 builder.Services.AddScoped<IValidator<PropertyValueUpdateDto>, PropertyValueUpdateDtoClientValidator>();
+builder.Services.AddScoped<IValidator<PropertyValueUpdateDtoList>, PropertyValueUpdateDtoListClientValidator>();
 
 #endregion
 

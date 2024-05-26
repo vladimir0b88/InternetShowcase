@@ -8,7 +8,8 @@ using FluentValidation;
 namespace Application.Services
 {
     public class PropertyValueService(IPropertyValueRepository repository,
-                                      IValidator<PropertyValueUpdateDto> updateValidator) : IPropertyValueService
+                                      IValidator<PropertyValueUpdateDto> updateValidator,
+                                      IValidator<PropertyValueUpdateDtoList> listUpdateValidator) : IPropertyValueService
     {
         public async Task<Result<List<PropertyValue>>> GetAllPropertyValues()
         {
@@ -40,6 +41,34 @@ namespace Application.Services
             };
 
             var result = await repository.UpdatePropertyValue(propertyValue);
+
+            return result;
+        }
+
+        public async Task<Result> UpdatePropertyValueList(PropertyValueUpdateDtoList updateDtoList)
+        {
+            var validationResult = await listUpdateValidator.ValidateAsync(updateDtoList);
+
+            if(!validationResult.IsValid)
+                return new ValidationErrorResult(message: "Значение характеристик товара не прошли валидацию",
+                                                 errors: [ErrorList.FailedValidation],
+                                                 validationErrors: validationResult.Errors);
+
+            Result result = new SuccessResult();
+
+            foreach (var updateDto in updateDtoList.List)
+            {
+                PropertyValue propertyValue = new()
+                {
+                    Id = updateDto.Id,
+                    Value = updateDto.Value,
+                };
+
+                var tempResult = await repository.UpdatePropertyValue(propertyValue);
+
+                if (tempResult is ErrorResult errorResult)
+                    result = errorResult;
+            }
 
             return result;
         }

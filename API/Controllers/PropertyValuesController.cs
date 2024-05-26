@@ -45,12 +45,28 @@ namespace API.Controllers
 
             return result switch
             {
-                SuccessResult => Ok(),
+                SuccessResult => Ok(result),
                 ValidationErrorResult => StatusCode(422, result),
                 NotFoundErrorResult => NotFound(result),
-                ErrorResult errorResult => BadRequest(errorResult),
+                ErrorResult => BadRequest(result),
                 _ => throw new ApplicationException()
             };
         }
+
+        [HttpPut("List")]
+        public async Task<IActionResult> UpdatePropertyValueList([FromBody] PropertyValueUpdateDtoList updateDtoList)
+        {
+            var result = await propertyValueService.UpdatePropertyValueList(updateDtoList);
+
+            return result switch
+            {
+                SuccessResult => Ok(result),
+                ValidationErrorResult => StatusCode(422, result),
+                NotFoundErrorResult => NotFound(result),
+                ErrorResult => BadRequest(result),
+                _ => throw new ApplicationException()
+            };
+        }
+
     }
 }

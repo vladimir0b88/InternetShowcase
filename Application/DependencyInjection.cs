@@ -41,7 +41,7 @@ namespace Application
 
             // PropertyValue
             services.AddScoped<IValidator<PropertyValueUpdateDto>, PropertyValueUpdateDtoValidator>();
-
+            services.AddScoped<IValidator<PropertyValueUpdateDtoList>, PropertyValueUpdateDtoListValidator>();
             #endregion
 
             return services;

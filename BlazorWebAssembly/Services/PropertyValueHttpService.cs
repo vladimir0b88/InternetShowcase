@@ -11,7 +11,8 @@ using System.Net.Http.Json;
 namespace BlazorWebAssembly.Services
 {
     public class PropertyValueHttpService(HttpClient httpClient,
-                                          IValidator<PropertyValueUpdateDto> updateValidator) : IPropertyValueService
+                                          IValidator<PropertyValueUpdateDto> updateValidator,
+                                          IValidator<PropertyValueUpdateDtoList> updateListValidator) : IPropertyValueService
     {
         private const string _controllerUri = "api/PropertyValues";
 
@@ -43,6 +44,22 @@ namespace BlazorWebAssembly.Services
                                                  validationErrors: validationResult.Errors);
 
             var response = await httpClient.PutAsJsonAsync(_controllerUri, updateDto);
+
+            var result = await HttpResponseHandler.GetResult(response);
+
+            return result;
+        }
+
+        public async Task<Result> UpdatePropertyValueList(PropertyValueUpdateDtoList updateDtoList)
+        {
+            var validationResult = await updateListValidator.ValidateAsync(updateDtoList);
+
+            if (!validationResult.IsValid)
+                return new ValidationErrorResult(message: "Значения свойств товара для изменения не прошли валидацию",
+                                                 errors: [ErrorList.FailedValidation],
+                                                 validationErrors: validationResult.Errors);
+
+            var response = await httpClient.PutAsJsonAsync($"{_controllerUri}/List", updateDtoList);
 
             var result = await HttpResponseHandler.GetResult(response);
 

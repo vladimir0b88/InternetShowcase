@@ -9,5 +9,7 @@ namespace Application.Common.Interfaces
         Task<Result<List<PropertyValue>>> GetAllPropertyValues();
         Task<Result<List<PropertyValue>>> GetPropertyValuesByProductId(long productId);
         Task<Result> UpdatePropertyValue(PropertyValueUpdateDto updateDto);
+
+        Task<Result> UpdatePropertyValueList(PropertyValueUpdateDtoList updateDtoList);
     }
 }
