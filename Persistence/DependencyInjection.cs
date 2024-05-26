@@ -25,6 +25,7 @@ namespace Persistence
             services.AddScoped<ITypePropertyRepository, TypePropertyRepository>();
             services.AddScoped<IPropertyValueRepository, PropertyValueRepository>();
 
+            services.AddScoped<IUserRepository, UserRepository>();
 
             return services;
         }

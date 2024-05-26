@@ -3,13 +3,26 @@
 
 @inject IProductTypeService productTypeService
 
-<h3>Типы товаров</h3>
 
-<QuickGrid Items="_productTypes" Class="w-auto table table-striped table-bordered">
-    <PropertyColumn Property="@(p => p.Id)"></PropertyColumn>
+<AuthorizeView Roles="Administrator">
+    <NotAuthorized>
+        <h1>Бро, надо авторизироваться</h1>
+    </NotAuthorized>
+    <Authorized>
+        <h1>Авторизован как: @context.User.Identity?.Name</h1>
+        <h3>Типы товаров</h3>
 
-    <PropertyColumn Property="@(p => p.Name)" Title="Наименование" Sortable="true"></PropertyColumn>
-</QuickGrid>
+        <QuickGrid Items="_productTypes" Class="w-auto table table-striped table-bordered">
+            <PropertyColumn Property="@(p => p.Id)"></PropertyColumn>
+
+            <PropertyColumn Property="@(p => p.Name)" Title="Наименование" Sortable="true"></PropertyColumn>
+        </QuickGrid>
+    </Authorized>
+
+</AuthorizeView>
+
+
+
 
 @code {
     private IQueryable<ProductType>? _productTypes = null;

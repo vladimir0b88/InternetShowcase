@@ -1,6 +1,8 @@
 ﻿@page "/ProductsTable"
 <PageTitle>Таблица продуктов</PageTitle>
 
+@attribute [Authorize(Roles ="Administrator")]
+
 @inject IProductService productService
 
 <h3>Продукты</h3>
