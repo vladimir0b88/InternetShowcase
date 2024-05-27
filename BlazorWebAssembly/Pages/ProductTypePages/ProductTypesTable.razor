@@ -4,7 +4,7 @@
 @inject IProductTypeService productTypeService
 
 
-<AuthorizeView Roles="Administrator">
+@* <AuthorizeView Roles="Administrator">
     <NotAuthorized>
         <h1>Бро, надо авторизироваться</h1>
     </NotAuthorized>
@@ -19,8 +19,14 @@
         </QuickGrid>
     </Authorized>
 
-</AuthorizeView>
+</AuthorizeView> *@
 
+
+<QuickGrid Items="_productTypes" Class="w-auto table table-striped table-bordered">
+    <PropertyColumn Property="@(p => p.Id)"></PropertyColumn>
+
+    <PropertyColumn Property="@(p => p.Name)" Title="Наименование" Sortable="true"></PropertyColumn>
+</QuickGrid>
 
 
 
