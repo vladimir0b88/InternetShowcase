@@ -9,23 +9,30 @@ using FluentValidation;
 namespace Application.Services
 {
     internal class UserService(IUserRepository repository,
-                               IPasswordHashService passwordHashService,
+                               IPasswordHashService passHashService,
                                IJwtService jwtService,
                                IValidator<UserRegisterDto> createValidator) : IUserService
     {
+        public async Task<Result<List<User>>> GetAllUsers()
+        {
+            var result = await repository.GetAll();
+
+            return result;
+        }
+
         public async Task<Result<string>> Login(UserLoginDto loginDto)
         {
-            var userResult = await repository.GetByEmail(loginDto.Email);
+            var searchResult = await repository.GetByEmail(loginDto.Email);
 
-            if (userResult is ErrorResult<User> errorResult)
+            if (searchResult is ErrorResult<User> errorResult)
                 return new ErrorResult<string>(message: errorResult.Message,
                                                errors: errorResult.Errors);
 
-            User user = userResult.Data;
+            User user = searchResult.Data;
 
-            var isCorrectPassword = passwordHashService.Verify(loginDto.Password, user.PasswordHash);
+            var isCorrectPass = passHashService.Verify(loginDto.Password, user.PasswordHash);
 
-            if (isCorrectPassword == false)
+            if (isCorrectPass == false)
                 return new ErrorResult<string>(message: "Неправильный пароль",
                                                errors: [ErrorList.AuthError]);
 
@@ -47,7 +54,7 @@ namespace Application.Services
             {
                 UserName = createDto.UserName,
                 Email = createDto.Email,
-                PasswordHash = passwordHashService.Generate(createDto.Password),
+                PasswordHash = passHashService.Generate(createDto.Password),
             };
 
             var result = await repository.AddUser(user);

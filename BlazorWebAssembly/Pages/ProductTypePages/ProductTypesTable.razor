@@ -4,12 +4,12 @@
 @inject IProductTypeService productTypeService
 
 
-@* <AuthorizeView Roles="Administrator">
+<AuthorizeView>
     <NotAuthorized>
-        <h1>Бро, надо авторизироваться</h1>
+        <h1>Бро, надо авторизироваться @context.User.Claims.FirstOrDefault()?.Value</h1>
     </NotAuthorized>
     <Authorized>
-        <h1>Авторизован как: @context.User.Identity?.Name</h1>
+        <h1>Авторизован как: @context.User.Claims.FirstOrDefault(c => c.ValueType == "userName")!.Value</h1>
         <h3>Типы товаров</h3>
 
         <QuickGrid Items="_productTypes" Class="w-auto table table-striped table-bordered">
@@ -19,14 +19,9 @@
         </QuickGrid>
     </Authorized>
 
-</AuthorizeView> *@
+</AuthorizeView>
 
 
-<QuickGrid Items="_productTypes" Class="w-auto table table-striped table-bordered">
-    <PropertyColumn Property="@(p => p.Id)"></PropertyColumn>
-
-    <PropertyColumn Property="@(p => p.Name)" Title="Наименование" Sortable="true"></PropertyColumn>
-</QuickGrid>
 
 
 

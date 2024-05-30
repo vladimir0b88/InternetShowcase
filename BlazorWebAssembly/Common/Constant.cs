@@ -2,6 +2,6 @@
 {
     public static class Constant
     {
-        public static string JwtToken = string.Empty;
+        public static string JwtToken { get; set; } = "";
     }
 }

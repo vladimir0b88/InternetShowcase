@@ -9,32 +9,39 @@ namespace API
     public static class ApiExtensions
     {
         public static void AddApiAuthentication(this IServiceCollection services,
-            IConfiguration configuration)
+                                                     IConfiguration configuration)
         {
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+            {
+                var jwtOptions = configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>();
+
+                options.TokenValidationParameters = new TokenValidationParameters()
                 {
-                    var jwtOptions = configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>();
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidateLifetime = true,
 
-                    options.TokenValidationParameters = new TokenValidationParameters()
+                    ValidIssuer = jwtOptions!.Issuer,
+                    ValidAudience = jwtOptions!.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions!.SecretKey))
+                };
+
+                options.Events = new JwtBearerEvents()
+                {
+                    OnMessageReceived = context =>
                     {
-                        ValidateIssuer = false,
-                        ValidateAudience = false,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions!.SecretKey))
-                    };
+                        context.Token = context.Request.Cookies["jwt-token"];
 
-                    options.Events = new JwtBearerEvents()
-                    {
-                        OnMessageReceived = context =>
-                        {
-                            context.Token = context.Request.Cookies["jwt-token"];
-
-                            return Task.CompletedTask;
-                        },
-                    };
-                });
+                        return Task.CompletedTask;
+                    },
+                };
+            });
 
             services.AddAuthorization();
         }

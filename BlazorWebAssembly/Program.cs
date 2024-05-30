@@ -7,6 +7,7 @@ using Application.Models.ProductTypes.Update;
 using Application.Models.PropertyValues.Update;
 using Application.Models.TypeProperties.Create;
 using Application.Models.TypeProperties.Update;
+using Application.Models.Users.Register;
 using BlazorWebAssembly;
 using BlazorWebAssembly.Common;
 using BlazorWebAssembly.Services;
@@ -25,7 +26,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddBlazorBootstrap();
 
-builder.Services.AddScoped(sp => new HttpClient 
+builder.Services.AddScoped(sp => new HttpClient
 {
     BaseAddress = new Uri("http://localhost:5297")
 });
@@ -38,13 +39,14 @@ builder.Services.AddScoped<IProductService, ProductHttpService>();
 builder.Services.AddScoped<IProductTypeService, ProductTypeHttpService>();
 builder.Services.AddScoped<ITypePropertyService, TypePropertyHttpService>();
 builder.Services.AddScoped<IPropertyValueService, PropertyValueHttpService>();
+builder.Services.AddScoped<IUserService, UserHttpService>();
 
 #endregion
 
 #region Validators
 // Product
-builder.Services.AddScoped<IValidator<ProductCreateDto>,ProductCreateDtoClientValidator>();
-builder.Services.AddScoped<IValidator<ProductUpdateDto>,ProductUpdateDtoClientValidator>();
+builder.Services.AddScoped<IValidator<ProductCreateDto>, ProductCreateDtoClientValidator>();
+builder.Services.AddScoped<IValidator<ProductUpdateDto>, ProductUpdateDtoClientValidator>();
 
 // ProductType
 builder.Services.AddScoped<IValidator<ProductTypeCreateDto>, ProductTypeCreateDtoClientValidator>();
@@ -57,6 +59,10 @@ builder.Services.AddScoped<IValidator<TypePropertyUpdateDto>, TypePropertyUpdate
 // PropertyValue
 builder.Services.AddScoped<IValidator<PropertyValueUpdateDto>, PropertyValueUpdateDtoClientValidator>();
 builder.Services.AddScoped<IValidator<PropertyValueUpdateDtoList>, PropertyValueUpdateDtoListClientValidator>();
+
+// User
+builder.Services.AddScoped<IValidator<UserRegisterDto>, UserRegisterDtoValidator>();
+
 
 #endregion
 

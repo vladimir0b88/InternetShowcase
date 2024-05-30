@@ -2,10 +2,6 @@ using Application;
 using Persistence;
 using Infrastructure;
 using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Microsoft.Extensions.Options;
 using API;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,7 +30,6 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddApplication();
 builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration);
-
 builder.Services.AddApiAuthentication(builder.Configuration);
 
 var app = builder.Build();
@@ -48,7 +43,6 @@ if (app.Environment.IsDevelopment())
 app.UseCors(builder => builder.AllowAnyOrigin()
                               .AllowAnyMethod()
                               .AllowAnyHeader());
-
 
 app.UseAuthentication();
 app.UseAuthorization();

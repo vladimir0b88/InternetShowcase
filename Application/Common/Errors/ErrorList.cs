@@ -23,5 +23,9 @@ namespace Application
         public static readonly Error AuthError = new Error(
             code: nameof(AuthError),
             description: "Ошибка аутентификации");
+
+        public static readonly Error EntityAlreadyExist = new Error(
+            code: nameof(EntityAlreadyExist),
+            description: "Сущность уже существует");
     }
 }

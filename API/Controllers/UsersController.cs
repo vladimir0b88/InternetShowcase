@@ -3,14 +3,28 @@ using Application.Common.Interfaces;
 using Application.Common.Models;
 using Application.Models.Users.Login;
 using Application.Models.Users.Register;
+using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UserController (IUserService userService): ControllerBase
+    public class UsersController (IUserService userService): ControllerBase
     {
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var result = await userService.GetAllUsers();
+
+            return result switch
+            {
+                SuccessResult<List<User>> => Ok(result),
+                ErrorResult<List<User>> => BadRequest(result),
+                _ => throw new ApplicationException()
+            };
+        }
+
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] UserRegisterDto registerDto)
         {
