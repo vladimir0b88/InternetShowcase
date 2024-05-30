@@ -1,4 +1,4 @@
-﻿
+﻿using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
 using System.Text.Json;
 
@@ -6,23 +6,38 @@ namespace BlazorWebAssembly.Common
 {
     public class CustomAuthStateProvider : AuthenticationStateProvider
     {
+        private readonly ClaimsPrincipal _anonymous = new ClaimsPrincipal(new ClaimsIdentity());
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            string token = "token";
+            AuthenticationState state;
 
+            if(string.IsNullOrEmpty(Constant.JwtToken))
+            {
+                state = new AuthenticationState(_anonymous);
 
-            // Пустой пользователь
-            var identity = new ClaimsIdentity();
+                NotifyAuthenticationStateChanged(Task.FromResult(state));
 
-            // Нормальный пользователь
-            // var identity = new ClaimsIdentity(ParseClaimsFromJWT(token), "jwt");
+                return state;
+            }
 
-            var user = new ClaimsPrincipal(identity);
-            var state = new AuthenticationState(user);
+            //var getUserClaims = DecryptToken(Constant.JwtToken);
 
-            NotifyAuthenticationStateChanged(Task.FromResult(state));
+            //if(getUserClaims is null)
+            //{
+            //    state = new AuthenticationState(_anonymous);
 
-            return state;
+            //    NotifyAuthenticationStateChanged(Task.FromResult(state));
+
+            //    return state;
+            //}
+
+            //var claimsPrincipal = SetClaimPrincipal(getUserClaims);
+
+            //state = new AuthenticationState(claimsPrincipal);
+
+            //return state;
+
+            return new AuthenticationState(_anonymous);
         }
 
 
