@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors();
 
 builder.Services.AddControllers()
-                .AddJsonOptions(x => 
+                .AddJsonOptions(x =>
                 {
                     x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
                     x.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
@@ -25,10 +25,14 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddApplication();
 builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration);
+
 builder.Services.AddApiAuthentication(builder.Configuration);
+builder.Services.AddAuthorization();
+
+
+
 
 var app = builder.Build();
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
