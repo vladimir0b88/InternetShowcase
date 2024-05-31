@@ -1,4 +1,4 @@
-﻿namespace Application.Models.ProductTypes.Update
+﻿namespace Application.Models
 {
     public class ProductTypeUpdateDto
     {

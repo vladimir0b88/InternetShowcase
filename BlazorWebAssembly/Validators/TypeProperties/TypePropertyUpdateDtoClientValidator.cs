@@ -1,7 +1,7 @@
-﻿using Application.Models.TypeProperties.Update;
+﻿using Application.Models;
 using FluentValidation;
 
-namespace BlazorWebAssembly.Validators.TypeProperties
+namespace BlazorWebAssembly.Validators
 {
     public class TypePropertyUpdateDtoClientValidator : AbstractValidator<TypePropertyUpdateDto>
     {

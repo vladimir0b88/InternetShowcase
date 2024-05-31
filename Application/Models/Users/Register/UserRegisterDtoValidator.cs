@@ -1,7 +1,7 @@
 ﻿
 using FluentValidation;
 
-namespace Application.Models.Users.Register
+namespace Application.Models
 {
     public class UserRegisterDtoValidator : AbstractValidator<UserRegisterDto>
     {

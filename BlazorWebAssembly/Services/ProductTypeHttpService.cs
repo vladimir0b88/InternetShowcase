@@ -1,9 +1,5 @@
-﻿using Application;
-using Application.Common.Errors;
-using Application.Common.Interfaces;
-using Application.Common.Models;
-using Application.Models.ProductTypes.Create;
-using Application.Models.ProductTypes.Update;
+﻿using Application.Common;
+using Application.Models;
 using BlazorWebAssembly.Common;
 using Domain.Entities;
 using FluentValidation;

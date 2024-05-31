@@ -1,7 +1,7 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Common;
 using FluentValidation;
 
-namespace Application.Models.TypeProperties.Create
+namespace Application.Models
 {
     public class TypePropertyCreateDtoValidator : AbstractValidator<TypePropertyCreateDto>
     {

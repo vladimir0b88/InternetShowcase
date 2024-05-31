@@ -1,8 +1,7 @@
-﻿using Application.Common.Models;
-using Application.Models.PropertyValues.Update;
+﻿using Application.Models;
 using Domain.Entities;
 
-namespace Application.Common.Interfaces
+namespace Application.Common
 {
     public interface IPropertyValueService
     {

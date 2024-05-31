@@ -1,7 +1,4 @@
-﻿using Application;
-using Application.Common.Errors;
-using Application.Common.Interfaces;
-using Application.Common.Models;
+﻿using Application.Common;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 

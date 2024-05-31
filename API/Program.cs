@@ -14,14 +14,9 @@ builder.Services.AddControllers()
                 {
                     x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
                     x.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+                    x.JsonSerializerOptions.IncludeFields = true;
+                    x.JsonSerializerOptions.WriteIndented = true;
                 });
-
-builder.Services.ConfigureHttpJsonOptions(x =>
-{
-    x.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-    x.SerializerOptions.IncludeFields = true;
-    x.SerializerOptions.WriteIndented = true;
-});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

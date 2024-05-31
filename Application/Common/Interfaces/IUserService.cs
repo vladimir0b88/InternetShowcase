@@ -1,9 +1,7 @@
-﻿using Application.Common.Models;
-using Application.Models.Users.Login;
-using Application.Models.Users.Register;
+﻿using Application.Models;
 using Domain.Entities;
 
-namespace Application.Common.Interfaces
+namespace Application.Common
 {
     public interface IUserService
     {

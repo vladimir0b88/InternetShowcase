@@ -1,7 +1,7 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Common;
 using FluentValidation;
 
-namespace Application.Models.Products.Update
+namespace Application.Models
 {
     public class ProductUpdateDtoValidator : AbstractValidator<ProductUpdateDto>
     {

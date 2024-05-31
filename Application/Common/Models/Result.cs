@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace Application.Common.Models
+namespace Application.Common
 {
 
 

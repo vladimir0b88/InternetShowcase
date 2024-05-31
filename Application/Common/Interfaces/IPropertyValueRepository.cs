@@ -1,8 +1,6 @@
-﻿
-using Application.Common.Models;
-using Domain.Entities;
+﻿using Domain.Entities;
 
-namespace Application.Common.Interfaces
+namespace Application.Common
 {
     public interface IPropertyValueRepository
     {

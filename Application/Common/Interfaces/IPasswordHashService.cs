@@ -1,5 +1,5 @@
 ﻿
-namespace Application.Common.Interfaces
+namespace Application.Common
 {
     public interface IPasswordHashService
     {

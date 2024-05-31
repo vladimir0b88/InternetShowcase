@@ -1,7 +1,7 @@
-﻿using Application.Common.Models;
+﻿using Application.Common;
 using System.Text.Json.Serialization;
 
-namespace Application.Common.Errors
+namespace Application.Common
 {
     public class NotFoundErrorResult : ErrorResult
     {

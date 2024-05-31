@@ -1,6 +1,4 @@
-﻿using Application.Common.Models;
-
-namespace Application
+﻿namespace Application.Common
 {
     public class ErrorList
     {

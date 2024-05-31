@@ -1,5 +1,5 @@
 ﻿
-namespace Application.Common.Models
+namespace Application.Common
 {
     public class UserSession
     {

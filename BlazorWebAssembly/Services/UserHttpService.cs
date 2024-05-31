@@ -1,13 +1,10 @@
-﻿using Application.Common.Errors;
-using Application;
-using Application.Common.Interfaces;
-using Application.Common.Models;
-using Application.Models.Users.Login;
-using Application.Models.Users.Register;
+﻿
 using FluentValidation;
 using System.Net.Http.Json;
 using BlazorWebAssembly.Common;
 using Domain.Entities;
+using Application.Models;
+using Application.Common;
 
 namespace BlazorWebAssembly.Services
 {

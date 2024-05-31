@@ -1,8 +1,5 @@
-﻿using Application.Common.Errors;
-using Application.Common.Interfaces;
-using Application.Common.Models;
-using Application.Models.Users.Login;
-using Application.Models.Users.Register;
+﻿using Application.Common;
+using Application.Models;
 using Domain.Entities;
 using FluentValidation;
 

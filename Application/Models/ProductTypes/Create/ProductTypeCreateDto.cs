@@ -1,4 +1,4 @@
-﻿namespace Application.Models.ProductTypes.Create
+﻿namespace Application.Models
 {
     public class ProductTypeCreateDto
     {

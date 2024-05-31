@@ -3,7 +3,7 @@
 
 @inject IUserService userService
 @inject NavigationManager navManager
-@inject AuthenticationStateProvider authStateProvider
+@inject AuthenticationStateProvider stateProvider
 
 <h3>Войти в личный кабинет</h3>
 
@@ -16,16 +16,16 @@
 
     <div class="form-group">
         <label class="col-form-label">Эл. почта</label>
-        <div class="col-md-2">
+        <div class="col-md-6">
             <InputText @bind-Value="@_loginDto.Email" class="form-control"></InputText>
         </div>
 
         <label class="col-form-label">Пароль</label>
-        <div class="col-md-2">
+        <div class="col-md-6">
             <InputText @bind-Value="@_loginDto.Password" type="password" class="form-control"></InputText>
         </div>
 
-        <div class="col-md-2 mt-2">
+        <div class="col-md-6 mt-2">
             <Button Type="ButtonType.Submit" Color="ButtonColor.Success">Войти</Button>
         </div>
     </div>
@@ -47,9 +47,9 @@
         {
             _errorMessage = null;
 
-            var stateProvider = (CustomAuthStateProvider)authStateProvider;
+            var customStateProvider = (CustomAuthStateProvider)stateProvider;
 
-            stateProvider.UpdateAuthenticationState(result.Data);
+            await customStateProvider.UpdateAuthState(result.Data);
 
             navManager.NavigateTo("/");
         }

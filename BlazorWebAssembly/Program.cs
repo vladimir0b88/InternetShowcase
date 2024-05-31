@@ -1,20 +1,11 @@
 global using Microsoft.AspNetCore.Components.Authorization;
-using Application.Common.Interfaces;
-using Application.Models.Products.Create;
-using Application.Models.Products.Update;
-using Application.Models.ProductTypes.Create;
-using Application.Models.ProductTypes.Update;
-using Application.Models.PropertyValues.Update;
-using Application.Models.TypeProperties.Create;
-using Application.Models.TypeProperties.Update;
-using Application.Models.Users.Register;
+using Application.Common;
+using Application.Models;
+using Blazored.LocalStorage;
 using BlazorWebAssembly;
 using BlazorWebAssembly.Common;
 using BlazorWebAssembly.Services;
-using BlazorWebAssembly.Validators.Products;
-using BlazorWebAssembly.Validators.ProductTypes;
-using BlazorWebAssembly.Validators.PropertyValues;
-using BlazorWebAssembly.Validators.TypeProperties;
+using BlazorWebAssembly.Validators;
 using FluentValidation;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -25,6 +16,8 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddBlazorBootstrap();
+builder.Services.AddBlazoredLocalStorage();
+builder.Services.AddCascadingAuthenticationState();
 
 builder.Services.AddScoped(sp => new HttpClient
 {

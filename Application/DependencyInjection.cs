@@ -1,12 +1,5 @@
-﻿using Application.Common.Interfaces;
-using Application.Models.Products.Create;
-using Application.Models.Products.Update;
-using Application.Models.ProductTypes.Create;
-using Application.Models.ProductTypes.Update;
-using Application.Models.PropertyValues.Update;
-using Application.Models.TypeProperties.Create;
-using Application.Models.TypeProperties.Update;
-using Application.Models.Users.Register;
+﻿using Application.Common;
+using Application.Models;
 using Application.Services;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;

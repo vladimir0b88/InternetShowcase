@@ -1,9 +1,7 @@
-﻿
-using Application.Common.Models;
-using FluentValidation.Results;
+﻿using FluentValidation.Results;
 using System.Text.Json.Serialization;
 
-namespace Application.Common.Errors
+namespace Application.Common
 {
     public class ValidationErrorResult : ErrorResult
     {

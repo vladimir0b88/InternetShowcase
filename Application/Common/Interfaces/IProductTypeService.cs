@@ -1,9 +1,7 @@
-﻿using Application.Common.Models;
-using Application.Models.ProductTypes.Create;
-using Application.Models.ProductTypes.Update;
+﻿using Application.Models;
 using Domain.Entities;
 
-namespace Application.Common.Interfaces
+namespace Application.Common
 {
     public interface IProductTypeService
     {

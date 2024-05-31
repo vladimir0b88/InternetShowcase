@@ -1,7 +1,7 @@
-﻿using Application.Models.Products.Create;
+﻿using Application.Models;
 using FluentValidation;
 
-namespace BlazorWebAssembly.Validators.Products
+namespace BlazorWebAssembly.Validators
 {
     public class ProductCreateDtoClientValidator : AbstractValidator<ProductCreateDto>
     {

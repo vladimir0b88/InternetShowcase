@@ -1,8 +1,5 @@
-﻿using Application.Common.Errors;
-using Application.Common.Interfaces;
-using Application.Common.Models;
-using Application.Models.Products.Create;
-using Application.Models.Products.Update;
+﻿using Application.Common;
+using Application.Models;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 

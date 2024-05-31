@@ -1,5 +1,5 @@
 ﻿
-namespace Application.Models.Users.Register
+namespace Application.Models
 {
     public class UserRegisterDto
     {

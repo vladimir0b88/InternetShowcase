@@ -1,5 +1,5 @@
 ﻿
-namespace Application.Models.TypeProperties.Update
+namespace Application.Models
 {
     public class TypePropertyUpdateDto
     {

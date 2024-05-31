@@ -1,4 +1,4 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Common;
 using Domain.Entities;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -15,8 +15,8 @@ namespace Infrastructure.Services
         {
             Claim[] claims = [
                 new Claim("userId", user.Id.ToString()),
-                new Claim("userName", user.UserName),
-                new Claim("userEmail", user.Email)];
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Email, user.Email)];
 
             var signingCredential = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey)),
                                                                SecurityAlgorithms.HmacSha256);

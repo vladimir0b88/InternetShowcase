@@ -1,7 +1,7 @@
-﻿using Application.Models.TypeProperties.Create;
+﻿using Application.Models;
 using FluentValidation;
 
-namespace BlazorWebAssembly.Validators.TypeProperties
+namespace BlazorWebAssembly.Validators
 {
     public class TypePropertyCreateDtoClientValidator : AbstractValidator<TypePropertyCreateDto>
     {

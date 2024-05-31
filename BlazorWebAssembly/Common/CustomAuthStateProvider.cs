@@ -1,35 +1,52 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using Application.Common;
+using Blazored.LocalStorage;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace BlazorWebAssembly.Common
 {
-    public class CustomAuthStateProvider : AuthenticationStateProvider
+    public class CustomAuthStateProvider(ILocalStorageService storageService) : AuthenticationStateProvider
     {
         private readonly ClaimsPrincipal _anonymous = new(new ClaimsIdentity());
+
+        private const string _localStorageKey = "auth";
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            AuthenticationState state;
+            string? token = await storageService.GetItemAsStringAsync(_localStorageKey);
 
-            if (string.IsNullOrEmpty(Constant.JwtToken))
+            if (string.IsNullOrEmpty(token))
                 return await AuthenticateAnonymous();
 
-            try
-            {
-                var getUserClaims = DecryptToken(Constant.JwtToken);
 
-                if (getUserClaims == null)
-                    return await AuthenticateAnonymous();
+            var result = GetClaims(token);
 
-                var claimsPrincipal = SetClaimPrincipal(getUserClaims);
-
-                state = new AuthenticationState(claimsPrincipal);
-
-                return state;
-            }
-            catch
-            {
+            if (result is ErrorResult<CustomUserClaims>)
                 return await AuthenticateAnonymous();
-            }
+
+            var claims = SetClaimPrincipal(result.Data);
+
+            NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(claims)));
+
+            return new AuthenticationState(claims);
+        }
+
+        private static Result<CustomUserClaims> GetClaims(string token)
+        {
+            if (string.IsNullOrEmpty(token))
+                return new ErrorResult<CustomUserClaims>(message: "Передан пустой токен");
+
+            var handler = new JwtSecurityTokenHandler();
+
+            var jwtToken = handler.ReadJwtToken(token);
+
+            CustomUserClaims claims = new CustomUserClaims()
+            {
+                Id = (long)Convert.ToDouble(jwtToken.Claims.FirstOrDefault(c => c.Type == "userId")!.Value),
+                Username = jwtToken.Claims.FirstOrDefault(c => c.Type == "userName")!.Value,
+                Email = jwtToken.Claims.FirstOrDefault(c => c.Type == "userEmail")!.Value
+            };
+
+            return new SuccessResult<CustomUserClaims>(claims);
         }
 
         private async Task<AuthenticationState> AuthenticateAnonymous()
@@ -55,41 +72,28 @@ namespace BlazorWebAssembly.Common
                 }, "JwtAuth"));
         }
 
-        public static CustomUserClaims DecryptToken(string jwtToken)
+        public async Task UpdateAuthState(string token)
         {
-            if (string.IsNullOrEmpty(jwtToken))
-                return new CustomUserClaims();
+            var claims = new ClaimsPrincipal();
 
-            var handler = new JwtSecurityTokenHandler();
-
-            var token = handler.ReadJwtToken(jwtToken);
-
-            CustomUserClaims claims = new CustomUserClaims()
+            if (!string.IsNullOrEmpty(token))
             {
-                Id = (long)Convert.ToDouble(token.Claims.FirstOrDefault(c => c.ValueType == "userId")!.Value),
-                Username = token.Claims.FirstOrDefault(c => c.ValueType == "userName")!.Value,
-                Email = token.Claims.FirstOrDefault(c => c.ValueType == "userEmail")!.Value
-            };
+                var result = GetClaims(token);
 
-            return claims;
-        }
+                if (result is ErrorResult<CustomUserClaims>)
+                    return;
 
-        public async void UpdateAuthenticationState(string jwtToken)
-        {
-            var claimsPrincipal = new ClaimsPrincipal();
+                claims = SetClaimPrincipal(result.Data);
 
-            if(!string.IsNullOrEmpty(jwtToken))
-            {
-                Constant.JwtToken = jwtToken;
-
-                var getUserClaims = DecryptToken(jwtToken);
-                claimsPrincipal = SetClaimPrincipal(getUserClaims);
+                await storageService.SetItemAsStringAsync(_localStorageKey, token);
             }
             else
             {
-                Constant.JwtToken = null!;
+                await storageService.RemoveItemAsync(_localStorageKey);
             }
-            NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(claimsPrincipal)));
+
+            await storageService.SetItemAsStringAsync(_localStorageKey, token);
+            NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(claims)));
         }
     }
 }

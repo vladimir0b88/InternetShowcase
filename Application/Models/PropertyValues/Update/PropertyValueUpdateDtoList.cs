@@ -1,5 +1,5 @@
 ﻿
-namespace Application.Models.PropertyValues.Update
+namespace Application.Models
 {
     public class PropertyValueUpdateDtoList
     {

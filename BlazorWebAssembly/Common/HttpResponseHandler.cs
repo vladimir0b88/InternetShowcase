@@ -1,8 +1,6 @@
-﻿using Application.Common.Errors;
-using Application.Common.Models;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 using System.Net;
-using Application;
+using Application.Common;
 
 namespace BlazorWebAssembly.Common
 {

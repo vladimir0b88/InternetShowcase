@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Application.Models.PropertyValues.Update
+namespace Application.Models
 {
     public class PropertyValueUpdateDtoValidator : AbstractValidator<PropertyValueUpdateDto>
     {

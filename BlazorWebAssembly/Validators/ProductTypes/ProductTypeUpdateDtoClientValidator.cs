@@ -1,7 +1,7 @@
-﻿using Application.Models.ProductTypes.Update;
+﻿using Application.Models;
 using FluentValidation;
 
-namespace BlazorWebAssembly.Validators.ProductTypes
+namespace BlazorWebAssembly.Validators
 {
     public class ProductTypeUpdateDtoClientValidator : AbstractValidator<ProductTypeUpdateDto>
     {

@@ -1,5 +1,5 @@
 ﻿
-namespace Application.Models.Users.Login
+namespace Application.Models
 {
     public class UserLoginDto
     {

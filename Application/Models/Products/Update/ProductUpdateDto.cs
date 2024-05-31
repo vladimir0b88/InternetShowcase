@@ -1,6 +1,5 @@
-﻿using Domain.Entities;
-
-namespace Application.Models.Products.Update
+﻿
+namespace Application.Models
 {
     public class ProductUpdateDto
     {

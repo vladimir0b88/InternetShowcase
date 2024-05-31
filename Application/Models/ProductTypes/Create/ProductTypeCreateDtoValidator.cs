@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Application.Models.ProductTypes.Create
+namespace Application.Models
 {
     public class ProductTypeCreateDtoValidator : AbstractValidator<ProductTypeCreateDto>
     {

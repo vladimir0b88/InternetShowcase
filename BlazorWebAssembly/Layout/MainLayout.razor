@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@inject AuthenticationStateProvider stateProvider
 
 <div class="bb-page">
 
@@ -9,7 +10,15 @@
 
     <main>
         <div class="bb-top-row px-4 d-flex justify-content-end">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+            <AuthorizeView>
+                <Authorized>
+                    <span class="text-center m-3">@context.User.Claims.FirstOrDefault(c => c.Type == "userName")?.Value</span>
+                    <Button Color="ButtonColor.Secondary" @onclick="Logout">Выйти</Button>
+                </Authorized>
+                <NotAuthorized>
+                    <span>Бро, авторизируйся</span>
+                </NotAuthorized>
+            </AuthorizeView>
         </div>
 
         <article class="content px-4">
@@ -36,9 +45,9 @@
         navItems = new List<NavItem>
         {
             new NavItem { Id = "1",                    Href = "/",                    Text = "Каталог",        IconName = IconName.HouseDoorFill,  Match=NavLinkMatch.All},
-                                                                                                  
+
             new NavItem { Id = "4",                    Href = "/ProductTypes",        Text = "Типы товаров"},
-                                                                                                  
+
             new NavItem { Id = "5",                                                   Text = "Таблицы"},
             new NavItem { Id = "501",  ParentId = "5", Href = "/ProductsTable",       Text = "Продукты"},
             new NavItem { Id = "502",  ParentId = "5", Href = "/ProductTypesTable",   Text = "Типы товаров"},
@@ -53,5 +62,12 @@
         };                                                                            
 
         return navItems;
+    }
+
+    async Task Logout()
+    {
+        var customStateProvider = (CustomAuthStateProvider)stateProvider;
+
+        await customStateProvider.UpdateAuthState(string.Empty);
     }
 }

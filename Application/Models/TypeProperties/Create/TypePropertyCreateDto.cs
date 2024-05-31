@@ -1,5 +1,5 @@
 ﻿
-namespace Application.Models.TypeProperties.Create
+namespace Application.Models
 {
     public class TypePropertyCreateDto
     {
