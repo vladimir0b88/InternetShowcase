@@ -9,7 +9,7 @@
         <h1>Бро, надо авторизироваться</h1>
     </NotAuthorized>
     <Authorized>
-        <h1>Авторизован как: @context.User.Claims.FirstOrDefault(c => c.Type == "userName")!.Value</h1>
+        <h1>Авторизован как: @context.User.Identity!.Name</h1>
         <h3>Типы товаров</h3>
 
         <QuickGrid Items="_productTypes" Class="w-auto table table-striped table-bordered">

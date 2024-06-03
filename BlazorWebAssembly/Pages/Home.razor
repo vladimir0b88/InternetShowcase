@@ -1,6 +1,8 @@
 ﻿@page "/"
 <PageTitle>Каталог</PageTitle>
 
+@attribute [AllowAnonymous]
+
 @inject IProductTypeService productTypeService
 @inject IProductService productService
 @inject ITypePropertyService typePropertyService

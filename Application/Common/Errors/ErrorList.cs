@@ -1,4 +1,6 @@
-﻿namespace Application.Common
+﻿using Application.Common.Errors;
+
+namespace Application.Common
 {
     public class ErrorList
     {

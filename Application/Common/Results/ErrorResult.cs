@@ -1,6 +1,5 @@
-﻿
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
+using Application.Common.Errors;
 
 namespace Application.Common
 {

@@ -1,6 +1,8 @@
 ﻿@page "/Login"
 <PageTitle>Войти</PageTitle>
 
+@attribute [AllowAnonymous]
+
 @inject IUserService userService
 @inject NavigationManager navManager
 @inject AuthenticationStateProvider stateProvider

@@ -1,4 +1,4 @@
-﻿namespace Application.Common
+﻿namespace Application.Common.Errors
 {
     public class Error
     {

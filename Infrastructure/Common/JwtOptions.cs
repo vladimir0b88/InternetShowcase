@@ -1,5 +1,4 @@
-﻿
-namespace Infrastructure
+﻿namespace Infrastructure.Common
 {
     public class JwtOptions
     {

@@ -1,5 +1,5 @@
-﻿using Application.Common;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
+using Application.Common.Errors;
 
 namespace Application.Common
 {

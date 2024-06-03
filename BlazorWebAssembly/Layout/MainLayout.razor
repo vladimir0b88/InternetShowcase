@@ -12,7 +12,7 @@
         <div class="bb-top-row px-4 d-flex justify-content-end">
             <AuthorizeView>
                 <Authorized>
-                    <span class="text-center m-3">@context.User.Claims.FirstOrDefault(c => c.Type == "userName")?.Value</span>
+                    <span class="text-center m-3">@context.User.Identity!.Name</span>
                     <Button Color="ButtonColor.Secondary" @onclick="Logout">Выйти</Button>
                 </Authorized>
                 <NotAuthorized>

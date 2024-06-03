@@ -42,8 +42,8 @@ namespace BlazorWebAssembly.Common
             CustomUserClaims claims = new CustomUserClaims()
             {
                 Id = (long)Convert.ToDouble(jwtToken.Claims.FirstOrDefault(c => c.Type == "userId")!.Value),
-                Username = jwtToken.Claims.FirstOrDefault(c => c.Type == "userName")!.Value,
-                Email = jwtToken.Claims.FirstOrDefault(c => c.Type == "userEmail")!.Value
+                Username = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)!.Value,
+                Email = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)!.Value,
             };
 
             return new SuccessResult<CustomUserClaims>(claims);
@@ -67,8 +67,8 @@ namespace BlazorWebAssembly.Common
                 new List<Claim>
                 {
                     new Claim("userId", userClaim.Id.ToString()),
-                    new Claim("userName", userClaim.Username),
-                    new Claim("userEmail", userClaim.Email),
+                    new Claim(ClaimTypes.Name, userClaim.Username),
+                    new Claim(ClaimTypes.Email, userClaim.Email),
                 }, "JwtAuth"));
         }
 

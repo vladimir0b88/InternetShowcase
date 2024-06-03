@@ -1,5 +1,4 @@
-﻿
-using FluentValidation;
+﻿using FluentValidation;
 using System.Net.Http.Json;
 using BlazorWebAssembly.Common;
 using Domain.Entities;

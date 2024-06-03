@@ -1,6 +1,8 @@
 ﻿@page "/Registration"
 <PageTitle>Регистрация</PageTitle>
 
+@attribute [AllowAnonymous]
+
 @inject IUserService userService
 @inject NavigationManager navManager
 

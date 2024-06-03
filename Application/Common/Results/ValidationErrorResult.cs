@@ -1,4 +1,5 @@
-﻿using FluentValidation.Results;
+﻿using Application.Common.Errors;
+using FluentValidation.Results;
 using System.Text.Json.Serialization;
 
 namespace Application.Common
