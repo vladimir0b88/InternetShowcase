@@ -39,6 +39,9 @@
 
     private string? _errorMessage = null;
 
+    [CascadingParameter]
+    MainLayout? _mainLayout { get; set; }
+
     private async Task Submit()
     {
         var result = await userService.Login(_loginDto);
@@ -52,6 +55,8 @@
             var customStateProvider = (CustomAuthStateProvider)stateProvider;
 
             await customStateProvider.UpdateAuthState(result.Data);
+
+            await _mainLayout!.RefreshSidebar();
 
             navManager.NavigateTo("/");
         }

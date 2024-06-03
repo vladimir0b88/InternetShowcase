@@ -3,71 +3,94 @@
 
 <div class="bb-page">
 
-    <Sidebar @ref="sidebar"
-             IconName="IconName.Cart"
-             Title="Kaif House"
-             DataProvider="SidebarDataProvider" />
+    <CascadingValue Value="this">
 
-    <main>
-        <div class="bb-top-row px-4 d-flex justify-content-end">
-            <AuthorizeView>
-                <Authorized>
-                    <span class="text-center m-3">@context.User.Identity!.Name</span>
-                    <Button Color="ButtonColor.Secondary" @onclick="Logout">Выйти</Button>
-                </Authorized>
-                <NotAuthorized>
-                    <span>Бро, авторизируйся</span>
-                </NotAuthorized>
-            </AuthorizeView>
-        </div>
+        <Sidebar @ref="sidebar"
+                 IconName="IconName.Cart"
+                 Title="Kaif House"
+                 DataProvider="SidebarDataProvider" />
 
-        <article class="content px-4">
-            <div class="py-2">@Body</div>
-        </article>
-    </main>
+
+        <main>
+            <div class="bb-top-row px-4 d-flex justify-content-end">
+                <AuthorizeView>
+                    <Authorized>
+                        <span class="text-center m-3">@context.User.Identity!.Name</span>
+                        <LogoutButton />
+                    </Authorized>
+
+                    <NotAuthorized>
+                        <span class="m-3">Бро, авторизируйся</span>
+                        <Button Color="ButtonColor.Success"
+                                Type="ButtonType.Link"
+                                To="Login">
+                            Войти
+                        </Button>
+                    </NotAuthorized>
+                </AuthorizeView>
+            </div>
+
+            <article class="content px-4">
+                <div class="py-2">@Body</div>
+            </article>
+        </main>
+    </CascadingValue>
 
 </div>
 
 @code {
-    Sidebar? sidebar;
+    Sidebar? sidebar { get; set; }
     IEnumerable<NavItem>? navItems;
+
 
     private async Task<SidebarDataProviderResult> SidebarDataProvider(SidebarDataProviderRequest request)
     {
         if (navItems is null)
-            navItems = GetNavItems();
+            navItems = await GetNavItems();
 
         return await Task.FromResult(request.ApplyTo(navItems));
     }
 
-    private IEnumerable<NavItem> GetNavItems()
+    public async Task RefreshSidebar()
     {
-        navItems = new List<NavItem>
-        {
+        await GetNavItems();
+
+        await sidebar!.RefreshDataAsync();
+    }
+
+    private async Task<IEnumerable<NavItem>> GetNavItems()
+    {
+        navItems = new List<NavItem>{
             new NavItem { Id = "1",                    Href = "/",                    Text = "Каталог",        IconName = IconName.HouseDoorFill,  Match=NavLinkMatch.All},
-
             new NavItem { Id = "4",                    Href = "/ProductTypes",        Text = "Типы товаров"},
+        };
 
-            new NavItem { Id = "5",                                                   Text = "Таблицы"},
-            new NavItem { Id = "501",  ParentId = "5", Href = "/ProductsTable",       Text = "Продукты"},
-            new NavItem { Id = "502",  ParentId = "5", Href = "/ProductTypesTable",   Text = "Типы товаров"},
-            new NavItem { Id = "503",  ParentId = "5", Href = "/TypePropertiesTable", Text = "Свойства"},
-            new NavItem { Id = "504",  ParentId = "5", Href = "/PropertyValuesTable", Text = "Значения свойств"},
-            new NavItem { Id = "505",  ParentId = "5", Href = "/UsersTable",          Text = "Пользователи"},
+        var authState = await stateProvider.GetAuthenticationStateAsync();
 
-            new NavItem { Id = "6",                    Href = "/Registration",        Text = "Регистрация"},
+        if (!authState.User.Identity!.IsAuthenticated)
+        {
+            navItems = navItems.Concat(new List<NavItem>{
+                    new NavItem { Id = "6",                    Href = "/Registration",        Text = "Регистрация"},
+                    new NavItem { Id = "7",                    Href = "/Login",               Text = "Войти"},
+                });
+            return navItems;
 
-            new NavItem { Id = "7",                    Href = "/Login",               Text = "Войти"},
+        }
 
-        };                                                                            
+        var user = authState.User;
+
+        if (user.IsInRole(Roles.Administrator))
+            navItems = navItems.Concat(new List<NavItem>{
+                    new NavItem { Id = "5",                                                   Text = "Таблицы"},
+                    new NavItem { Id = "501",  ParentId = "5", Href = "/ProductsTable",       Text = "Продукты"},
+                    new NavItem { Id = "502",  ParentId = "5", Href = "/ProductTypesTable",   Text = "Типы товаров"},
+                    new NavItem { Id = "503",  ParentId = "5", Href = "/TypePropertiesTable", Text = "Свойства"},
+                    new NavItem { Id = "504",  ParentId = "5", Href = "/PropertyValuesTable", Text = "Значения свойств"},
+                    new NavItem { Id = "505",  ParentId = "5", Href = "/UsersTable",          Text = "Пользователи"},
+                });
+
 
         return navItems;
     }
 
-    async Task Logout()
-    {
-        var customStateProvider = (CustomAuthStateProvider)stateProvider;
-
-        await customStateProvider.UpdateAuthState(string.Empty);
-    }
 }

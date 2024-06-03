@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain.Constants;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -23,6 +24,11 @@ namespace Persistence.EnityTypeConfiguration
             builder.Property(u => u.Email) 
                    .HasMaxLength(64)
                    .IsRequired();
+
+            builder.Property(u => u.Role)
+                    .HasMaxLength(30)
+                    .IsRequired()
+                    .HasDefaultValue(Roles.Guest);
         }
     }
 }

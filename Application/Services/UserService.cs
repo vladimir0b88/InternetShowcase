@@ -52,6 +52,7 @@ namespace Application.Services
                 UserName = createDto.UserName,
                 Email = createDto.Email,
                 PasswordHash = passHashService.Generate(createDto.Password),
+                Role = createDto.Role,
             };
 
             var result = await repository.AddUser(user);

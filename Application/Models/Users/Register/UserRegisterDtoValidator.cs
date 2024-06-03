@@ -1,4 +1,4 @@
-﻿
+﻿using Domain.Constants;
 using FluentValidation;
 
 namespace Application.Models
@@ -12,6 +12,10 @@ namespace Application.Models
             RuleFor(u => u.Email).NotEmpty().MaximumLength(60);
 
             RuleFor(u => u.Password).NotEmpty();
+
+            RuleFor(u => u.Role).NotEmpty()
+                                .Must(Roles.IsCorrectRole)
+                                .WithMessage("Указана некорректная роль");
         }
     }
 }
