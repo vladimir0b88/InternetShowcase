@@ -7,10 +7,12 @@ using System.Net.Http.Json;
 
 namespace BlazorWebAssembly.Services
 {
-    public class PropertyValueHttpService(HttpClient httpClient,
+    public class PropertyValueHttpService(IHttpClientFactory httpClientFactory,
                                           IValidator<PropertyValueUpdateDto> updateValidator,
                                           IValidator<PropertyValueUpdateDtoList> updateListValidator) : IPropertyValueService
     {
+        private readonly HttpClient httpClient = httpClientFactory.CreateClient("WebApi");
+
         private const string _controllerUri = "api/PropertyValues";
 
         public async Task<Result<List<PropertyValue>>> GetAllPropertyValues()

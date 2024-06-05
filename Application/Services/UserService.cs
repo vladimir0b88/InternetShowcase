@@ -1,5 +1,6 @@
 ﻿using Application.Common;
 using Application.Models;
+using Domain.Constants;
 using Domain.Entities;
 using FluentValidation;
 
@@ -52,7 +53,7 @@ namespace Application.Services
                 UserName = createDto.UserName,
                 Email = createDto.Email,
                 PasswordHash = passHashService.Generate(createDto.Password),
-                Role = createDto.Role,
+                Role = string.IsNullOrEmpty(createDto.Role) ? Roles.Guest : createDto.Role,
             };
 
             var result = await repository.AddUser(user);

@@ -7,10 +7,12 @@ using System.Net.Http.Json;
 
 namespace BlazorWebAssembly.Services
 {
-    public class TypePropertyHttpService(HttpClient httpClient,
+    public class TypePropertyHttpService(IHttpClientFactory httpClientFactory,
                                          IValidator<TypePropertyCreateDto> createValidator,
                                          IValidator<TypePropertyUpdateDto> updateValidator) : ITypePropertyService
     {
+        private readonly HttpClient httpClient = httpClientFactory.CreateClient("WebApi");
+
         private const string _controllerUri = "api/TypeProperties";
 
         public async Task<Result<List<TypeProperty>>> GetPropertiesByProductTypeId(long typeId)

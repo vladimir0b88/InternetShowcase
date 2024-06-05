@@ -1,4 +1,5 @@
 ﻿using Application.Common;
+using BitzArt.Blazor.Cookies;
 using Blazored.LocalStorage;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -9,7 +10,7 @@ namespace BlazorWebAssembly.Common
     {
         private readonly ClaimsPrincipal _anonymous = new(new ClaimsIdentity());
 
-        private const string _localStorageKey = "auth";
+        private const string _localStorageKey = "jwt-token";
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             string? token = await storageService.GetItemAsStringAsync(_localStorageKey);

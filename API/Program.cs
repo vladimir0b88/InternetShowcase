@@ -3,6 +3,7 @@ using Persistence;
 using Infrastructure;
 using System.Text.Json.Serialization;
 using API;
+using Domain.Constants;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,7 +28,10 @@ builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddApiAuthentication(builder.Configuration);
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(Policies.CanCreate, p => p.RequireRole(Roles.Administrator));
+});
 
 
 

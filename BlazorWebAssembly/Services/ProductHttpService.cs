@@ -7,10 +7,12 @@ using System.Net.Http.Json;
 
 namespace BlazorWebAssembly.Services
 {
-    public class ProductHttpService(HttpClient httpClient,
+    public class ProductHttpService(IHttpClientFactory httpClientFactory,
                                     IValidator<ProductCreateDto> createValidator,
                                     IValidator<ProductUpdateDto> updateValidator) : IProductService
     {
+        private readonly HttpClient httpClient = httpClientFactory.CreateClient("WebApi");
+        
         private const string _controllerUri = "api/Products";
 
         public async Task<Result<List<Product>>> GetAllProducts()

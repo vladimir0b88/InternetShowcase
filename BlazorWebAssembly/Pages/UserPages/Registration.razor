@@ -8,10 +8,7 @@
 
 <h3>Регистрация</h3>
 
-@if(_errorMessage is not null)
-{
-    <h3>@_errorMessage</h3>
-}
+<ErrorModal @ref="modal"></ErrorModal>
 
 <EditForm Model="_registerDto" OnValidSubmit="Submit" autocomplete="off">
     <FluentValidationValidator/>
@@ -45,6 +42,8 @@
 @code {
     private UserRegisterDto _registerDto = new UserRegisterDto();
 
+    private ErrorModal modal = new();
+
     private string? _errorMessage = null;
 
     private async Task Submit()
@@ -53,7 +52,7 @@
 
         if(result is ErrorResult errorResult)
         {
-            _errorMessage = errorResult.Message;
+            await modal.ShowModal(errorResult);
         }
         else
         {

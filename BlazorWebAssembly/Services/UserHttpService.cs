@@ -7,9 +7,11 @@ using Application.Common;
 
 namespace BlazorWebAssembly.Services
 {
-    public class UserHttpService(HttpClient httpClient,
+    public class UserHttpService(IHttpClientFactory httpClientFactory,
                                  IValidator<UserRegisterDto> registerValidator) : IUserService
     {
+        private readonly HttpClient httpClient = httpClientFactory.CreateClient("WebApi");
+
         private const string _controllerUri = "api/Users";
 
         public async Task<Result<List<User>>> GetAllUsers()

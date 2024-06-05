@@ -1,6 +1,8 @@
 ﻿using Application.Common;
 using Application.Models;
+using Domain.Constants;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -36,6 +38,8 @@ namespace API.Controllers
             };
         }
 
+
+        [Authorize(Policy = Policies.CanCreate)]
         [HttpPost]
         public async Task<IActionResult> AddProductType([FromBody] ProductTypeCreateDto createDto)
         {

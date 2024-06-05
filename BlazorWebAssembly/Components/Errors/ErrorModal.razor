@@ -1,0 +1,34 @@
+﻿
+<Modal @ref="modal" IsVerticallyCentered="true" Title="Ошибка">
+    <BodyTemplate>
+
+        <p><b>Сообщение: </b>@errorMessage</p>
+
+        <p><b>Коды ошибок: </b>@errorCodes</p>
+
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="HideModal">Ok</Button>
+    </FooterTemplate>
+</Modal>
+
+
+@code {
+    private Modal modal = new();
+
+    private string errorMessage = string.Empty;
+    private string errorCodes = string.Empty;
+
+    private async Task HideModal()
+    {
+        await modal.HideAsync();
+    }
+
+    public async Task ShowModal(ErrorResult errorResult)
+    {
+        this.errorMessage = errorResult.Message;
+        this.errorCodes = string.Join(", ",errorResult.Errors.Select(e => e.Code));
+
+        await modal.ShowAsync();
+    }
+}

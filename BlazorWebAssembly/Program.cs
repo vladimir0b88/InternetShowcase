@@ -19,10 +19,11 @@ builder.Services.AddBlazorBootstrap();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddCascadingAuthenticationState();
 
-builder.Services.AddScoped(sp => new HttpClient
-{
-    BaseAddress = new Uri("http://localhost:5297")
-});
+builder.Services.AddTransient<CookieHandler>();
+builder.Services.AddScoped(sp => new HttpClient{ BaseAddress = new Uri("http://localhost:5297")});
+builder.Services.AddHttpClient("WebApi", c => c.BaseAddress = new Uri("http://localhost:5297"))
+                .AddHttpMessageHandler<CookieHandler>();
+
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 builder.Services.AddAuthorizationCore();
 

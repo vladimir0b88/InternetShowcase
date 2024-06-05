@@ -15,13 +15,14 @@ namespace Application.Models
 
             RuleFor(p => p.TypeId).Custom(async (typeId, context) =>
             {
-                if (typeId is not null)
-                {
-                    bool typeExist = await productTypeRepository.ExistById((long)typeId);
+                if (typeId is null)
+                    return;
 
-                    if (!typeExist)
-                        context.AddFailure($"Указанный тип продукта с id: {typeId} не существует");
-                }
+                bool typeExist = await productTypeRepository.ExistById((long)typeId);
+
+                if (!typeExist)
+                    context.AddFailure($"Указанный тип продукта с id: {typeId} не существует");
+
             });
         }
     }
