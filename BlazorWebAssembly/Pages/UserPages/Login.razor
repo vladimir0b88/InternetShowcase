@@ -36,9 +36,6 @@
 
     private ErrorModal modal = new();
 
-    [CascadingParameter]
-    MainLayout? mainLayout { get; set; }
-
     private async Task Submit()
     {
         var result = await userService.Login(loginDto);
@@ -54,9 +51,6 @@
 
         await customStateProvider.UpdateAuthState(result.Data);
 
-        await mainLayout!.RefreshSidebar();
-
         navManager.NavigateTo("/");
-
     }
 }

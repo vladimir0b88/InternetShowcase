@@ -11,9 +11,9 @@
 
 <h3>Создание продукта</h3>
 
-@if (_productType is not null)
+@if (productType is not null)
 {
-    <EditForm Model="_createDto" OnValidSubmit="Submit">
+    <EditForm Model="createDto" OnValidSubmit="Submit">
 
         <FluentValidationValidator />
         <ValidationSummary />
@@ -22,22 +22,22 @@
 
             <label class="col-form-label">Тип товара</label>
             <div class="col-md-2">
-                <input class="form-control" placeholder="@_productType.Name" disabled>
+                <input class="form-control" placeholder="@productType.Name" disabled>
             </div>
 
             <label class="col-form-label">Название</label>
             <div class="col-md-2">
-                <InputText @bind-Value="@_createDto.Name" class="form-control"></InputText>
+                <InputText @bind-Value="@createDto.Name" class="form-control"></InputText>
             </div>
 
             <label class="col-form-label">Описание</label>
             <div class="col-md-2">
-                <InputTextArea @bind-Value="@_createDto.Description" class="form-control"></InputTextArea>
+                <InputTextArea @bind-Value="@createDto.Description" class="form-control"></InputTextArea>
             </div>
 
             <label class="col-form-label">Стоимость</label>
             <div class="col-md-2">
-                <InputNumber @bind-Value="@_createDto.Cost" class="form-control"></InputNumber>
+                <InputNumber @bind-Value="@createDto.Cost" class="form-control"></InputNumber>
             </div>
 
             <div class="col-md-2 mt-2">
@@ -53,8 +53,8 @@
     [Parameter]
     public long TypeId { get; set; }
 
-    private ProductCreateDto _createDto = new ProductCreateDto();
-    private ProductType? _productType = null;
+    private ProductCreateDto createDto = new ProductCreateDto();
+    private ProductType? productType = null;
 
     private ErrorModal modal = new();
 
@@ -70,8 +70,8 @@
         switch (result)
         {
             case SuccessResult<ProductType> successResult:
-                _productType = successResult.Data;
-                _createDto.TypeId = _productType.Id;
+                productType = successResult.Data;
+                createDto.TypeId = productType.Id;
                 break;
 
             case ErrorResult<ProductType> errorResult:
@@ -83,7 +83,7 @@
 
     private async Task Submit()
     {
-        var result = await productService.AddProduct(_createDto!);
+        var result = await productService.AddProduct(createDto!);
 
         if (result is ErrorResult errorResult)
         {
@@ -91,6 +91,6 @@
             return;
         }
 
-        navManager.NavigateTo($"ProductType/{_productType!.Id}");
+        navManager.NavigateTo($"ProductType/{productType!.Id}");
     }
 }

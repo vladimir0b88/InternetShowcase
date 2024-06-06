@@ -1,96 +1,53 @@
 ﻿@inherits LayoutComponentBase
 @inject AuthenticationStateProvider stateProvider
 
-<div class="bb-page">
+<header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
 
-    <CascadingValue Value="this">
+    <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
+        <span class="px-3">Kaif House</span>
+    </a>
 
-        <Sidebar @ref="sidebar"
-                 IconName="IconName.Cart"
-                 Title="Kaif House"
-                 DataProvider="SidebarDataProvider" />
+    <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+        <li>
+            <a href="/" class="nav-link px-2 link-secondary">
+                <div class="text-dark">Каталог</div>
+            </a>
+        </li>
 
+        <li>
+            <a href="/ProductTypes" class="nav-link px-2 link-secondary">
+                <div class="text-dark">Типы товаров</div>
+            </a>
+        </li>
 
-        <main>
-            <div class="bb-top-row px-4 d-flex justify-content-end">
-                <AuthorizeView>
-                    <Authorized>
-                        <span class="text-center m-3">@context.User.Identity!.Name</span>
-                        <LogoutButton />
-                    </Authorized>
+    </ul>
 
-                    <NotAuthorized>
-                        <span class="m-3">Бро, авторизируйся</span>
-                        <Button Color="ButtonColor.Success"
-                                Type="ButtonType.Link"
-                                To="Login">
-                            Войти
-                        </Button>
-                    </NotAuthorized>
-                </AuthorizeView>
-            </div>
+    <div class="col-md-3 text-end">
+        <AuthorizeView>
+            <Authorized>
+                <span class="text-center m-3">@context.User.Identity!.Name</span>
+                <LogoutButton />
+            </Authorized>
 
-            <article class="content px-4">
-                <div class="py-2">@Body</div>
-            </article>
-        </main>
-    </CascadingValue>
+            <NotAuthorized>
+                <span class="m-3">Бро, авторизируйся</span>
+                <Button Color="ButtonColor.Success"
+                        Type="ButtonType.Link"
+                        To="Login">
+                    Войти
+                </Button>
+            </NotAuthorized>
+        </AuthorizeView>
+    </div>
+</header>
 
-</div>
+<main>
+    <article class="content">
+        <div class="py-2">@Body</div>
+    </article>
+</main>
 
 @code {
-    Sidebar? sidebar { get; set; }
-    IEnumerable<NavItem>? navItems;
 
-
-    private async Task<SidebarDataProviderResult> SidebarDataProvider(SidebarDataProviderRequest request)
-    {
-        if (navItems is null)
-            navItems = await GetNavItems();
-
-        return await Task.FromResult(request.ApplyTo(navItems));
-    }
-
-    public async Task RefreshSidebar()
-    {
-        await GetNavItems();
-
-        await sidebar!.RefreshDataAsync();
-    }
-
-    private async Task<IEnumerable<NavItem>> GetNavItems()
-    {
-        navItems = new List<NavItem>{
-            new NavItem { Id = "1",                    Href = "/",                    Text = "Каталог",        IconName = IconName.HouseDoorFill,  Match=NavLinkMatch.All},
-            new NavItem { Id = "4",                    Href = "/ProductTypes",        Text = "Типы товаров"},
-        };
-
-        var authState = await stateProvider.GetAuthenticationStateAsync();
-
-        if (!authState.User.Identity!.IsAuthenticated)
-        {
-            navItems = navItems.Concat(new List<NavItem>{
-                    new NavItem { Id = "6",                    Href = "/Registration",        Text = "Регистрация"},
-                    new NavItem { Id = "7",                    Href = "/Login",               Text = "Войти"},
-                });
-            return navItems;
-
-        }
-
-        var user = authState.User;
-
-        if (user.IsInRole(Roles.Administrator))
-            navItems = navItems.Concat(new List<NavItem>{
-                    new NavItem { Id = "5",                                                   Text = "Таблицы"},
-                    new NavItem { Id = "501",  ParentId = "5", Href = "/ProductsTable",       Text = "Продукты"},
-                    new NavItem { Id = "502",  ParentId = "5", Href = "/ProductTypesTable",   Text = "Типы товаров"},
-                    new NavItem { Id = "503",  ParentId = "5", Href = "/TypePropertiesTable", Text = "Свойства"},
-                    new NavItem { Id = "504",  ParentId = "5", Href = "/PropertyValuesTable", Text = "Значения свойств"},
-                    new NavItem { Id = "505",  ParentId = "5", Href = "/UsersTable",          Text = "Пользователи"},
-                });
-
-
-        return navItems;
-    }
 
 }
