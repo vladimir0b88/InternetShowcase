@@ -1,7 +1,7 @@
 ﻿@inherits LayoutComponentBase
 @inject AuthenticationStateProvider stateProvider
 
-<header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+<header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 border-bottom">
 
     <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
         <span class="px-3">Kaif House</span>
@@ -25,17 +25,22 @@
     <div class="col-md-3 text-end">
         <AuthorizeView>
             <Authorized>
-                <span class="text-center m-3">@context.User.Identity!.Name</span>
-                <LogoutButton />
+                <div class="mx-3">
+                    <span class="text-center m-3">@context.User.Identity!.Name</span>
+                    <LogoutButton />
+                </div>
+
             </Authorized>
 
             <NotAuthorized>
-                <span class="m-3">Бро, авторизируйся</span>
-                <Button Color="ButtonColor.Success"
-                        Type="ButtonType.Link"
-                        To="Login">
-                    Войти
-                </Button>
+                <div class="mx-3">
+                    <span class="m-3">Бро, авторизируйся</span>
+                    <Button Color="ButtonColor.Success"
+                            Type="ButtonType.Link"
+                            To="Login">
+                        Войти
+                    </Button>
+                </div>
             </NotAuthorized>
         </AuthorizeView>
     </div>
