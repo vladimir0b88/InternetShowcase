@@ -4,6 +4,8 @@
 @inject IProductService productService
 @inject NavigationManager navManager
 
+<ErrorModal @ref="modal"></ErrorModal>
+
 @if(_product is not null)
 {
     <h3>Наименование: @_product.Name</h3>
@@ -41,6 +43,8 @@
 
     private Product? _product = null;
 
+    private ErrorModal modal = new();
+
     protected override async Task OnInitializedAsync()
     {
         await GetProduct();
@@ -57,6 +61,7 @@
                 break;
 
             case ErrorResult<Product> errorResult:
+                await modal.ShowModal(errorResult);
                 break;
         }
     }

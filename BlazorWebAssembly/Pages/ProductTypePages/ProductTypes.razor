@@ -1,9 +1,12 @@
 ﻿@page "/ProductTypes"
 <PageTitle>Типы товаров</PageTitle>
 
+@attribute [Authorize(Roles = "Administrator")]
+
 @inject IProductTypeService productTypeService
 @inject NavigationManager navManager
 
+<ErrorModal @ref="modal"></ErrorModal>
 
 <h3>
     Типы товаров 
@@ -50,10 +53,6 @@
 
     </QuickGrid>
 }
-else
-{
-    <h3>@_errorMessage</h3>
-}
 
 
 @code {
@@ -61,7 +60,7 @@ else
 
     private GridSort<ProductType> _sortByName = GridSort<ProductType>.ByAscending(pt => pt.Name);
 
-    private string? _errorMessage = null;
+    private ErrorModal modal = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -70,7 +69,13 @@ else
 
     async Task DeleteProductType(long id)
     {
-        await productTypeService.DeleteProductTypeById(id);
+        var result = await productTypeService.DeleteProductTypeById(id);
+
+        if (result is ErrorResult errorResult)
+        {
+            await modal.ShowModal(errorResult);
+            return;
+        }
 
         await GetProductTypes();
     }
@@ -83,12 +88,11 @@ else
         {
             case SuccessResult<List<ProductType>> successResult:
                 _allProductTypes = successResult.Data?.AsQueryable();
-                _errorMessage = null;
                 break;
 
             case ErrorResult<List<ProductType>> errorResult:
                 _allProductTypes = null;
-                _errorMessage = errorResult.Message;
+                await modal.ShowModal(errorResult);
                 break;
         }
     }

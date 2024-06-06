@@ -1,6 +1,8 @@
 ﻿@page "/TypePropertiesTable"
 <PageTitle>Таблица свойств</PageTitle>
 
+@attribute [Authorize(Roles = "Administrator")]
+
 @inject ITypePropertyService typePropertyService
 
 <h3>Свойства</h3>

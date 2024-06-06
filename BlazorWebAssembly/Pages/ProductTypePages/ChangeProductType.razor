@@ -1,8 +1,12 @@
 ﻿@page "/ChangeProductType/{typeId:long}"
 <PageTitle>Изменение типа товара</PageTitle>
 
+@attribute [Authorize(Roles = "Administrator")]
+
 @inject IProductTypeService productTypeService
 @inject NavigationManager navManager
+
+<ErrorModal @ref="modal"></ErrorModal>
 
 <h3>Изменение типа товара</h3>
 
@@ -29,11 +33,18 @@
     public long TypeId{ get; set; }
 
     private ProductTypeUpdateDto _updateDto = new();
-    private string? errorMessage = null;
+    
+    private ErrorModal modal = new();
 
     async Task Submit()
     {
-        await productTypeService.UpdateProductType(_updateDto);
+        var result = await productTypeService.UpdateProductType(_updateDto);
+
+        if (result is ErrorResult errorResult)
+        {
+            await modal.ShowModal(errorResult);
+            return;
+        }
 
         navManager.NavigateTo("ProductTypes");
     }
@@ -57,11 +68,10 @@
                     Id = productType.Id,
                     Name = productType.Name,
                 };
-                errorMessage = null;
                 break;
 
             case ErrorResult<ProductType> errorResult:
-                errorMessage = errorResult.Message;
+                await modal.ShowModal(errorResult);
                 break;
         }
     }

@@ -1,6 +1,8 @@
 ﻿@page "/PropertyValuesTable"
 <PageTitle>Таблица значений свойств</PageTitle>
 
+@attribute [Authorize(Roles = "Administrator")]
+
 @inject IPropertyValueService propertyValueService
 
 <h3>Значения свойств</h3>

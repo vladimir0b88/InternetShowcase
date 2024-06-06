@@ -54,6 +54,7 @@ namespace API.Controllers
             };
         }
 
+        [Authorize(Roles=Roles.Administrator)]
         [HttpPut]
         public async Task<IActionResult> UpdateProductType([FromBody] ProductTypeUpdateDto updateDto)
         {
@@ -69,6 +70,8 @@ namespace API.Controllers
             };
         }
 
+
+        [Authorize(Roles = Roles.Administrator)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProductById(long id)
         {

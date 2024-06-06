@@ -6,13 +6,13 @@
 @inject IUserService userService
 @inject NavigationManager navManager
 
-<h3>Регистрация</h3>
-
 <ErrorModal @ref="modal"></ErrorModal>
 
+<h3>Регистрация</h3>
+
 <EditForm Model="_registerDto" OnValidSubmit="Submit" autocomplete="off">
-    <FluentValidationValidator/>
-    <ValidationSummary/>
+    <FluentValidationValidator />
+    <ValidationSummary />
 
     <div class="form-group">
         <label class="col-form-label">Имя пользователя</label>
@@ -44,20 +44,16 @@
 
     private ErrorModal modal = new();
 
-    private string? _errorMessage = null;
-
     private async Task Submit()
     {
         var result = await userService.Register(_registerDto);
 
-        if(result is ErrorResult errorResult)
+        if (result is ErrorResult errorResult)
         {
             await modal.ShowModal(errorResult);
+            return;
         }
-        else
-        {
-            _errorMessage = null;
-            navManager.NavigateTo("/");
-        }
+
+        navManager.NavigateTo("/");
     }
 }

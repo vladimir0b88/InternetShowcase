@@ -9,22 +9,19 @@
 
 <h3>Войти в личный кабинет</h3>
 
-@if(_errorMessage is not null)
-{
-    <h3>@_errorMessage</h3>
-}
+<ErrorModal @ref="modal"></ErrorModal>
 
-<EditForm Model="_loginDto" OnValidSubmit="Submit" autocomplete="off">
+<EditForm Model="loginDto" OnValidSubmit="Submit" autocomplete="off">
 
     <div class="form-group">
         <label class="col-form-label">Эл. почта</label>
         <div class="col-md-6">
-            <InputText @bind-Value="@_loginDto.Email" class="form-control"></InputText>
+            <InputText @bind-Value="@loginDto.Email" class="form-control"></InputText>
         </div>
 
         <label class="col-form-label">Пароль</label>
         <div class="col-md-6">
-            <InputText @bind-Value="@_loginDto.Password" type="password" class="form-control"></InputText>
+            <InputText @bind-Value="@loginDto.Password" type="password" class="form-control"></InputText>
         </div>
 
         <div class="col-md-6 mt-2">
@@ -35,30 +32,31 @@
 </EditForm>
 
 @code {
-    private UserLoginDto _loginDto = new UserLoginDto();
+    private UserLoginDto loginDto = new UserLoginDto();
 
-    private string? _errorMessage = null;
+    private ErrorModal modal = new();
 
     [CascadingParameter]
-    MainLayout? _mainLayout { get; set; }
+    MainLayout? mainLayout { get; set; }
 
     private async Task Submit()
     {
-        var result = await userService.Login(_loginDto);
+        var result = await userService.Login(loginDto);
 
         if (result is ErrorResult<string> errorResult)
-            _errorMessage = errorResult.Message;
-        else
         {
-            _errorMessage = null;
-
-            var customStateProvider = (CustomAuthStateProvider)stateProvider;
-
-            await customStateProvider.UpdateAuthState(result.Data);
-
-            await _mainLayout!.RefreshSidebar();
-
-            navManager.NavigateTo("/");
+            await modal.ShowModal(errorResult);
+            return;
         }
+
+
+        var customStateProvider = (CustomAuthStateProvider)stateProvider;
+
+        await customStateProvider.UpdateAuthState(result.Data);
+
+        await mainLayout!.RefreshSidebar();
+
+        navManager.NavigateTo("/");
+
     }
 }

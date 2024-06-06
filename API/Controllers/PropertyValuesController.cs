@@ -1,6 +1,8 @@
 ﻿using Application.Common;
 using Application.Models;
+using Domain.Constants;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -9,6 +11,7 @@ namespace API.Controllers
     [Route("api/[controller]")]
     public class PropertyValuesController(IPropertyValueService propertyValueService) : ControllerBase
     {
+        [Authorize(Roles = Roles.Administrator)]
         [HttpGet]
         public async Task<IActionResult> GetAllPropertyValues()
         {
@@ -36,6 +39,7 @@ namespace API.Controllers
             };
         }
 
+        [Authorize(Roles = Roles.Administrator)]
         [HttpPut]
         public async Task<IActionResult> UpdatePropertyValue([FromBody]PropertyValueUpdateDto updateDto)
         {
@@ -51,6 +55,7 @@ namespace API.Controllers
             };
         }
 
+        [Authorize(Roles = Roles.Administrator)]
         [HttpPut("List")]
         public async Task<IActionResult> UpdatePropertyValueList([FromBody] PropertyValueUpdateDtoList updateDtoList)
         {

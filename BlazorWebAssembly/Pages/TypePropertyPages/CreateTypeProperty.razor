@@ -1,19 +1,17 @@
 ﻿@page "/CreateTypeProperty/{typeId:long}"
 <PageTitle>Создание свойства</PageTitle>
 
+@attribute [Authorize(Roles = "Administrator")]
+
 @inject IProductTypeService productTypeService
 @inject ITypePropertyService typePropertyService
 @inject NavigationManager navManager
 
+<ErrorModal @ref="modal"></ErrorModal>
 
-
-@if (_productType is null)
+@if (_productType is not null)
 {
-    <h3>Создание свойства типа товара</h3>
-    <h2>@_errorMessage</h2>
-}
-else
-{
+   
     <h3>Создание свойства для <b>@_productType.Name</b></h3>
 
     <EditForm Model="_createDto" OnValidSubmit="Submit">
@@ -43,7 +41,8 @@ else
     private ProductType? _productType = null;
 
     private TypePropertyCreateDto _createDto = new();
-    private string? _errorMessage = null;
+    
+    private ErrorModal modal = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -59,18 +58,23 @@ else
             case SuccessResult<ProductType> successResult:
                 _productType = successResult.Data;
                 _createDto.TypeId = _productType.Id;
-                _errorMessage = null;
                 break;
 
             case ErrorResult<ProductType> errorResult:
-                _errorMessage = errorResult.Message;
+                await modal.ShowModal(errorResult);
                 break;
         }
     }
 
     async Task Submit()
     {
-        await typePropertyService.AddProperty(_createDto);
+        var result = await typePropertyService.AddProperty(_createDto);
+
+        if (result is ErrorResult errorResult)
+        {
+            await modal.ShowModal(errorResult);
+            return;
+        }
 
         navManager.NavigateTo($"ProductType/{TypeId}");
     }

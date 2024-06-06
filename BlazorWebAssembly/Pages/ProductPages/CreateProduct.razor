@@ -1,9 +1,13 @@
 ﻿@page "/CreateProduct/{typeId:long}"
 <PageTitle>Создание продукта</PageTitle>
 
+@attribute [Authorize(Roles = "Administrator")]
+
 @inject IProductService productService
 @inject IProductTypeService productTypeService
 @inject NavigationManager navManager
+
+<ErrorModal @ref="modal"></ErrorModal>
 
 <h3>Создание продукта</h3>
 
@@ -44,14 +48,6 @@
 }
 
 
-@if (_errorMessage is not null)
-{
-    <div class="col-auto">
-        <h3>@_errorMessage</h3>
-    </div>
-}
-
-
 
 @code {
     [Parameter]
@@ -60,7 +56,7 @@
     private ProductCreateDto _createDto = new ProductCreateDto();
     private ProductType? _productType = null;
 
-    private string? _errorMessage = null;
+    private ErrorModal modal = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -76,11 +72,10 @@
             case SuccessResult<ProductType> successResult:
                 _productType = successResult.Data;
                 _createDto.TypeId = _productType.Id;
-                _errorMessage = null;
                 break;
 
             case ErrorResult<ProductType> errorResult:
-                _errorMessage = errorResult.Message;
+                await modal.ShowModal(errorResult);
                 break;
         }
     }
@@ -92,12 +87,10 @@
 
         if (result is ErrorResult errorResult)
         {
-            _errorMessage = errorResult.Message;
+            await modal.ShowModal(errorResult);
+            return;
         }
-        else
-        {
-            _errorMessage = null;
-            navManager.NavigateTo($"ProductType/{_productType!.Id}");
-        }
+
+        navManager.NavigateTo($"ProductType/{_productType!.Id}");
     }
 }

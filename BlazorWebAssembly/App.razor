@@ -4,15 +4,22 @@
         <Found Context="routeData">
             <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
                 <NotAuthorized>
-                    Братишка, ты не авторизован
+                    @if(context.User.Identity?.IsAuthenticated == true)
+                    {
+                        <h1>Недостаточно прав для просмотра данной страницы</h1>
+                    }
+                    else
+                    {
+                        <h1>Братишка, ты не авторизован</h1>
+                    }
                 </NotAuthorized>
             </AuthorizeRouteView>
             <FocusOnNavigate RouteData="@routeData" Selector="h1" />
         </Found>
         <NotFound>
-            <PageTitle>Not found</PageTitle>
+            <PageTitle>Страница не найдена</PageTitle>
             <LayoutView Layout="@typeof(MainLayout)">
-                <p role="alert">Sorry, there's nothing at this address.</p>
+                <h1>Некорректный адрес :(</h1>
             </LayoutView>
         </NotFound>
     </Router>

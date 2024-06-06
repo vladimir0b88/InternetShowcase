@@ -2,15 +2,14 @@
 
 <PageTitle>Изменение свойства</PageTitle>
 
+@attribute [Authorize(Roles = "Administrator")]
+
 @inject ITypePropertyService typePropertyService
 @inject NavigationManager navManager
 
-<h3>Изменение свойства</h3>
+<ErrorModal @ref="modal"></ErrorModal>
 
-@if(errorMessage is not null)
-{
-    <h3>@errorMessage</h3>
-}
+<h3>Изменение свойства</h3>
 
 <EditForm Model="_updateDto" OnValidSubmit="Submit">
 
@@ -38,7 +37,8 @@
     public long PropertyId{ get; set; }
 
     private TypePropertyUpdateDto _updateDto = new();
-    private string? errorMessage = null;
+    
+    private ErrorModal modal = new();
 
     async Task Submit()
     {
@@ -46,7 +46,7 @@
 
         if(result is ErrorResult errorResult)
         {
-            errorMessage = errorResult.Message;
+            await modal.ShowModal(errorResult);
             return;
         }
 
@@ -71,11 +71,10 @@
                         Id = typeProperty.Id,
                         Name = typeProperty.Name,
                     };
-                errorMessage = null;
                 break;
 
             case ErrorResult<TypeProperty> errorResult:
-                errorMessage = errorResult.Message;
+                await modal.ShowModal(errorResult);
                 break;
         }
     }

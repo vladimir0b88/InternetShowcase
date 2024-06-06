@@ -1,11 +1,14 @@
 ﻿@page "/CreateProductType"
 <PageTitle>Создание типа товара</PageTitle>
 
+@attribute [Authorize(Roles = "Administrator")]
+
 @inject IProductTypeService productTypeService
 @inject NavigationManager navManager
 
-<h3>Создание типа товара</h3>
+<ErrorModal @ref="modal"></ErrorModal>
 
+<h3>Создание типа товара</h3>
 
 <EditForm Model="_createDto" OnValidSubmit="Submit">
 
@@ -29,10 +32,17 @@
 @code {
     private ProductTypeCreateDto _createDto = new();
 
+    private ErrorModal modal = new();
 
     async Task Submit()
     {
-        await productTypeService.AddProductType(_createDto);
+        var result = await productTypeService.AddProductType(_createDto);
+
+        if (result is ErrorResult errorResult)
+        {
+            await modal.ShowModal(errorResult);
+            return;
+        }
 
         navManager.NavigateTo("ProductTypes");
     }

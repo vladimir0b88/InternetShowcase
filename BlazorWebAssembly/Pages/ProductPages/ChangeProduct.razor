@@ -1,16 +1,16 @@
 ﻿@page "/changeProduct/{productId:long}"
-<PageTitle>ChangeProduct</PageTitle>
+<PageTitle>Изменение продукта</PageTitle>
+
+@attribute [Authorize(Roles = "Administrator")]
 
 @inject IProductService productService
 @inject NavigationManager navManager
 
-<h3>ChangeProduct</h3>
+<ErrorModal @ref="modal"></ErrorModal>
 
-@if(errorMessage is not null || updateDto is null)
-{
-    <h3>@errorMessage</h3>
-}
-else
+<h3>Изменение продукта</h3>
+
+@if (updateDto is not null)
 {
     <div class="col-auto">
         <label class="form-label">
@@ -54,7 +54,7 @@ else
 
     private ProductUpdateDto? updateDto = null;
 
-    private string? errorMessage = null;
+    private ErrorModal modal = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -62,7 +62,7 @@ else
 
         if (result is ErrorResult<Product> errorResult)
         {
-            errorMessage = errorResult.Message;
+            await modal.ShowModal(errorResult);
             return;
         }
 
@@ -72,22 +72,22 @@ else
         Product product = result.Data;
 
         updateDto = new ProductUpdateDto()
-        {
-            Id = product.Id,
-            Name = product.Name,
-            Description = product.Description,
-            Cost = product.Cost,
-            TypeId = product.TypeId,
-        };
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Description = product.Description,
+                Cost = product.Cost,
+                TypeId = product.TypeId,
+            };
     }
 
     private async Task UpdateProduct()
     {
         var result = await productService.UpdateProduct(updateDto!);
 
-        if(result is ErrorResult errorResult)
+        if (result is ErrorResult errorResult)
         {
-            errorMessage = errorResult.Message;
+            await modal.ShowModal(errorResult);
             return;
         }
 

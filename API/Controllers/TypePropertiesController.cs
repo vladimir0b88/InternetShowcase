@@ -1,6 +1,8 @@
 ﻿using Application.Common;
 using Application.Models;
+using Domain.Constants;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -10,6 +12,7 @@ namespace API.Controllers
     [Route("api/[controller]")]
     public class TypePropertiesController(ITypePropertyService propertyService) : ControllerBase
     {
+        [Authorize(Roles = Roles.Administrator)]
         [HttpGet]
         public async Task<IActionResult> GetAllTypeProperties()
         {
@@ -50,7 +53,7 @@ namespace API.Controllers
             };
         }
 
-
+        [Authorize(Roles = Roles.Administrator)]
         [HttpPost]
         public async Task<IActionResult> AddTypeProperty([FromBody]TypePropertyCreateDto createDto)
         {
@@ -65,6 +68,7 @@ namespace API.Controllers
             };
         }
 
+        [Authorize(Roles = Roles.Administrator)]
         [HttpPut]
         public async Task<IActionResult> UpdateTypeProperty([FromBody]TypePropertyUpdateDto updateDto)
         {
@@ -79,6 +83,7 @@ namespace API.Controllers
             };
         }
 
+        [Authorize(Roles = Roles.Administrator)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTypeProperty(long id)
         {

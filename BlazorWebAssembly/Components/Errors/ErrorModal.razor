@@ -4,7 +4,10 @@
 
         <p><b>Сообщение: </b>@errorMessage</p>
 
-        <p><b>Коды ошибок: </b>@errorCodes</p>
+        @if(!string.IsNullOrEmpty(errorCodes))
+        {
+            <p><b>Коды ошибок: </b>@errorCodes</p>
+        }
 
     </BodyTemplate>
     <FooterTemplate>
@@ -28,6 +31,14 @@
     {
         this.errorMessage = errorResult.Message;
         this.errorCodes = string.Join(", ",errorResult.Errors.Select(e => e.Code));
+
+        await modal.ShowAsync();
+    }
+
+    public async Task ShowModal<T>(ErrorResult<T> errorResult)
+    {
+        this.errorMessage = errorResult.Message;
+        this.errorCodes = string.Join(", ", errorResult.Errors.Select(e => e.Code));
 
         await modal.ShowAsync();
     }

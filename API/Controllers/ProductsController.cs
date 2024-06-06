@@ -1,6 +1,8 @@
 ﻿using Application.Common;
 using Application.Models;
+using Domain.Constants;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -50,6 +52,7 @@ namespace API.Controllers
             };
         }
 
+        [Authorize(Roles = Roles.Administrator)]
         [HttpPost]
         public async Task<IActionResult> AddProduct([FromBody] ProductCreateDto createDto)
         {
@@ -64,7 +67,7 @@ namespace API.Controllers
             };
         }
 
-
+        [Authorize(Roles = Roles.Administrator)]
         [HttpPut]
         public async Task<IActionResult> UpdateProduct([FromBody] ProductUpdateDto updateDto)
         {
@@ -80,7 +83,7 @@ namespace API.Controllers
             };
         }
 
-
+        [Authorize(Roles = Roles.Administrator)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProductById(long id)
         {

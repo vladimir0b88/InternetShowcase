@@ -1,6 +1,6 @@
-﻿using System.Net.Http.Json;
+﻿using Application.Common;
 using System.Net;
-using Application.Common;
+using System.Net.Http.Json;
 
 namespace BlazorWebAssembly.Common
 {
@@ -34,6 +34,14 @@ namespace BlazorWebAssembly.Common
 
                 case HttpStatusCode.BadRequest:
                     result = await response.Content.ReadFromJsonAsync<ErrorResult>();
+                    break;
+
+                case HttpStatusCode.Forbidden:
+                    result = new ErrorResult(message: "Недостаточно прав для выполнения данной операции");
+                    break;
+
+                case HttpStatusCode.Unauthorized:
+                    result = new ErrorResult(message: "Пользователь не авторизирован");
                     break;
 
                 default:
@@ -72,6 +80,14 @@ namespace BlazorWebAssembly.Common
 
                 case HttpStatusCode.BadRequest:
                     result = await response.Content.ReadFromJsonAsync<ErrorResult<T>>();
+                    break;
+
+                case HttpStatusCode.Forbidden:
+                    result = new ErrorResult<T>(message: "Недостаточно прав для выполнения данной операции");
+                    break;
+
+                case HttpStatusCode.Unauthorized:
+                    result = new ErrorResult<T>(message: "Пользователь не авторизирован");
                     break;
 
                 default:

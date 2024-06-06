@@ -1,6 +1,8 @@
 ﻿@page "/UsersTable"
 <PageTitle>Таблица пользователей</PageTitle>
 
+@attribute [Authorize(Roles = "Administrator")]
+
 @inject IUserService userService
 
 <h3>Пользователи</h3>
