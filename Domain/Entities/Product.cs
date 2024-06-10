@@ -12,5 +12,7 @@ namespace Domain.Entities
         public virtual ProductType? Type { get; set; } = null!;
 
         public virtual IList<PropertyValue> PropertyValues { get; set; } = null!;
+
+        public virtual IList<ProductImage> Images { get; set; } = null!;
     }
 }

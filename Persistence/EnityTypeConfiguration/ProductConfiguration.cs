@@ -37,6 +37,11 @@ namespace Persistence.EnityTypeConfiguration
                    .WithMany(type => type.Products)
                    .HasForeignKey(product => product.TypeId)
                    .OnDelete(DeleteBehavior.SetNull);
+
+            builder.HasMany(product => product.Images)
+                   .WithOne(productImages => productImages.Product)
+                   .HasForeignKey(productImages => productImages.ProductId)
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

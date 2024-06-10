@@ -15,6 +15,8 @@ namespace Persistence
 
         public DbSet<PropertyValue> PropertyValues { get; set; }
 
+        public DbSet<ProductImage> ProductImages { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
             //Database.EnsureCreated();
@@ -26,6 +28,7 @@ namespace Persistence
             builder.ApplyConfiguration(new ProductTypeConfiguration());
             builder.ApplyConfiguration(new TypePropertyConfiguration());
             builder.ApplyConfiguration(new PropertyValueConfiguration());
+            builder.ApplyConfiguration(new ProductImageConfiguration());
 
             builder.ApplyConfiguration(new UserConfiguration());
 
