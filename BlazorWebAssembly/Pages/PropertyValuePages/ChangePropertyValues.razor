@@ -1,0 +1,82 @@
+﻿@page "/ChangePropertyValues/{productId:long}"
+<PageTitle>Изменение свойств</PageTitle>
+
+@attribute [Authorize(Roles = Roles.Administrator)]
+
+@inject IProductService productService
+@inject IPropertyValueService propertyValueService
+@inject NavigationManager navManager
+
+
+<ErrorModal @ref="modal"></ErrorModal>
+
+@if(updateList is not null)
+{
+    <EditForm Model="updateList" OnValidSubmit="UpdatePropertyValues">
+        <FluentValidationValidator />
+        <ValidationSummary />
+
+        @foreach(PropertyValueUpdateDto updateDto in updateList.List)
+        {
+            <div class="col-auto">
+                <label class="form-label">
+                    @(product.PropertyValues.First(pv => pv.Id == updateDto.Id)
+                                            .TypeProperty.Name)
+                    <InputText @bind-Value="@updateDto.Value" class="form-control"></InputText>
+                </label>
+            </div>
+        }
+
+        <div class="col-md-2 mt-2">
+            <Button Type="ButtonType.Submit" Color="ButtonColor.Success">Изменить</Button>
+        </div>
+
+    </EditForm>
+}
+
+
+@code {
+    private ErrorModal modal = new();
+
+    [Parameter]
+    public long ProductId { get; set; }
+
+    private Product product = new();
+
+    private PropertyValueUpdateDtoList updateList = new();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await productService.GetProductById(ProductId);
+
+        if (result is ErrorResult<Product> errorResult)
+        {
+            await modal.ShowModal(errorResult);
+            return;
+        }
+
+        product = result.Data;
+
+        var list = product.PropertyValues.Select(pv => new PropertyValueUpdateDto()
+        {
+            Id = pv.Id,
+            Value = pv.Value
+        }).ToList();
+
+        updateList.List = list;
+    }
+
+    private async Task UpdatePropertyValues()
+    {
+        var result = await propertyValueService.UpdatePropertyValueList(updateList);
+
+        if (result is ErrorResult errorResult)
+        {
+            await modal.ShowModal(errorResult);
+            return;
+        }
+
+        navManager.NavigateTo($"Product/{ProductId}");
+    }
+}

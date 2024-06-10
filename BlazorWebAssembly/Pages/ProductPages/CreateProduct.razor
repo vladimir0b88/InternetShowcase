@@ -1,7 +1,7 @@
 ﻿@page "/CreateProduct/{typeId:long}"
 <PageTitle>Создание продукта</PageTitle>
 
-@attribute [Authorize(Roles = "Administrator")]
+@attribute [Authorize(Roles = Roles.Administrator)]
 
 @inject IProductService productService
 @inject IProductTypeService productTypeService

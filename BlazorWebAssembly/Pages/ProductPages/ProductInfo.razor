@@ -10,13 +10,15 @@
 {
     <Button Color="ButtonColor.Secondary"
             Type="ButtonType.Link"
-            To="@($"changeProduct/{_product.Id}")">
+            To="@($"changeProduct/{_product.Id}")"
+            >
         <Icon Name="IconName.Pencil" Size="IconSize.x6"></Icon>
         Изменить
     </Button>
 
     <Button Color="ButtonColor.Danger"
-            @onclick="DeleteProduct">
+            @onclick="DeleteProduct"
+            Class="mx-2">
         Удалить
     </Button>
 
@@ -29,8 +31,16 @@
     <h4>Описание</h4>
     <p class="fs-6 text-break text-wrap">@_product.Description</p>
 
+    <div class="divider"></div>
 
-    <table class="w-auto table table-striped table-bordered">
+    <Button Color="ButtonColor.Secondary"
+            Type="ButtonType.Link"
+            To="@($"ChangePropertyValues/{_product.Id}")">
+        <Icon Name="IconName.Pencil" Size="IconSize.x6"></Icon>
+        Изменить характеристики
+    </Button>
+
+    <table class="w-auto table table-striped table-bordered mt-3">
         <thead>
             <tr>
                 <th>Характеристика</th>

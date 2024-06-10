@@ -2,7 +2,7 @@
 
 <PageTitle>Изменение свойства</PageTitle>
 
-@attribute [Authorize(Roles = "Administrator")]
+@attribute [Authorize(Roles = Roles.Administrator)]
 
 @inject ITypePropertyService typePropertyService
 @inject NavigationManager navManager

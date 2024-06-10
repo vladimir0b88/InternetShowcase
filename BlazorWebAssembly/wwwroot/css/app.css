@@ -123,3 +123,10 @@ code {
 a {
     text-decoration: none;
 }
+
+.divider {
+    border-bottom: 1px solid #DADADA;
+    background-color: #DADADA;
+    height: 1px;
+    margin: 0.5em 0px 1.5em;
+}
