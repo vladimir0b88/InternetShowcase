@@ -6,8 +6,20 @@
 
 <ErrorModal @ref="modal"></ErrorModal>
 
-@if(_product is not null)
+@if (_product is not null)
 {
+    <Button Color="ButtonColor.Secondary"
+            Type="ButtonType.Link"
+            To="@($"changeProduct/{_product.Id}")">
+        <Icon Name="IconName.Pencil" Size="IconSize.x6"></Icon>
+        Изменить
+    </Button>
+
+    <Button Color="ButtonColor.Danger"
+            @onclick="DeleteProduct">
+        Удалить
+    </Button>
+
     <h3>Наименование: @_product.Name</h3>
 
     <p class="fs-4">Тип продукта: @_product.Type?.Name</p>
@@ -16,7 +28,7 @@
 
     <h4>Описание</h4>
     <p class="fs-6 text-break text-wrap">@_product.Description</p>
-    
+
 
     <table class="w-auto table table-striped table-bordered">
         <thead>
@@ -26,7 +38,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach(PropertyValue propertyValue in _product.PropertyValues)
+            @foreach (PropertyValue propertyValue in _product.PropertyValues)
             {
                 <tr>
                     <td>@propertyValue.TypeProperty.Name</td>
@@ -53,6 +65,22 @@
     async Task GetProduct()
     {
         var result = await productService.GetProductById(ProductId);
+
+        switch (result)
+        {
+            case SuccessResult<Product> successResult:
+                _product = successResult.Data;
+                break;
+
+            case ErrorResult<Product> errorResult:
+                await modal.ShowModal(errorResult);
+                break;
+        }
+    }
+
+    async Task DeleteProduct()
+    {
+        var result = await productService.DeleteProductById(_product!.Id);
 
         switch (result)
         {

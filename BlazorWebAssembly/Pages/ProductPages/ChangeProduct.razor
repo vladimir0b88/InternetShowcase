@@ -50,6 +50,7 @@
             <Button Color="ButtonColor.Success" @onclick="UpdateProduct">Изменить</Button>
         </div>
 
+
     </EditForm>
 }
 
@@ -59,9 +60,18 @@
 
     private ProductUpdateDto? updateDto = null;
 
+    private PropertyValueUpdateDtoList propertyValueUpdateDto = new();
+
     private ErrorModal modal = new();
 
+    private List<PropertyValue> propertyValues = new();
+
     protected override async Task OnInitializedAsync()
+    {
+        await GetProductUpdateDto();
+    }
+
+    private async Task GetProductUpdateDto()
     {
         var result = await productService.GetProductById(ProductId);
 

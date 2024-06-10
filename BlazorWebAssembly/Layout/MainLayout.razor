@@ -20,6 +20,24 @@
             </a>
         </li>
 
+        <AuthorizeView Roles="@Roles.Administrator">
+            <Authorized>
+                <li>
+                    <Dropdown>
+                        <DropdownToggleButton>Таблицы</DropdownToggleButton>
+                        <DropdownMenu>
+                            <DropdownItem To="/ProductsTable" Type="ButtonType.Link">Продукты</DropdownItem>
+                            <DropdownItem To="/ProductTypesTable" Type="ButtonType.Link">Типы товаров</DropdownItem>
+                            <DropdownItem To="/TypePropertiesTable" Type="ButtonType.Link">Свойства типа</DropdownItem>
+                            <DropdownItem To="/PropertyValuesTable" Type="ButtonType.Link">Значения свойств</DropdownItem>
+                            <DropdownDivider>Dropdown header</DropdownDivider>
+                            <DropdownItem To="/UsersTable" Type="ButtonType.Link">Пользователи</DropdownItem>
+                        </DropdownMenu>
+                    </Dropdown>
+                </li>
+            </Authorized>
+        </AuthorizeView>
+
     </ul>
 
     <div class="col-md-3 text-end">
