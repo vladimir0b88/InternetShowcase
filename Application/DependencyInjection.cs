@@ -38,8 +38,13 @@ namespace Application
             // PropertyValue
             services.AddScoped<IValidator<PropertyValueUpdateDto>, PropertyValueUpdateDtoValidator>();
             services.AddScoped<IValidator<PropertyValueUpdateDtoList>, PropertyValueUpdateDtoListValidator>();
+            
             // User
             services.AddScoped<IValidator<UserRegisterDto>, UserRegisterDtoValidator>();
+            
+            // ProductImage
+            services.AddScoped<IValidator<ProductImageAddDto>, ProductImageAddDtoValidator>();
+
             #endregion
 
             return services;

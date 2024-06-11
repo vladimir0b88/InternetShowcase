@@ -29,7 +29,6 @@ namespace Persistence
             builder.ApplyConfiguration(new TypePropertyConfiguration());
             builder.ApplyConfiguration(new PropertyValueConfiguration());
             builder.ApplyConfiguration(new ProductImageConfiguration());
-
             builder.ApplyConfiguration(new UserConfiguration());
 
             base.OnModelCreating(builder);

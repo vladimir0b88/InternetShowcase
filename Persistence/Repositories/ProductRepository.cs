@@ -12,6 +12,7 @@ namespace Persistence.Repositories
                                                      .Include(p => p.PropertyValues)
                                                      .ThenInclude(pv => pv.TypeProperty)
                                                      .Include(p => p.Type)
+                                                     .Include(p => p.Images)
                                                      .FirstOrDefaultAsync(p => p.Id == id);
 
             if (product is null)

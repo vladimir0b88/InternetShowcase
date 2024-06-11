@@ -1,5 +1,5 @@
-﻿
-using Application.Common;
+﻿using Application.Common;
+using Application.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,6 +25,7 @@ namespace Persistence
             services.AddScoped<IProductTypeRepository, ProductTypeRepository>();
             services.AddScoped<ITypePropertyRepository, TypePropertyRepository>();
             services.AddScoped<IPropertyValueRepository, PropertyValueRepository>();
+            services.AddScoped<IProductImageRepository, ProductImageRepository>();
 
             services.AddScoped<IUserRepository, UserRepository>();
 

@@ -6,7 +6,7 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductImageController : ControllerBase
+    public class ProductImagesController : ControllerBase
     {
         [HttpPost("{productId:long}")]
         public async Task<IActionResult> UploadImage()
