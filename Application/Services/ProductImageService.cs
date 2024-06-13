@@ -1,14 +1,36 @@
 ﻿using Application.Common;
 using Application.Models;
 using Domain.Entities;
+using FluentValidation;
 
 namespace Application.Services
 {
-    public class ProductImageService(IProductImageRepository repository) : IProductImageService
+    public class ProductImageService(IProductImageRepository repository,
+                                     IValidator<ProductImageAddDto> addValidator) : IProductImageService
     {
-        public Task<Result> AddImage(ProductImageAddDto addDto)
+        public async Task<Result> AddImage(ProductImageAddDto addDto)
         {
-            throw new NotImplementedException();
+            var validationResult = await addValidator.ValidateAsync(addDto);
+
+            if (!validationResult.IsValid)
+                return new ValidationErrorResult(message: "Добавляемое изображение не прошло валидацию",
+                                                 errors: [ErrorList.FailedValidation],
+                                                 validationErrors: validationResult.Errors);
+
+            ProductImage productImage = new ProductImage()
+            {
+                ProductId = addDto.ProductId,
+            };
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                addDto.FormFile.CopyTo(ms);
+                productImage.Image = ms.ToArray();
+            }
+
+            var result = await repository.AddImage(productImage);
+
+            return result;
         }
 
         public async Task<Result> DeleteImage(long id)

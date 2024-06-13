@@ -18,6 +18,7 @@ namespace Application
             services.AddScoped<ITypePropertyService, TypePropertyService>();
             services.AddScoped<IPropertyValueService, PropertyValueService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IProductImageService, ProductImageService>();
 
             #endregion
 
