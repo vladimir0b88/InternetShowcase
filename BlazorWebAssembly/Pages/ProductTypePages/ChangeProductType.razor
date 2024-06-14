@@ -10,35 +10,42 @@
 
 <h3>Изменение типа товара</h3>
 
-<EditForm Model="_updateDto" OnValidSubmit="Submit">
+@if (updateDto is null)
+{
+    <LoadingSpinner></LoadingSpinner>
+}
+else
+{
+    <EditForm Model="updateDto" OnValidSubmit="Submit">
 
-    <FluentValidationValidator />
-    <ValidationSummary />
+        <FluentValidationValidator />
+        <ValidationSummary />
 
-    <div class="form-group">
-
-        <label class="col-form-label">Название типа товара</label>
         <div class="col-md-2">
-            <InputText @bind-Value="@_updateDto.Name" class="form-control"></InputText>
+            <label class="col-form-label">
+                Название типа товара
+                <InputText @bind-Value="@updateDto.Name" class="form-control"></InputText>
+            </label>
         </div>
 
         <div class="col-md-2 mt-2">
             <Button Type="ButtonType.Submit" Color="ButtonColor.Success">Изменить</Button>
         </div>
-    </div>
-</EditForm>
+
+    </EditForm>
+}
 
 @code {
     [Parameter]
-    public long TypeId{ get; set; }
+    public long TypeId { get; set; }
 
-    private ProductTypeUpdateDto _updateDto = new();
-    
+    private ProductTypeUpdateDto? updateDto = null;
+
     private ErrorModal modal = new();
 
     async Task Submit()
     {
-        var result = await productTypeService.UpdateProductType(_updateDto);
+        var result = await productTypeService.UpdateProductType(updateDto!);
 
         if (result is ErrorResult errorResult)
         {
@@ -63,11 +70,11 @@
         {
             case SuccessResult<ProductType> successResult:
                 ProductType productType = successResult.Data!;
-                _updateDto = new ProductTypeUpdateDto()
-                {
-                    Id = productType.Id,
-                    Name = productType.Name,
-                };
+                updateDto = new ProductTypeUpdateDto()
+                    {
+                        Id = productType.Id,
+                        Name = productType.Name,
+                    };
                 break;
 
             case ErrorResult<ProductType> errorResult:

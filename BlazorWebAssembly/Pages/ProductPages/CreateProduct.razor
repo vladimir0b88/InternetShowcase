@@ -11,6 +11,11 @@
 
 <h3>Создание продукта</h3>
 
+@if(productType is null)
+{
+    <LoadingSpinner></LoadingSpinner>
+}
+
 @if (productType is not null)
 {
     <EditForm Model="createDto" OnValidSubmit="Submit">
@@ -18,32 +23,30 @@
         <FluentValidationValidator />
         <ValidationSummary />
 
-        <div class="form-group">
-
-            <label class="col-form-label">Тип товара</label>
-            <div class="col-md-2">
-                <input class="form-control" placeholder="@productType.Name" disabled>
-            </div>
-
-            <label class="col-form-label">Название</label>
-            <div class="col-md-2">
-                <InputText @bind-Value="@createDto.Name" class="form-control"></InputText>
-            </div>
-
-            <label class="col-form-label">Описание</label>
-            <div class="col-md-2">
-                <InputTextArea @bind-Value="@createDto.Description" class="form-control"></InputTextArea>
-            </div>
-
-            <label class="col-form-label">Стоимость</label>
-            <div class="col-md-2">
-                <InputNumber @bind-Value="@createDto.Cost" class="form-control"></InputNumber>
-            </div>
-
-            <div class="col-md-2 mt-2">
-                <Button Type="ButtonType.Submit" Color="ButtonColor.Success">Создать</Button>
-            </div>
+        <label class="col-form-label">Тип товара</label>
+        <div class="col-md-2">
+            <input class="form-control" placeholder="@productType.Name" disabled>
         </div>
+
+        <label class="col-form-label">Название</label>
+        <div class="col-md-2">
+            <InputText @bind-Value="@createDto.Name" class="form-control"></InputText>
+        </div>
+
+        <label class="col-form-label">Описание</label>
+        <div class="col-md-2">
+            <InputTextArea @bind-Value="@createDto.Description" class="form-control"></InputTextArea>
+        </div>
+
+        <label class="col-form-label">Стоимость</label>
+        <div class="col-md-2">
+            <InputNumber @bind-Value="@createDto.Cost" class="form-control"></InputNumber>
+        </div>
+
+        <div class="col-md-2 mt-2">
+            <Button Type="ButtonType.Submit" Color="ButtonColor.Success">Создать</Button>
+        </div>
+
     </EditForm>
 }
 
@@ -63,7 +66,7 @@
         await GetProductType();
     }
 
-    async Task GetProductType()
+    private async Task GetProductType()
     {
         var result = await productTypeService.GetProductTypeById(TypeId);
 

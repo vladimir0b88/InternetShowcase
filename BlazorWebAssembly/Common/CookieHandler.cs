@@ -13,7 +13,5 @@ namespace BlazorWebAssembly.Common
 
             return await base.SendAsync(request, cancellationToken);
         }
-
-
     }
 }

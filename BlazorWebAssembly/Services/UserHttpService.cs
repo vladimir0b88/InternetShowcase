@@ -20,6 +20,8 @@ namespace BlazorWebAssembly.Services
 
             var result = await HttpResponseHandler.GetResult<List<User>>(response);
 
+            await Task.Delay(Constant.ServiceDelay);
+
             return result;
         }
 
@@ -28,6 +30,8 @@ namespace BlazorWebAssembly.Services
             var response = await httpClient.PostAsJsonAsync($"{_controllerUri}/Login", loginDto);
 
             var result = await HttpResponseHandler.GetResult<string>(response);
+
+            await Task.Delay(Constant.ServiceDelay);
 
             return result;
         }
@@ -44,6 +48,8 @@ namespace BlazorWebAssembly.Services
             var response = await httpClient.PostAsJsonAsync($"{_controllerUri}/Register", registerDto);
 
             var result = await HttpResponseHandler.GetResult(response);
+
+            await Task.Delay(Constant.ServiceDelay);
 
             return result;
         }

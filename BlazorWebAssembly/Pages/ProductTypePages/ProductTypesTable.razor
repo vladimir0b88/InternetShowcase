@@ -7,15 +7,21 @@
 
 <p class="fs-3">Типы товаров</p>
 
-<QuickGrid Items="_productTypes" Class="w-auto table table-striped table-bordered">
-    <PropertyColumn Property="@(p => p.Id)"></PropertyColumn>
+@if (productTypes is null)
+{
+    <LoadingSpinner></LoadingSpinner>
+}
+else
+{
+    <QuickGrid Items="productTypes" Class="w-auto table table-striped table-bordered">
+        <PropertyColumn Property="@(p => p.Id)"></PropertyColumn>
 
-    <PropertyColumn Property="@(p => p.Name)" Title="Наименование" Sortable="true"></PropertyColumn>
-</QuickGrid>
-
+        <PropertyColumn Property="@(p => p.Name)" Title="Наименование" Sortable="true"></PropertyColumn>
+    </QuickGrid>
+}
 
 @code {
-    private IQueryable<ProductType>? _productTypes = null;
+    private IQueryable<ProductType>? productTypes = null;
 
     protected override async Task OnInitializedAsync()
     {
@@ -28,6 +34,6 @@
         var result = await productTypeService.GetAllProductTypes();
 
         if (result is SuccessResult<List<ProductType>> successResult)
-            _productTypes = successResult.Data.AsQueryable();
+            productTypes = successResult.Data.AsQueryable();
     }
 }

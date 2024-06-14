@@ -7,20 +7,27 @@
 
 <h3>Продукты</h3>
 
-<QuickGrid Items="_products" Class="w-auto table table-striped table-bordered">
-    <PropertyColumn Property="@(p => p.Id)"></PropertyColumn>
+@if (products is null)
+{
+    <LoadingSpinner></LoadingSpinner>
+}
+else
+{
+    <QuickGrid Items="products" Class="w-auto table table-striped table-bordered">
+        <PropertyColumn Property="@(p => p.Id)"></PropertyColumn>
 
-    <PropertyColumn Property="@(p => p.TypeId)" Title="Тип товара"></PropertyColumn>
+        <PropertyColumn Property="@(p => p.TypeId)" Title="Тип товара"></PropertyColumn>
 
-    <PropertyColumn Property="@(p => p.Name)" Title="Наименование" Sortable="true"></PropertyColumn>
+        <PropertyColumn Property="@(p => p.Name)" Title="Наименование" Sortable="true"></PropertyColumn>
 
-    <PropertyColumn Property="@(p => p.Cost)" Title="Стоимость" Sortable="true"></PropertyColumn>
+        <PropertyColumn Property="@(p => p.Cost)" Title="Стоимость" Sortable="true"></PropertyColumn>
 
-    <PropertyColumn Property="@(p => p.Description)" Title="Описание" Class="text-break"></PropertyColumn>
-</QuickGrid>
+        <PropertyColumn Property="@(p => p.Description)" Title="Описание" Class="text-break"></PropertyColumn>
+    </QuickGrid>
+}
 
 @code {
-    private IQueryable<Product>? _products = null;
+    private IQueryable<Product>? products = null;
 
     protected override async Task OnInitializedAsync()
     {
@@ -33,6 +40,6 @@
         var result = await productService.GetAllProducts();
 
         if (result is SuccessResult<List<Product>> successResult)
-            _products = successResult.Data.AsQueryable();
+            products = successResult.Data.AsQueryable();
     }
 }

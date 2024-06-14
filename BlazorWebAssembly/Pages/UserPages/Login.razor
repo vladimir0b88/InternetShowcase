@@ -13,20 +13,18 @@
 
 <EditForm Model="loginDto" OnValidSubmit="Submit" autocomplete="off">
 
-    <div class="form-group">
-        <label class="col-form-label">Эл. почта</label>
-        <div class="col-md-6">
-            <InputText @bind-Value="@loginDto.Email" class="form-control"></InputText>
-        </div>
+    <div class="form-floating col-md-3 mb-3">
+        <InputText @bind-Value="@loginDto.Email" id="loginDtoEmail" class="form-control" placeholder="test@example.ru"></InputText>
+        <label for="loginDtoEmail">Эл. почта</label>
+    </div>
 
-        <label class="col-form-label">Пароль</label>
-        <div class="col-md-6">
-            <InputText @bind-Value="@loginDto.Password" type="password" class="form-control"></InputText>
-        </div>
+    <div class="form-floating col-md-3 mb-3">
+        <InputText @bind-Value="@loginDto.Password" type="password" class="form-control" id="loginDtoPass" placeholder="qwerty123"></InputText>
+        <label for="loginDtoPass">Пароль</label>
+    </div>
 
-        <div class="col-md-6 mt-2">
-            <Button Type="ButtonType.Submit" Color="ButtonColor.Success">Войти</Button>
-        </div>
+    <div class="col-md-6 mt-2">
+        <Button Type="ButtonType.Submit" Color="ButtonColor.Success">Войти</Button>
     </div>
 
 </EditForm>

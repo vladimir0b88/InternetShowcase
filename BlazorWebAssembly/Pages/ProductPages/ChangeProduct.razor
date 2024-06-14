@@ -10,6 +10,11 @@
 
 <h3>Изменение продукта</h3>
 
+@if(updateDto is null)
+{
+    <LoadingSpinner></LoadingSpinner>
+}
+
 @if (updateDto is not null)
 {
     <EditForm Model="updateDto" OnValidSubmit="UpdateProduct">

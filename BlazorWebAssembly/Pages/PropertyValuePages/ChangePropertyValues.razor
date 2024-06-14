@@ -10,7 +10,11 @@
 
 <ErrorModal @ref="modal"></ErrorModal>
 
-@if(updateList is not null)
+@if(updateList is null)
+{
+    <LoadingSpinner></LoadingSpinner>
+}
+else
 {
     <EditForm Model="updateList" OnValidSubmit="UpdatePropertyValues">
         <FluentValidationValidator />
@@ -43,7 +47,7 @@
 
     private Product product = new();
 
-    private PropertyValueUpdateDtoList updateList = new();
+    private PropertyValueUpdateDtoList? updateList = null;
 
 
     protected override async Task OnInitializedAsync()
@@ -64,12 +68,15 @@
             Value = pv.Value
         }).ToList();
 
-        updateList.List = list;
+        updateList = new()
+        {
+            List = list,    
+        };
     }
 
     private async Task UpdatePropertyValues()
     {
-        var result = await propertyValueService.UpdatePropertyValueList(updateList);
+        var result = await propertyValueService.UpdatePropertyValueList(updateList!);
 
         if (result is ErrorResult errorResult)
         {

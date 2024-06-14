@@ -10,99 +10,119 @@
 
 <ErrorModal @ref="modal"></ErrorModal>
 
-<h3>Информация о типе товара: <b>@_productType.Name</b></h3>
-
-<h4 class="mt-3">
-    Свойства
-
-    <Button Color="ButtonColor.Success"
-            Type="ButtonType.Link"
-            To="@($"CreateTypeProperty/{_productType.Id}")">
-        <Icon Name="IconName.PlusLg" Size="IconSize.x5"></Icon>
-    </Button>
-
-    <Button Color="ButtonColor.Primary"
-            @onclick="GetTypeProperties">
-        <Icon Name="IconName.ArrowRepeat" Size="IconSize.x5"></Icon>
-    </Button>
-</h4>
-
-
-@if (_typeProperties is not null)
+@if (productType is null)
 {
-    <QuickGrid Items="_typeProperties" Class="w-auto table table-striped table-bordered table-sm">
-        <PropertyColumn Property="@(tp => tp.Id)"></PropertyColumn>
-
-        <PropertyColumn Property="@(tp => tp.Name)" Title="Наименование" Sortable="true"></PropertyColumn>
-
-        <TemplateColumn>
-            <Button Color="ButtonColor.Secondary"
-                    Type="ButtonType.Link"
-                    To="@($"ChangeTypeProperty/{context.TypeId}/{context.Id}")">
-                <Icon Name="IconName.Pencil" Size="IconSize.x6"></Icon>
-            </Button>
-        </TemplateColumn>
-
-        <TemplateColumn>
-            <Button Color="ButtonColor.Danger"
-                    @onclick="() => DeleteTypePropertyById(context.Id)">
-                <Icon Name="IconName.XLg" Size="IconSize.x6"></Icon>
-            </Button>
-        </TemplateColumn>
-
-    </QuickGrid>
+    <LoadingSpinner></LoadingSpinner>
 }
-
-
-
-<h4 class="mt-3">
-    Продукты
-
-    <Button Color="ButtonColor.Success"
-            Type="ButtonType.Link"
-            To="@($"CreateProduct/{_productType.Id}")">
-        <Icon Name="IconName.PlusLg" Size="IconSize.x5"></Icon>
-    </Button>
-
-    <Button Color="ButtonColor.Primary"
-            @onclick="GetProducts">
-        <Icon Name="IconName.ArrowRepeat" Size="IconSize.x5"></Icon>
-    </Button>
-
-</h4>
-
-@if (_products is not null)
+else
 {
-    <QuickGrid Items="_products" Class="w-auto table table-striped table-bordered">
-        <PropertyColumn Property="@(p => p.Id)"></PropertyColumn>
+    <h3>Информация о типе товара: <b>@productType.Name</b></h3>
 
-        <TemplateColumn Title="Наименование">
-            <Button Color="ButtonColor.Light"
-                    Type="ButtonType.Link"
-                    To="@($"Product/{context.Id}")">
-                @context.Name
-            </Button>
-        </TemplateColumn>
 
-        <PropertyColumn Property="@(p => p.Cost)" Title="Стоимость" Sortable="true"></PropertyColumn>
+    <h4 class="mt-3">
+        Свойства
 
-        <PropertyColumn Property="@(p => p.Description)" Title="Описание" Class="text-break"></PropertyColumn>
-    </QuickGrid>
+        <Button Color="ButtonColor.Success"
+                Type="ButtonType.Link"
+                To="@($"CreateTypeProperty/{productType.Id}")">
+            <Icon Name="IconName.PlusLg" Size="IconSize.x5"></Icon>
+        </Button>
+
+        <Button Color="ButtonColor.Primary"
+                @onclick="GetTypeProperties">
+            <Icon Name="IconName.ArrowRepeat" Size="IconSize.x5"></Icon>
+        </Button>
+    </h4>
+
+
+    @if (typeProperties is null)
+    {
+        <LoadingSpinner></LoadingSpinner>
+    }
+    else
+    {
+        <QuickGrid Items="typeProperties" Class="w-auto table table-striped table-bordered table-sm">
+            <PropertyColumn Property="@(tp => tp.Id)"></PropertyColumn>
+
+            <PropertyColumn Property="@(tp => tp.Name)" Title="Наименование" Sortable="true"></PropertyColumn>
+
+            <TemplateColumn Class="col-justify-center">
+                <Button Color="ButtonColor.Secondary"
+                        Type="ButtonType.Link"
+                        To="@($"ChangeTypeProperty/{context.TypeId}/{context.Id}")">
+                    <Icon Name="IconName.Pencil" Size="IconSize.x6"></Icon>
+                </Button>
+            </TemplateColumn>
+
+            <TemplateColumn>
+                <ChildContent>
+                    <Button Color="ButtonColor.Danger"
+                            @onclick="() => DeleteTypePropertyById(context.Id)">
+                        <Icon Name="IconName.XLg" Size="IconSize.x6"></Icon>
+                    </Button>
+                </ChildContent>
+            </TemplateColumn>
+
+        </QuickGrid>
+    }
+
+
+
+
+    <h4 class="mt-3">
+        Продукты
+
+        <Button Color="ButtonColor.Success"
+                Type="ButtonType.Link"
+                To="@($"CreateProduct/{productType.Id}")">
+            <Icon Name="IconName.PlusLg" Size="IconSize.x5"></Icon>
+        </Button>
+
+        <Button Color="ButtonColor.Primary"
+                @onclick="GetProducts">
+            <Icon Name="IconName.ArrowRepeat" Size="IconSize.x5"></Icon>
+        </Button>
+
+    </h4>
+
+
+    @if (products is null)
+    {
+        <LoadingSpinner></LoadingSpinner>
+    }
+    else
+    {
+        <QuickGrid Items="products" Class="w-auto table table-striped table-bordered">
+            <PropertyColumn Property="@(p => p.Id)"></PropertyColumn>
+
+            <TemplateColumn Title="Наименование">
+                <Button Color="ButtonColor.Light"
+                        Type="ButtonType.Link"
+                        To="@($"Product/{context.Id}")">
+                    @context.Name
+                </Button>
+            </TemplateColumn>
+
+            <PropertyColumn Property="@(p => p.Cost)" Title="Стоимость" Sortable="true"></PropertyColumn>
+
+            <PropertyColumn Property="@(p => p.Description)" Title="Описание" Class="text-break"></PropertyColumn>
+        </QuickGrid>
+    }
+
 }
-
 
 
 @code {
     [Parameter]
     public long TypeId { get; set; }
 
-    private ProductType _productType = new();
+    private ProductType? productType = null;
 
     private ErrorModal modal = new();
 
-    private IQueryable<TypeProperty>? _typeProperties = null;
+    private IQueryable<TypeProperty>? typeProperties = null;
 
-    private IQueryable<Product>? _products = null;
+    private IQueryable<Product>? products = null;
 
     protected override async Task OnInitializedAsync()
     {
@@ -120,7 +140,7 @@
         switch (result)
         {
             case SuccessResult<ProductType> successResult:
-                _productType = successResult.Data;
+                productType = successResult.Data;
                 break;
 
             case ErrorResult<ProductType> errorResult:
@@ -136,7 +156,7 @@
         switch (result)
         {
             case SuccessResult<List<TypeProperty>> successResult:
-                _typeProperties = successResult.Data.AsQueryable();
+                typeProperties = successResult.Data.AsQueryable();
                 break;
             case ErrorResult<List<TypeProperty>> errorResult:
                 await modal.ShowModal(errorResult);
@@ -153,7 +173,7 @@
         switch (result)
         {
             case SuccessResult<List<Product>> successResult:
-                _products = successResult.Data.AsQueryable();
+                products = successResult.Data.AsQueryable();
                 break;
 
             case ErrorResult<List<Product>> errorResult:

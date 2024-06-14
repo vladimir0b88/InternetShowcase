@@ -21,6 +21,8 @@ namespace BlazorWebAssembly.Services
 
             var result = await HttpResponseHandler.GetResult<List<TypeProperty>>(response);
 
+            await Task.Delay(Constant.ServiceDelay);
+
             return result;
         }
         public async Task<Result> AddProperty(TypePropertyCreateDto createDto)
@@ -35,6 +37,8 @@ namespace BlazorWebAssembly.Services
             var response = await httpClient.PostAsJsonAsync(_controllerUri, createDto);
 
             var result = await HttpResponseHandler.GetResult(response);
+
+            await Task.Delay(Constant.ServiceDelay);
 
             return result;
         }
@@ -51,6 +55,8 @@ namespace BlazorWebAssembly.Services
 
             var result = await HttpResponseHandler.GetResult(response);
 
+            await Task.Delay(Constant.ServiceDelay);
+
             return result;
         }
 
@@ -59,6 +65,8 @@ namespace BlazorWebAssembly.Services
             var response = await httpClient.DeleteAsync($"{_controllerUri}/{propertyId}");
 
             var result = await HttpResponseHandler.GetResult(response);
+
+            await Task.Delay(Constant.ServiceDelay);
 
             return result;
         }
@@ -69,6 +77,8 @@ namespace BlazorWebAssembly.Services
 
             var result = await HttpResponseHandler.GetResult<List<TypeProperty>>(response);
 
+            await Task.Delay(Constant.ServiceDelay);
+
             return result;
         }
 
@@ -77,6 +87,8 @@ namespace BlazorWebAssembly.Services
             var response = await httpClient.GetAsync($"{_controllerUri}/{propertyId}");
 
             var result = await HttpResponseHandler.GetResult<TypeProperty>(response);
+
+            await Task.Delay(Constant.ServiceDelay);
 
             return result;
         }

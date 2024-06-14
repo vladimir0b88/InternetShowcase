@@ -6,11 +6,16 @@
 
 <ErrorModal @ref="modal"></ErrorModal>
 
-@if (_product is not null)
+@if(product is null)
+{
+    <LoadingSpinner></LoadingSpinner>
+}
+
+@if (product is not null)
 {
     <Button Color="ButtonColor.Secondary"
             Type="ButtonType.Link"
-            To="@($"changeProduct/{_product.Id}")"
+            To="@($"changeProduct/{product.Id}")"
             >
         <Icon Name="IconName.Pencil" Size="IconSize.x6"></Icon>
         Изменить
@@ -22,20 +27,22 @@
         Удалить
     </Button>
 
-    <h3>Наименование: @_product.Name</h3>
+    <div class="divider"></div>
 
-    <p class="fs-4">Тип продукта: @_product.Type?.Name</p>
+    <h3>Наименование: @product.Name</h3>
 
-    <p class="fs-3">Стоимость: @_product.Cost</p>
+    <p class="fs-4">Тип продукта: @product.Type?.Name</p>
+
+    <p class="fs-3">Стоимость: @product.Cost</p>
 
     <h4>Описание</h4>
-    <p class="fs-6 text-break text-wrap">@_product.Description</p>
+    <p class="fs-6 text-break text-wrap">@product.Description</p>
 
     <div class="divider"></div>
 
     <Button Color="ButtonColor.Secondary"
             Type="ButtonType.Link"
-            To="@($"ChangePropertyValues/{_product.Id}")">
+            To="@($"ChangePropertyValues/{product.Id}")">
         <Icon Name="IconName.Pencil" Size="IconSize.x6"></Icon>
         Изменить характеристики
     </Button>
@@ -48,7 +55,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (PropertyValue propertyValue in _product.PropertyValues)
+            @foreach (PropertyValue propertyValue in product.PropertyValues)
             {
                 <tr>
                     <td>@propertyValue.TypeProperty.Name</td>
@@ -63,7 +70,7 @@
     [Parameter]
     public long ProductId { get; set; }
 
-    private Product? _product = null;
+    private Product? product = null;
 
     private ErrorModal modal = new();
 
@@ -79,7 +86,7 @@
         switch (result)
         {
             case SuccessResult<Product> successResult:
-                _product = successResult.Data;
+                product = successResult.Data;
                 break;
 
             case ErrorResult<Product> errorResult:
@@ -90,12 +97,12 @@
 
     async Task DeleteProduct()
     {
-        var result = await productService.DeleteProductById(_product!.Id);
+        var result = await productService.DeleteProductById(product!.Id);
 
         switch (result)
         {
             case SuccessResult<Product> successResult:
-                _product = successResult.Data;
+                product = successResult.Data;
                 break;
 
             case ErrorResult<Product> errorResult:

@@ -2,6 +2,6 @@
 {
     public static class Constant
     {
-        public static string JwtToken { get; set; } = "";
+        public static readonly int ServiceDelay = 500;
     }
 }

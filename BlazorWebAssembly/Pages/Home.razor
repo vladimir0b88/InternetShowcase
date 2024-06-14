@@ -9,11 +9,15 @@
 @inject NavigationManager navManager
 
 
-@if (_productTypes is not null)
+@if(productTypes is null)
+{
+    <LoadingSpinner></LoadingSpinner>
+}
+else
 {
     <div class="row g-1 align-items-start">
 
-        @foreach (ProductType productType in _productTypes)
+        @foreach (ProductType productType in productTypes)
         {
             <a class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2" href="@($"ProductType/{productType.Id}")">
                 <div class="category-item d-flex justify-content-center align-items-center overflow-hidden">
@@ -25,7 +29,7 @@
 }
 
 @code {
-    private List<ProductType>? _productTypes = null;
+    private List<ProductType>? productTypes = null;
 
     protected override async Task OnInitializedAsync()
     {
@@ -39,11 +43,11 @@
         switch (result)
         {
             case SuccessResult<List<ProductType>> successResult:
-                _productTypes = successResult.Data;
+                productTypes = successResult.Data;
                 break;
 
             case ErrorResult<List<ProductType>> errorResult:
-                _productTypes = null;
+                productTypes = null;
                 break;
         }
     }

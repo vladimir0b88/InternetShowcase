@@ -1,0 +1,54 @@
+﻿@page "/CreateProductImage/{productId:long}"
+<PageTitle>Добавление изображения</PageTitle>
+
+@inject IProductService productService
+@inject IProductImageService productImageService
+@inject NavigationManager navManager
+
+<ErrorModal @ref="modal"></ErrorModal>
+
+@if(product is not null)
+{
+    <EditForm Model="addImageDto" OnValidSubmit="Submit">
+
+    </EditForm>
+
+}
+
+@code {
+    [Parameter]
+    public long ProductId { get; set; }
+
+    private Product? product = null;
+    private ProductImageAddDto addImageDto = new();
+
+    private ErrorModal modal = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetProduct();
+    }
+
+    private async Task GetProduct()
+    {
+        var result = await productService.GetProductById(ProductId);
+
+        switch (result)
+        {
+            case SuccessResult<Product> successResult:
+                product = successResult.Data;
+                addImageDto.ProductId = ProductId;
+                break;
+
+            case ErrorResult<Product> errorResult:
+                await modal.ShowModal(errorResult);
+                break;
+        }
+    }
+
+    private async Task Submit()
+    {
+        
+    }
+
+}

@@ -21,6 +21,8 @@ namespace BlazorWebAssembly.Services
 
             var result = await HttpResponseHandler.GetResult<List<ProductType>>(response);
 
+            await Task.Delay(Constant.ServiceDelay);
+
             return result;
         }
 
@@ -29,6 +31,8 @@ namespace BlazorWebAssembly.Services
             var response = await httpClient.GetAsync($"{_controllerUri}/{id}");
 
             var result = await HttpResponseHandler.GetResult<ProductType>(response);
+
+            await Task.Delay(Constant.ServiceDelay);
 
             return result;
         }
@@ -46,6 +50,8 @@ namespace BlazorWebAssembly.Services
 
             var result = await HttpResponseHandler.GetResult(response);
 
+            await Task.Delay(Constant.ServiceDelay);
+
             return result;
         }
 
@@ -62,6 +68,8 @@ namespace BlazorWebAssembly.Services
 
             var result = await HttpResponseHandler.GetResult(response);
 
+            await Task.Delay(Constant.ServiceDelay);
+
             return result;
         }
 
@@ -70,6 +78,8 @@ namespace BlazorWebAssembly.Services
             var response = await httpClient.DeleteAsync($"{_controllerUri}/{id}");
 
             var result = await HttpResponseHandler.GetResult(response);
+
+            await Task.Delay(Constant.ServiceDelay);
 
             return result;
         }

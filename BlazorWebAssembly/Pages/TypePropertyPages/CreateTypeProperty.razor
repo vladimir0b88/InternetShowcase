@@ -9,27 +9,29 @@
 
 <ErrorModal @ref="modal"></ErrorModal>
 
-@if (_productType is not null)
+@if(productType is null)
 {
-   
-    <h3>Создание свойства для <b>@_productType.Name</b></h3>
+    <LoadingSpinner></LoadingSpinner>
+}
+else
+{
 
-    <EditForm Model="_createDto" OnValidSubmit="Submit">
+    <h3>Создание свойства для <b>@productType.Name</b></h3>
+
+    <EditForm Model="createDto" OnValidSubmit="Submit">
 
         <FluentValidationValidator />
         <ValidationSummary />
 
-        <div class="form-group">
-
-            <label class="col-form-label">Название свойства</label>
-            <div class="col-md-2">
-                <InputText @bind-Value="@_createDto.Name" class="form-control"></InputText>
-            </div>
-
-            <div class="col-md-2 mt-2">
-                <Button Type="ButtonType.Submit" Color="ButtonColor.Success">Создать</Button>
-            </div>
+        <label class="col-form-label">Название свойства</label>
+        <div class="col-md-2">
+            <InputText @bind-Value="@createDto.Name" class="form-control"></InputText>
         </div>
+
+        <div class="col-md-2 mt-2">
+            <Button Type="ButtonType.Submit" Color="ButtonColor.Success">Создать</Button>
+        </div>
+
     </EditForm>
 }
 
@@ -38,10 +40,10 @@
     [Parameter]
     public long TypeId { get; set; }
 
-    private ProductType? _productType = null;
+    private ProductType? productType = null;
 
-    private TypePropertyCreateDto _createDto = new();
-    
+    private TypePropertyCreateDto createDto = new();
+
     private ErrorModal modal = new();
 
     protected override async Task OnInitializedAsync()
@@ -56,8 +58,8 @@
         switch (result)
         {
             case SuccessResult<ProductType> successResult:
-                _productType = successResult.Data;
-                _createDto.TypeId = _productType.Id;
+                productType = successResult.Data;
+                createDto.TypeId = productType.Id;
                 break;
 
             case ErrorResult<ProductType> errorResult:
@@ -68,7 +70,7 @@
 
     async Task Submit()
     {
-        var result = await typePropertyService.AddProperty(_createDto);
+        var result = await typePropertyService.AddProperty(createDto);
 
         if (result is ErrorResult errorResult)
         {

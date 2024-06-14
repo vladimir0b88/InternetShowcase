@@ -7,19 +7,25 @@
 
 <h3>Пользователи</h3>
 
-<QuickGrid Items="_users" Class="w-auto table table-striped table-bordered">
-    <PropertyColumn Property="@(p => p.Id)"></PropertyColumn>
+@if (users is null)
+{
+    <LoadingSpinner></LoadingSpinner>
+}
+else
+{
+    <QuickGrid Items="users" Class="w-auto table table-striped table-bordered">
+        <PropertyColumn Property="@(p => p.Id)"></PropertyColumn>
 
-    <PropertyColumn Property="@(u => u.UserName)" Title="Имя пользователя" Sortable="true" IsDefaultSortColumn></PropertyColumn>
+        <PropertyColumn Property="@(u => u.UserName)" Title="Имя пользователя" Sortable="true" IsDefaultSortColumn></PropertyColumn>
 
-    <PropertyColumn Property="@(u => u.Email)" Title="Эл. почта" Sortable="true"></PropertyColumn>
+         <PropertyColumn Property="@(u => u.Email)" Title="Эл. почта" Sortable="true"></PropertyColumn>
 
-    <PropertyColumn Property="@(u => u.Role)" Title="Роль" Sortable="true"></PropertyColumn>
-</QuickGrid>
-
+         <PropertyColumn Property="@(u => u.Role)" Title="Роль" Sortable="true"></PropertyColumn>
+     </QuickGrid>
+}
 
 @code {
-    private IQueryable<User>? _users = null;
+    private IQueryable<User>? users = null;
 
     protected override async Task OnInitializedAsync()
     {
@@ -31,6 +37,6 @@
         var result = await userService.GetAllUsers();
 
         if (result is SuccessResult<List<User>> successResult)
-            _users = successResult.Data.AsQueryable();
+            users = successResult.Data.AsQueryable();
     }
 }

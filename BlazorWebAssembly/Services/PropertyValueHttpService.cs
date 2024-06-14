@@ -21,6 +21,8 @@ namespace BlazorWebAssembly.Services
 
             var result = await HttpResponseHandler.GetResult<List<PropertyValue>>(response);
 
+            await Task.Delay(Constant.ServiceDelay);
+
             return result;
         }
 
@@ -29,6 +31,8 @@ namespace BlazorWebAssembly.Services
             var response = await httpClient.GetAsync($"{_controllerUri}/{productId}");
 
             var result = await HttpResponseHandler.GetResult<List<PropertyValue>>(response);
+
+            await Task.Delay(Constant.ServiceDelay);
 
             return result;
         }
@@ -46,6 +50,8 @@ namespace BlazorWebAssembly.Services
 
             var result = await HttpResponseHandler.GetResult(response);
 
+            await Task.Delay(Constant.ServiceDelay);
+
             return result;
         }
 
@@ -61,6 +67,8 @@ namespace BlazorWebAssembly.Services
             var response = await httpClient.PutAsJsonAsync($"{_controllerUri}/List", updateDtoList);
 
             var result = await HttpResponseHandler.GetResult(response);
+
+            await Task.Delay(Constant.ServiceDelay);
 
             return result;
         }

@@ -7,16 +7,23 @@
 
 <h3>Свойства</h3>
 
-<QuickGrid Items="_typeProperties" Class="w-auto table table-striped table-bordered">
-    <PropertyColumn Property="@(p => p.Id)"></PropertyColumn>
+@if (typeProperties is null)
+{
+    <LoadingSpinner></LoadingSpinner>
+}
+else
+{
+    <QuickGrid Items="typeProperties" Class="w-auto table table-striped table-bordered">
+        <PropertyColumn Property="@(p => p.Id)"></PropertyColumn>
 
-    <PropertyColumn Property="@(p => p.Name)" Title="Наименование" Sortable="true"></PropertyColumn>
+        <PropertyColumn Property="@(p => p.Name)" Title="Наименование" Sortable="true"></PropertyColumn>
 
-    <PropertyColumn Property="@(p => p.TypeId)" Title="id типа"></PropertyColumn>
-</QuickGrid>
+        <PropertyColumn Property="@(p => p.TypeId)" Title="id типа"></PropertyColumn>
+    </QuickGrid>
+}
 
 @code {
-    private IQueryable<TypeProperty>? _typeProperties = null;
+    private IQueryable<TypeProperty>? typeProperties = null;
 
     protected override async Task OnInitializedAsync()
     {
@@ -29,6 +36,6 @@
         var result = await typePropertyService.GetAllTypeProperties();
 
         if (result is SuccessResult<List<TypeProperty>> successResult)
-            _typeProperties = successResult.Data.AsQueryable();
+            typeProperties = successResult.Data.AsQueryable();
     }
 }

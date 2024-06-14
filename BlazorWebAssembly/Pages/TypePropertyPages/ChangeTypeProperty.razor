@@ -11,40 +11,38 @@
 
 <h3>Изменение свойства</h3>
 
-<EditForm Model="_updateDto" OnValidSubmit="Submit">
+<EditForm Model="updateDto" OnValidSubmit="Submit">
 
     <FluentValidationValidator />
     <ValidationSummary />
 
-    <div class="form-group">
-
-        <label class="col-form-label">Название свойства</label>
-        <div class="col-md-2">
-            <InputText @bind-Value="@_updateDto.Name" class="form-control"></InputText>
-        </div>
-
-        <div class="col-md-2 mt-2">
-            <Button Type="ButtonType.Submit" Color="ButtonColor.Success">Изменить</Button>
-        </div>
+    <label class="col-form-label">Название свойства</label>
+    <div class="col-md-2">
+        <InputText @bind-Value="@updateDto.Name" class="form-control"></InputText>
     </div>
+
+    <div class="col-md-2 mt-2">
+        <Button Type="ButtonType.Submit" Color="ButtonColor.Success">Изменить</Button>
+    </div>
+
 </EditForm>
 
 @code {
     [Parameter]
-    public long ProductTypeId{ get; set; }
+    public long ProductTypeId { get; set; }
 
     [Parameter]
-    public long PropertyId{ get; set; }
+    public long PropertyId { get; set; }
 
-    private TypePropertyUpdateDto _updateDto = new();
-    
+    private TypePropertyUpdateDto updateDto = new();
+
     private ErrorModal modal = new();
 
     async Task Submit()
     {
-        var result = await typePropertyService.UpdateProperty(_updateDto);
+        var result = await typePropertyService.UpdateProperty(updateDto);
 
-        if(result is ErrorResult errorResult)
+        if (result is ErrorResult errorResult)
         {
             await modal.ShowModal(errorResult);
             return;
@@ -66,7 +64,7 @@
         {
             case SuccessResult<TypeProperty> successResult:
                 TypeProperty typeProperty = successResult.Data!;
-                _updateDto = new TypePropertyUpdateDto()
+                updateDto = new TypePropertyUpdateDto()
                     {
                         Id = typeProperty.Id,
                         Name = typeProperty.Name,

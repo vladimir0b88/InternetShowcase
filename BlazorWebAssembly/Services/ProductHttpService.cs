@@ -13,31 +13,37 @@ namespace BlazorWebAssembly.Services
     {
         private readonly HttpClient httpClient = httpClientFactory.CreateClient("WebApi");
         
-        private const string _controllerUri = "api/Products";
+        private const string controllerUri = "api/Products";
 
         public async Task<Result<List<Product>>> GetAllProducts()
         {
-            var response = await httpClient.GetAsync(_controllerUri);
+            var response = await httpClient.GetAsync(controllerUri);
 
             var result = await HttpResponseHandler.GetResult<List<Product>>(response);
+
+            await Task.Delay(Constant.ServiceDelay);
 
             return result;
         }
 
         public async Task<Result<List<Product>>> GetByProductTypeId(long productTypeId)
         {
-            var response = await httpClient.GetAsync($"{_controllerUri}/ProductType/{productTypeId}");
+            var response = await httpClient.GetAsync($"{controllerUri}/ProductType/{productTypeId}");
 
             var result = await HttpResponseHandler.GetResult<List<Product>>(response);
+
+            await Task.Delay(Constant.ServiceDelay);
 
             return result;
         }
 
         public async Task<Result<Product>> GetProductById(long id)
         {
-            var response = await httpClient.GetAsync($"{_controllerUri}/{id}");
+            var response = await httpClient.GetAsync($"{controllerUri}/{id}");
 
             var result = await HttpResponseHandler.GetResult<Product>(response);
+
+            await Task.Delay(Constant.ServiceDelay);
 
             return result;
         }
@@ -51,9 +57,11 @@ namespace BlazorWebAssembly.Services
                                                  errors: [ErrorList.FailedValidation],
                                                  validationErrors: validationResult.Errors);
 
-            var response = await httpClient.PostAsJsonAsync(_controllerUri, productDto);
+            var response = await httpClient.PostAsJsonAsync(controllerUri, productDto);
 
             var result = await HttpResponseHandler.GetResult(response);
+
+            await Task.Delay(Constant.ServiceDelay);
 
             return result;
         }
@@ -68,18 +76,22 @@ namespace BlazorWebAssembly.Services
                                                  validationErrors: validationResult.Errors);
 
 
-            var response = await httpClient.PutAsJsonAsync(_controllerUri, updateDto);
+            var response = await httpClient.PutAsJsonAsync(controllerUri, updateDto);
 
             var result = await HttpResponseHandler.GetResult(response);
+
+            await Task.Delay(Constant.ServiceDelay);
 
             return result;
         }
 
         public async Task<Result> DeleteProductById(long id)
         {
-            var response = await httpClient.DeleteAsync($"{_controllerUri}/{id}");
+            var response = await httpClient.DeleteAsync($"{controllerUri}/{id}");
 
             var result = await HttpResponseHandler.GetResult(response);
+
+            await Task.Delay(Constant.ServiceDelay);
 
             return result;
         }
