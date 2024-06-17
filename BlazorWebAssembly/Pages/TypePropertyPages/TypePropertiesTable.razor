@@ -5,6 +5,8 @@
 
 @inject ITypePropertyService typePropertyService
 
+<ErrorModal @ref="modal"></ErrorModal>
+
 <h3>Свойства</h3>
 
 @if (typeProperties is null)
@@ -25,6 +27,8 @@ else
 @code {
     private IQueryable<TypeProperty>? typeProperties = null;
 
+    private ErrorModal modal = new();
+
     protected override async Task OnInitializedAsync()
     {
         await GetTypeProperties();
@@ -35,7 +39,15 @@ else
     {
         var result = await typePropertyService.GetAllTypeProperties();
 
-        if (result is SuccessResult<List<TypeProperty>> successResult)
-            typeProperties = successResult.Data.AsQueryable();
+        switch (result)
+        {
+            case SuccessResult<List<TypeProperty>> successResult:
+                typeProperties = successResult.Data.AsQueryable();
+                break;
+
+            case ErrorResult<List<TypeProperty>> error:
+                await modal.ShowModal(error);
+                break;
+        }
     }
 }

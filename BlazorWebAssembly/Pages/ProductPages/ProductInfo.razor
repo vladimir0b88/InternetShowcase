@@ -40,6 +40,23 @@
 
     <div class="divider"></div>
 
+    <h3>Изображения</h3>
+
+    <Button Color="ButtonColor.Success"
+            Type="ButtonType.Link"
+            To="@($"CreateProductImage/{product.Id}")">
+        <Icon Name="IconName.Plus" Size="IconSize.x6"></Icon>
+        Добавить изображение
+    </Button>
+
+    @foreach(var image in product.Images)
+    {
+        <img class="img-fluid" src="@image.GetImage()" />
+    }
+
+
+    <div class="divider"></div>
+
     <Button Color="ButtonColor.Secondary"
             Type="ButtonType.Link"
             To="@($"ChangePropertyValues/{product.Id}")">

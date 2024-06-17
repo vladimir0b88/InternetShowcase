@@ -9,10 +9,22 @@
 
 @if(product is not null)
 {
-    <EditForm Model="addImageDto" OnValidSubmit="Submit">
+    <EditForm Model="addImageDto" enctype="multipart/from-data" OnValidSubmit="Submit">
 
-        
+        <FluentValidationValidator/>
+        <ValidationSummary/>
 
+        <label class="col-form-label">Продукт</label>
+        <div class="col-md-2">
+            <input class="form-control" placeholder="@product.Name" disabled>
+        </div>
+
+        <label class="col-form-label">Изображение</label>
+        <InputFile @bind-value="addImageDto.FormFile" class="form-control" accept="image/jpeg" OnChange="HandleFileUpload" />
+
+        <div class="col-md-2 mt-2">
+            <Button Type="ButtonType.Submit" Color="ButtonColor.Success">Добавить</Button>
+        </div>
 
     </EditForm>
 
@@ -49,9 +61,24 @@
         }
     }
 
+    private async Task HandleFileUpload(InputFileChangeEventArgs e)
+    {
+
+    }
+
     private async Task Submit()
     {
-        
+        var result = await productImageService.AddImage(addImageDto);
+
+        switch (result)
+        {
+            case SuccessResult:
+                navManager.NavigateTo($"Product/{product!.Id}");
+                break;
+            case ErrorResult error:
+                await modal.ShowModal(error);
+                break;
+        }
     }
 
 }

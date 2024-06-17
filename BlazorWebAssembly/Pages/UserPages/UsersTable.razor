@@ -5,6 +5,8 @@
 
 @inject IUserService userService
 
+<ErrorModal @ref="modal"></ErrorModal>
+
 <h3>Пользователи</h3>
 
 @if (users is null)
@@ -27,6 +29,8 @@ else
 @code {
     private IQueryable<User>? users = null;
 
+    private ErrorModal modal = new();
+
     protected override async Task OnInitializedAsync()
     {
         await GetUsers();
@@ -36,7 +40,15 @@ else
     {
         var result = await userService.GetAllUsers();
 
-        if (result is SuccessResult<List<User>> successResult)
-            users = successResult.Data.AsQueryable();
+        switch (result)
+        {
+            case SuccessResult<List<User>> successResult:
+                users = successResult.Data.AsQueryable();
+                break;
+
+            case ErrorResult<List<User>> error:
+                await modal.ShowModal(error);
+                break;
+        }
     }
 }

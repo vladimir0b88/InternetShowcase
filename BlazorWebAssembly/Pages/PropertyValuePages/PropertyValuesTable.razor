@@ -5,6 +5,8 @@
 
 @inject IPropertyValueService propertyValueService
 
+<ErrorModal @ref="modal"></ErrorModal>
+
 <h3>Значения свойств</h3>
 
 @if (propertyValues is null)
@@ -27,6 +29,8 @@ else
 @code {
     private IQueryable<PropertyValue>? propertyValues = null;
 
+    private ErrorModal modal = new();
+
     protected override async Task OnInitializedAsync()
     {
         await GetPropertyValues();
@@ -37,7 +41,15 @@ else
     {
         var result = await propertyValueService.GetAllPropertyValues();
 
-        if (result is SuccessResult<List<PropertyValue>> successResult)
-            propertyValues = successResult.Data.AsQueryable();
+        switch (result)
+        {
+            case SuccessResult<List<PropertyValue>> successResult:
+                propertyValues = successResult.Data.AsQueryable();
+                break;
+
+            case ErrorResult<List<PropertyValue>> errorResult:
+                await modal.ShowModal(errorResult);
+                break;
+        }
     }
 }

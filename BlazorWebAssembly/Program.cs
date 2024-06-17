@@ -34,6 +34,7 @@ builder.Services.AddScoped<IProductTypeService, ProductTypeHttpService>();
 builder.Services.AddScoped<ITypePropertyService, TypePropertyHttpService>();
 builder.Services.AddScoped<IPropertyValueService, PropertyValueHttpService>();
 builder.Services.AddScoped<IUserService, UserHttpService>();
+builder.Services.AddScoped<IProductImageService, ProductImageHttpService>();
 
 #endregion
 
@@ -57,6 +58,8 @@ builder.Services.AddScoped<IValidator<PropertyValueUpdateDtoList>, PropertyValue
 // User
 builder.Services.AddScoped<IValidator<UserRegisterDto>, UserRegisterDtoValidator>();
 
+// ProductImage
+builder.Services.AddScoped<IValidator<ProductImageAddDto>, ProductImageAddDtoValidator>();
 
 #endregion
 

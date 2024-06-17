@@ -5,6 +5,8 @@
 
 @inject IProductTypeService productTypeService
 
+<ErrorModal @ref="modal"></ErrorModal>
+
 <p class="fs-3">Типы товаров</p>
 
 @if (productTypes is null)
@@ -23,6 +25,8 @@ else
 @code {
     private IQueryable<ProductType>? productTypes = null;
 
+    private ErrorModal modal = new();
+
     protected override async Task OnInitializedAsync()
     {
         await GetProducts();
@@ -33,7 +37,15 @@ else
     {
         var result = await productTypeService.GetAllProductTypes();
 
-        if (result is SuccessResult<List<ProductType>> successResult)
-            productTypes = successResult.Data.AsQueryable();
+        switch (result)
+        {
+            case SuccessResult<List<ProductType>> successResult:
+                productTypes = successResult.Data.AsQueryable();
+                break;
+
+            case ErrorResult<List<ProductType>> errorResult:
+                await modal.ShowModal(errorResult);
+                break;
+        }
     }
 }
