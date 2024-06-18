@@ -57,6 +57,10 @@ namespace Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Format")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<byte[]>("Image")
                         .IsRequired()
                         .HasColumnType("BLOB");

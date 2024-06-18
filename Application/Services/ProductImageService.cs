@@ -20,13 +20,9 @@ namespace Application.Services
             ProductImage productImage = new ProductImage()
             {
                 ProductId = addDto.ProductId,
+                Format = addDto.Format,
+                Image = addDto.Image,
             };
-
-            using (MemoryStream ms = new MemoryStream())
-            {
-                addDto.FormFile.CopyTo(ms);
-                productImage.Image = ms.ToArray();
-            }
 
             var result = await repository.AddImage(productImage);
 

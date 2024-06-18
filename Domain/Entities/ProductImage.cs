@@ -6,6 +6,8 @@
 
         public long ProductId { get; set; }
 
+        public string Format {  get; set; } = string.Empty;
+
         public byte[] Image { get; set; } = null!;
 
         public virtual Product Product { get; set; } = null!;
@@ -19,7 +21,7 @@
 
             string img = Convert.ToBase64String(image.Image, 0, image.Image.Length);
 
-            return "data:image/png;base64," + img;
+            return $"data:{image.Format};base64,{img}";
         }
 
         public string? GetImage()
@@ -29,7 +31,7 @@
 
             string img = Convert.ToBase64String(Image, 0, Image.Length);
 
-            return "data:image/png;base64," + img;
+            return $"data:{this.Format};base64,{img}";
         }
     }
 }

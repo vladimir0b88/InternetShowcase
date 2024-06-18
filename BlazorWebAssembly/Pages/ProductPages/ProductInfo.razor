@@ -1,12 +1,14 @@
 ﻿@page "/Product/{productId:long}"
 <PageTitle>Просмотр продукта</PageTitle>
 
+@attribute [Authorize(Roles = Roles.Administrator)]
+
 @inject IProductService productService
 @inject NavigationManager navManager
 
 <ErrorModal @ref="modal"></ErrorModal>
 
-@if(product is null)
+@if (product is null)
 {
     <LoadingSpinner></LoadingSpinner>
 }
@@ -15,8 +17,7 @@
 {
     <Button Color="ButtonColor.Secondary"
             Type="ButtonType.Link"
-            To="@($"changeProduct/{product.Id}")"
-            >
+            To="@($"changeProduct/{product.Id}")">
         <Icon Name="IconName.Pencil" Size="IconSize.x6"></Icon>
         Изменить
     </Button>
@@ -40,19 +41,27 @@
 
     <div class="divider"></div>
 
-    <h3>Изображения</h3>
+    <h3>
+        Изображения
+        <Button Color="ButtonColor.Success"
+                Type="ButtonType.Link"
+                To="@($"CreateProductImage/{product.Id}")">
+            <Icon Name="IconName.PlusLg" Size="IconSize.x5"></Icon>
+            Добавить изображение
+        </Button>
+    </h3>
 
-    <Button Color="ButtonColor.Success"
-            Type="ButtonType.Link"
-            To="@($"CreateProductImage/{product.Id}")">
-        <Icon Name="IconName.Plus" Size="IconSize.x6"></Icon>
-        Добавить изображение
-    </Button>
 
-    @foreach(var image in product.Images)
-    {
-        <img class="img-fluid" src="@image.GetImage()" />
-    }
+    <div class="row">
+        @foreach (var image in product.Images)
+        {
+            <div class="col-4">
+                <img class="img-fluid" src="@image.GetImage()" />
+            </div>
+
+        }
+    </div>
+
 
 
     <div class="divider"></div>
@@ -60,7 +69,7 @@
     <Button Color="ButtonColor.Secondary"
             Type="ButtonType.Link"
             To="@($"ChangePropertyValues/{product.Id}")">
-        <Icon Name="IconName.Pencil" Size="IconSize.x6"></Icon>
+        <Icon Name="IconName.Pencil" Size="IconSize.x5"></Icon>
         Изменить характеристики
     </Button>
 

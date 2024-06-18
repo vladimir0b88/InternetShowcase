@@ -1,26 +1,38 @@
 ﻿@page "/CreateProductImage/{productId:long}"
 <PageTitle>Добавление изображения</PageTitle>
 
+@attribute [Authorize(Roles = Roles.Administrator)]
+
 @inject IProductService productService
 @inject IProductImageService productImageService
 @inject NavigationManager navManager
 
 <ErrorModal @ref="modal"></ErrorModal>
 
-@if(product is not null)
+@if (product is not null)
 {
     <EditForm Model="addImageDto" enctype="multipart/from-data" OnValidSubmit="Submit">
 
-        <FluentValidationValidator/>
-        <ValidationSummary/>
+        <FluentValidationValidator />
+        <ValidationSummary />
 
         <label class="col-form-label">Продукт</label>
         <div class="col-md-2">
             <input class="form-control" placeholder="@product.Name" disabled>
         </div>
 
+        <label class="col-form-label">Формат</label>
+        <div class="col-md-2">
+            <input class="form-control" placeholder="@addImageDto.Format" disabled>
+        </div>
+
         <label class="col-form-label">Изображение</label>
-        <InputFile @bind-value="addImageDto.FormFile" class="form-control" accept="image/jpeg" OnChange="HandleFileUpload" />
+        <InputFile class="form-control" accept="image/*" OnChange="HandleFileUpload" />
+
+        @if (productImage is not null)
+        {
+            <img class="img-fluid m-2" src="@productImage.GetImage()">
+        }
 
         <div class="col-md-2 mt-2">
             <Button Type="ButtonType.Submit" Color="ButtonColor.Success">Добавить</Button>
@@ -36,6 +48,8 @@
 
     private Product? product = null;
     private ProductImageAddDto addImageDto = new();
+
+    private ProductImage? productImage = null;
 
     private ErrorModal modal = new();
 
@@ -63,7 +77,27 @@
 
     private async Task HandleFileUpload(InputFileChangeEventArgs e)
     {
+        var file = e.GetMultipleFiles(1).FirstOrDefault();
 
+        if (file is null)
+            return;
+
+        using (MemoryStream ms = new MemoryStream())
+        {
+            await file.OpenReadStream(maxAllowedSize: 10_000 * 1024).CopyToAsync(ms);
+
+            var bytes = ms.ToArray();
+
+            productImage = new ProductImage()
+                {
+                    ProductId = ProductId,
+                    Image = bytes,
+                    Format = file.ContentType
+                };
+        }
+
+        addImageDto.Image = productImage.Image;
+        addImageDto.Format = productImage.Format;
     }
 
     private async Task Submit()

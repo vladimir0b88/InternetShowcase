@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
-
+﻿
 namespace Application.Models
 {
     public class ProductImageAddDto
     {
-        public long ProductId {  get; set; }
+        public long ProductId { get; set; }
 
-        public IFormFile FormFile { get; set; } = null!;
+        public string Format { get; set; } = string.Empty;
+        public byte[] Image { get; set; } = null!;
     }
 }

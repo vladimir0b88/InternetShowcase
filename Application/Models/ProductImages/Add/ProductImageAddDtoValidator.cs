@@ -8,6 +8,8 @@ namespace Application.Models
         {
             RuleFor(pi => pi.ProductId).NotEmpty();
 
+            RuleFor(pi => pi.Format).NotEmpty();
+
             //RuleFor(pi => pi.FormFile).NotNull()
             //                          .Must(pi => pi.Length > 0)
             //                          .WithMessage("Изображение не может быть пустым");

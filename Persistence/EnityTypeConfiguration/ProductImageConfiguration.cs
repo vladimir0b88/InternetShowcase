@@ -17,6 +17,9 @@ namespace Persistence.EnityTypeConfiguration
             builder.Property(pi => pi.ProductId)
                    .IsRequired();
 
+            builder.Property(pi => pi.Format)
+                   .IsRequired();
+
             builder.Property(pi => pi.Image)
                    .IsRequired();
 
