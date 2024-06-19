@@ -9,7 +9,7 @@
 @inject NavigationManager navManager
 
 
-@if(productTypes is null)
+@if (productTypes is null)
 {
     <LoadingSpinner></LoadingSpinner>
 }
@@ -25,6 +25,20 @@ else
                 </div>
             </a>
         }
+    </div>
+
+    <div class="row">
+        <div class="col-3">
+            <ul class="list-group">
+
+                @foreach (ProductType productType in productTypes)
+                {
+                    <li class="list-group-item">@productType.Name</li>
+                }
+
+            </ul>
+        </div>
+
     </div>
 }
 

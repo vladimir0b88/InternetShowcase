@@ -1,81 +1,84 @@
 ﻿@inherits LayoutComponentBase
 @inject AuthenticationStateProvider stateProvider
 
-<header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-1 border-bottom">
-
-    <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
-        <span class="px-3 fs-5">Kaif House</span>
-    </a>
-
-    <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-        <li>
-            <a href="/" class="nav-link px-2 link-secondary">
-                <div class="text-dark fs-5">Каталог</div>
-            </a>
-        </li>
-
-        <li>
-            <a href="/ProductTypes" class="nav-link px-2 link-secondary">
-                <div class="text-dark fs-5">Типы товаров</div>
-            </a>
-        </li>
-
-        <AuthorizeView Roles="@Roles.Administrator">
-            <Authorized>
-                <li>
-                    <Dropdown>
-                        <DropdownToggleButton><span class="fs-5">Таблицы</span></DropdownToggleButton>
-                        <DropdownMenu>
-                            <DropdownItem To="/ProductsTable" Type="ButtonType.Link">Продукты</DropdownItem>
-                            <DropdownItem To="/ProductTypesTable" Type="ButtonType.Link">Типы товаров</DropdownItem>
-                            <DropdownItem To="/TypePropertiesTable" Type="ButtonType.Link">Свойства типа</DropdownItem>
-                            <DropdownItem To="/PropertyValuesTable" Type="ButtonType.Link">Значения свойств</DropdownItem>
-                            <DropdownDivider>Dropdown header</DropdownDivider>
-                            <DropdownItem To="/UsersTable" Type="ButtonType.Link">Пользователи</DropdownItem>
-                        </DropdownMenu>
-                    </Dropdown>
-                </li>
-            </Authorized>
-        </AuthorizeView>
-
-    </ul>
-
-    <div class="col-md-3 text-end">
-        <AuthorizeView>
-            <Authorized>
-                <div class="mx-3">
-                    <span class="text-center m-3">@context.User.Identity!.Name</span>
-                    <LogoutButton />
-                </div>
-
-            </Authorized>
-
-            <NotAuthorized>
-                <div class="mx-3">
-                    <span class="m-3">Бро, авторизируйся</span>
-
-                    <Button Color="ButtonColor.Secondary"
-                            Class="m-1"
-                            Type="ButtonType.Link"
-                            To="Login">
-                        Войти
-                    </Button>
-
-                    <Button Color="ButtonColor.Success"
-                            Type="ButtonType.Link"
-                            To="Registration">
-                        Регистрация
-                    </Button>
-
-                </div>
-            </NotAuthorized>
-        </AuthorizeView>
-    </div>
-</header>
 
 <main>
+
+    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-1 border-bottom">
+
+        <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
+            <span class="px-3 fs-5">Kaif House</span>
+        </a>
+
+        <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+            <li>
+                <a href="/" class="nav-link px-2 link-secondary">
+                    <div class="text-dark fs-5">Каталог</div>
+                </a>
+            </li>
+
+            <li>
+                <a href="/ProductTypes" class="nav-link px-2 link-secondary">
+                    <div class="text-dark fs-5">Типы товаров</div>
+                </a>
+            </li>
+
+            <AuthorizeView Roles="@Roles.Administrator">
+                <Authorized>
+                    <li>
+                        <Dropdown>
+                            <DropdownToggleButton><span class="fs-5">Таблицы</span></DropdownToggleButton>
+                            <DropdownMenu>
+                                <DropdownItem To="/ProductsTable" Type="ButtonType.Link">Продукты</DropdownItem>
+                                <DropdownItem To="/ProductTypesTable" Type="ButtonType.Link">Типы товаров</DropdownItem>
+                                <DropdownItem To="/TypePropertiesTable" Type="ButtonType.Link">Свойства типа</DropdownItem>
+                                <DropdownItem To="/PropertyValuesTable" Type="ButtonType.Link">Значения свойств</DropdownItem>
+                                <DropdownDivider>Dropdown header</DropdownDivider>
+                                <DropdownItem To="/UsersTable" Type="ButtonType.Link">Пользователи</DropdownItem>
+                            </DropdownMenu>
+                        </Dropdown>
+                    </li>
+                </Authorized>
+            </AuthorizeView>
+
+        </ul>
+
+        <div class="col-md-3 text-end">
+            <AuthorizeView>
+                <Authorized>
+                    <div class="mx-3">
+                        <span class="text-center m-3">@context.User.Identity!.Name</span>
+                        <LogoutButton />
+                    </div>
+
+                </Authorized>
+
+                <NotAuthorized>
+                    <div class="mx-3">
+                        <span class="m-3">Бро, авторизируйся</span>
+
+                        <Button Color="ButtonColor.Secondary"
+                                Class="m-1"
+                                Type="ButtonType.Link"
+                                To="Login">
+                            Войти
+                        </Button>
+
+                        <Button Color="ButtonColor.Success"
+                                Type="ButtonType.Link"
+                                To="Registration">
+                            Регистрация
+                        </Button>
+
+                    </div>
+                </NotAuthorized>
+            </AuthorizeView>
+        </div>
+    </header>
+
+
     <article class="content">
-        <div class="container py-2">@Body</div>
+        <div class="container">@Body</div>
     </article>
 </main>
 
