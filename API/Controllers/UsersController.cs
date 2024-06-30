@@ -11,20 +11,6 @@ namespace API.Controllers
     [Route("api/[controller]")]
     public class UsersController (IUserService userService): ControllerBase
     {
-        [Authorize(Roles = Roles.Administrator)]
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
-        {
-            var result = await userService.GetAllUsers();
-
-            return result switch
-            {
-                SuccessResult<List<User>> => Ok(result),
-                ErrorResult<List<User>> => BadRequest(result),
-                _ => throw new ApplicationException()
-            };
-        }
-
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] UserRegisterDto registerDto)
         {
@@ -55,5 +41,21 @@ namespace API.Controllers
                 _ => throw new ApplicationException()
             }; ;
         }
+
+
+        [Authorize(Roles = Roles.Administrator)]
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var result = await userService.GetAllUsers();
+
+            return result switch
+            {
+                SuccessResult<List<User>> => Ok(result),
+                ErrorResult<List<User>> => BadRequest(result),
+                _ => throw new ApplicationException()
+            };
+        }
+
     }
 }

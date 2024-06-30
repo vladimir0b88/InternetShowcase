@@ -10,9 +10,9 @@
 
 <h3>Регистрация</h3>
 
-<EditForm Model="registerDto" OnValidSubmit="Submit">
-    <FluentValidationValidator />
-    <ValidationSummary />
+<EditForm Model="registerDto" OnValidSubmit="Submit" autocomplete="off">
+    @* <FluentValidationValidator /> *@
+    @* <ValidationSummary /> *@
 
     <div class="form-floating col-md-3 mb-3">
         <InputText @bind-Value="@registerDto.UserName" id="registerDtoUserName" class="form-control"></InputText>
