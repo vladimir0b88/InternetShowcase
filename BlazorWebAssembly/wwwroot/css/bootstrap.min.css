@@ -117,7 +117,8 @@
     --bs-box-shadow-inset: inset 0 1px 2px rgba(0, 0, 0, 0.075);
     --bs-focus-ring-width: 0.25rem;
     --bs-focus-ring-opacity: 0.25;
-    --bs-focus-ring-color: rgba(13, 110, 253, 0.25);
+    /*--bs-focus-ring-color: rgba(13, 110, 253, 0.25);*/
+    --bs-focus-ring-color: lightgreen;
     --bs-form-valid-color: #198754;
     --bs-form-valid-border-color: #198754;
     --bs-form-invalid-color: #dc3545;
