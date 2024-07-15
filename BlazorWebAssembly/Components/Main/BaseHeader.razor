@@ -1,90 +1,105 @@
 ﻿
 <header>
 
-    <div class="py-2">
-
-        <div class="d-flex flex-wrap align-items-center justify-content-start justify-content-lg-between border-bottom">
-
-            
-            <a href="/" class="navbar-brand">
-                <span class="px-3 fs-3 text-dark text-decoration-none">Kaif House</span>
+    <nav class="navbar navbar-expand-lg py-3 navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                Kaif House
             </a>
 
-            <ul class="nav justify-content-center">
 
-                <li class="nav-item">
-                    <a href="/" class="nav-link px-2 link-secondary">
-                        <span class="text-dark fs-3">Каталог</span>
-                    </a>
-                </li>
+            <div class="lc-block collapse navbar-collapse" id="myNavbar4">
+                <div lc-helper="shortcode" class="live-shortcode me-auto">
+                    <ul id="menu-menu-1" class="navbar-nav">
 
-                <li class="nav-item">
-                    <a href="/ProductTypes" class="nav-link px-2 link-secondary">
-                        <span class="text-dark fs-3">Типы товаров</span>
-                    </a>
-                </li>
-
-                <AuthorizeView Roles="@Roles.Administrator">
-                    <Authorized>
-                        <li>
-                            <Dropdown>
-                                <DropdownToggleButton Color="ButtonColor.None" Class="header-dropdown"><span class="fs-3">Таблицы</span></DropdownToggleButton>
-                                <DropdownMenu>
-                                    <DropdownItem To="/ProductsTable" Type="ButtonType.Link">Продукты</DropdownItem>
-                                    <DropdownItem To="/ProductTypesTable" Type="ButtonType.Link">Типы товаров</DropdownItem>
-                                    <DropdownItem To="/TypePropertiesTable" Type="ButtonType.Link">Свойства типа</DropdownItem>
-                                    <DropdownItem To="/PropertyValuesTable" Type="ButtonType.Link">Значения свойств</DropdownItem>
-                                    <DropdownDivider>Dropdown header</DropdownDivider>
-                                    <DropdownItem To="/UsersTable" Type="ButtonType.Link">Пользователи</DropdownItem>
-                                </DropdownMenu>
-                            </Dropdown>
+                        <li class="menu-item menu-item-type-custom menu-item-object-custom nav-item nav-item-32739">
+                            <a href="/" class="nav-link ">
+                                Каталог
+                            </a>
                         </li>
-                    </Authorized>
-                </AuthorizeView>
-
-            </ul>
 
 
-            <div>
-                <AuthorizeView>
-                    <Authorized>
-                        <div class="mx-3">
-                            <span class="text-center m-3 fs-3">@context.User.Identity!.Name</span>
+                        <AuthorizeView Roles="@Roles.Administrator">
+                            <Authorized>
+                                <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home nav-item nav-item-32738">
+                                    <a href="/ProductTypes" class="nav-link ">
+                                        Типы товаров
+                                    </a>
+                                </li>
+
+                                <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children dropdown nav-item nav-item-33131">
+                                    <a href="#" class="nav-link  dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">Таблицы</a>
+                                    <ul class="dropdown-menu  depth_0">
+                                        <li class="menu-item menu-item-type-taxonomy menu-item-object-category nav-item nav-item-33132">
+                                            <a href="/ProductsTable" class="dropdown-item ">Продукты</a>
+                                        </li>
+                                        <li class="menu-item menu-item-type-taxonomy menu-item-object-category nav-item nav-item-33132">
+                                            <a href="/ProductTypesTable" class="dropdown-item ">Типы товаров</a>
+                                        </li>
+                                        <li class="menu-item menu-item-type-taxonomy menu-item-object-category nav-item nav-item-33132">
+                                            <a href="/TypePropertiesTable" class="dropdown-item ">Свойства типа</a>
+                                        </li>
+                                        <li class="menu-item menu-item-type-taxonomy menu-item-object-category nav-item nav-item-33132">
+                                            <a href="/PropertyValuesTable" class="dropdown-item ">Значения свойств</a>
+                                        </li>
+
+                                        <li>
+                                            <hr class="dropdown-divider" />
+                                        </li>
+
+                                        <li class="menu-item menu-item-type-taxonomy menu-item-object-category nav-item nav-item-33132">
+                                            <a href="/UsersTable" class="dropdown-item ">Пользователи</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </Authorized>
+                        </AuthorizeView>
+
+                    </ul>
+                </div>
+
+            </div>
+
+            <div lc-helper="shortcode" class="live-shortcode ms-auto">
+                <div class="navbar-nav d-flex flex-row">
+                    <AuthorizeView>
+                        <Authorized>
+                            <span class="nav-link mx-1">
+                                @context.User.Identity!.Name
+                            </span>
+
                             <LogoutButton />
-                        </div>
+                        </Authorized>
 
-                    </Authorized>
+                        <NotAuthorized>
+                            <a href="/Login" class="nav-link mx-1">
+                                Войти
+                            </a>
 
-                    <NotAuthorized>
-                        <div class="mx-3">
-                            <span class="m-3 fs-3">Бро, авторизируйся</span>
 
-                            <Button Color="ButtonColor.Secondary"
-                                    Class="m-1"
-                                    Type="ButtonType.Link"
-                                    To="Login">
-                                <span class="fs-3">Войти</span>
-                            </Button>
-
-                            <Button Color="ButtonColor.Success"
-                                    Type="ButtonType.Link"
-                                    To="Registration">
+                            <a href="/Registration" class="nav-link mx-3">
                                 Регистрация
-                            </Button>
-
-                        </div>
-                    </NotAuthorized>
-                </AuthorizeView>
+                            </a>
+                        </NotAuthorized>
+                    </AuthorizeView>
+                </div>
             </div>
 
 
-        </div>
+            <button class="navbar-toggler" type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#myNavbar4"
+                    aria-controls="myNavbar4"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
 
-    </div>
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+
+        </div>
+    </nav>
 
 </header>
 
 
-@code {
-
-}
