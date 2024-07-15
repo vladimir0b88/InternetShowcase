@@ -7,20 +7,20 @@
 
             
             <a href="/" class="navbar-brand">
-                <span class="px-3 fs-5 text-dark text-decoration-none">Kaif House</span>
+                <span class="px-3 fs-3 text-dark text-decoration-none">Kaif House</span>
             </a>
 
             <ul class="nav justify-content-center">
 
                 <li class="nav-item">
                     <a href="/" class="nav-link px-2 link-secondary">
-                        <span class="text-dark fs-5">Каталог</span>
+                        <span class="text-dark fs-3">Каталог</span>
                     </a>
                 </li>
 
                 <li class="nav-item">
                     <a href="/ProductTypes" class="nav-link px-2 link-secondary">
-                        <span class="text-dark fs-5">Типы товаров</span>
+                        <span class="text-dark fs-3">Типы товаров</span>
                     </a>
                 </li>
 
@@ -28,7 +28,7 @@
                     <Authorized>
                         <li>
                             <Dropdown>
-                                <DropdownToggleButton Color="ButtonColor.None"><span class="fs-5">Таблицы</span></DropdownToggleButton>
+                                <DropdownToggleButton Color="ButtonColor.None" Class="header-dropdown"><span class="fs-3">Таблицы</span></DropdownToggleButton>
                                 <DropdownMenu>
                                     <DropdownItem To="/ProductsTable" Type="ButtonType.Link">Продукты</DropdownItem>
                                     <DropdownItem To="/ProductTypesTable" Type="ButtonType.Link">Типы товаров</DropdownItem>
@@ -49,7 +49,7 @@
                 <AuthorizeView>
                     <Authorized>
                         <div class="mx-3">
-                            <span class="text-center m-3">@context.User.Identity!.Name</span>
+                            <span class="text-center m-3 fs-3">@context.User.Identity!.Name</span>
                             <LogoutButton />
                         </div>
 
@@ -57,13 +57,13 @@
 
                     <NotAuthorized>
                         <div class="mx-3">
-                            <span class="m-3">Бро, авторизируйся</span>
+                            <span class="m-3 fs-3">Бро, авторизируйся</span>
 
                             <Button Color="ButtonColor.Secondary"
                                     Class="m-1"
                                     Type="ButtonType.Link"
                                     To="Login">
-                                Войти
+                                <span class="fs-3">Войти</span>
                             </Button>
 
                             <Button Color="ButtonColor.Success"

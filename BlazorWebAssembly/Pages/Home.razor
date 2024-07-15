@@ -8,39 +8,40 @@
 @inject ITypePropertyService typePropertyService
 @inject NavigationManager navManager
 
+<div class="container">
+    @if (productTypes is null)
+    {
+        <LoadingSpinner></LoadingSpinner>
+    }
+    else
+    {
+        <div class="row g-1 align-items-start">
 
-@if (productTypes is null)
-{
-    <LoadingSpinner></LoadingSpinner>
-}
-else
-{
-    <div class="row g-1 align-items-start">
-
-        @foreach (ProductType productType in productTypes)
-        {
-            <a class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2" href="@($"ProductType/{productType.Id}")">
-                <div class="category-item d-flex justify-content-center align-items-center overflow-hidden">
-                    <h5 class="text-center text-wrap text-break mt-1">@productType.Name</h5>
-                </div>
-            </a>
-        }
-    </div>
-
-    <div class="row">
-        <div class="col-3">
-            <ul class="list-group">
-
-                @foreach (ProductType productType in productTypes)
-                {
-                    <li class="list-group-item">@productType.Name</li>
-                }
-
-            </ul>
+            @foreach (ProductType productType in productTypes)
+            {
+                <a class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2" href="@($"ProductType/{productType.Id}")">
+                    <div class="category-item d-flex justify-content-center align-items-center overflow-hidden">
+                        <p class="text-center text-wrap text-break mt-1 fs-3">@productType.Name</p>
+                    </div>
+                </a>
+            }
         </div>
 
-    </div>
-}
+        <div class="row">
+            <div class="col-3">
+                <ul class="list-group">
+
+                    @foreach (ProductType productType in productTypes)
+                    {
+                        <li class="list-group-item"><p>@productType.Name</p></li>
+                    }
+
+                </ul>
+            </div>
+
+        </div>
+    }
+</div>
 
 @code {
     private List<ProductType>? productTypes = null;
