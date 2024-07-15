@@ -12,7 +12,7 @@
                 <div lc-helper="shortcode" class="live-shortcode me-auto">
                     <ul id="menu-menu-1" class="navbar-nav">
 
-                        <li class="menu-item menu-item-type-custom menu-item-object-custom nav-item nav-item-32739">
+                        <li class="menu-item nav-item">
                             <a href="/" class="nav-link ">
                                 Каталог
                             </a>
@@ -21,25 +21,29 @@
 
                         <AuthorizeView Roles="@Roles.Administrator">
                             <Authorized>
-                                <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home nav-item nav-item-32738">
+                                <li class="menu-item nav-item">
                                     <a href="/ProductTypes" class="nav-link ">
                                         Типы товаров
                                     </a>
                                 </li>
 
-                                <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children dropdown nav-item nav-item-33131">
-                                    <a href="#" class="nav-link  dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">Таблицы</a>
+                                <li class="menu-item dropdown nav-item">
+                                    <a href="#" class="nav-link  dropdown-toggle"
+                                       data-bs-toggle="dropdown" data-bs-auto-close="outside"
+                                       aria-haspopup="true" aria-expanded="false">
+                                        Таблицы
+                                    </a>
                                     <ul class="dropdown-menu  depth_0">
-                                        <li class="menu-item menu-item-type-taxonomy menu-item-object-category nav-item nav-item-33132">
+                                        <li class="menu-item nav-item">
                                             <a href="/ProductsTable" class="dropdown-item ">Продукты</a>
                                         </li>
-                                        <li class="menu-item menu-item-type-taxonomy menu-item-object-category nav-item nav-item-33132">
+                                        <li class="menu-item nav-item">
                                             <a href="/ProductTypesTable" class="dropdown-item ">Типы товаров</a>
                                         </li>
-                                        <li class="menu-item menu-item-type-taxonomy menu-item-object-category nav-item nav-item-33132">
+                                        <li class="menu-item nav-item">
                                             <a href="/TypePropertiesTable" class="dropdown-item ">Свойства типа</a>
                                         </li>
-                                        <li class="menu-item menu-item-type-taxonomy menu-item-object-category nav-item nav-item-33132">
+                                        <li class="menu-item nav-item">
                                             <a href="/PropertyValuesTable" class="dropdown-item ">Значения свойств</a>
                                         </li>
 
@@ -47,7 +51,7 @@
                                             <hr class="dropdown-divider" />
                                         </li>
 
-                                        <li class="menu-item menu-item-type-taxonomy menu-item-object-category nav-item nav-item-33132">
+                                        <li class="menu-item nav-item">
                                             <a href="/UsersTable" class="dropdown-item ">Пользователи</a>
                                         </li>
                                     </ul>
