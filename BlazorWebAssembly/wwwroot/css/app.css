@@ -172,3 +172,9 @@ main{
     /*box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem lightgreen;*/
     border-color: white;
 }
+
+
+.main-brand:hover {
+    color: #129d19;
+    transition: all 400ms, opacity 400ms;
+}

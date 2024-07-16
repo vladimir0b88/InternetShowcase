@@ -42,7 +42,7 @@
                     {
                         @foreach (Product product in products)
                         {
-                            <div class="row g-1 border border-danger">
+                            <div class="row mt-1 border border-2 border-danger rounded">
                                 <div class="col-3">
                                     <img src="@(string.IsNullOrEmpty(product.Images.FirstOrDefault()?.GetImage()) 
                                                 ? "NotFoundImage.jpg" : product.Images.FirstOrDefault()?.GetImage())"
