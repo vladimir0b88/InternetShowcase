@@ -6,6 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+ 
+
   <ItemGroup>
     <PackageReference Include="BitzArt.Blazor.Cookies.Client" Version="1.0.4" />
     <PackageReference Include="Blazor.Bootstrap" Version="2.2.1" />
@@ -24,5 +26,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Application\Application.csproj" />
   </ItemGroup>
+
 
 </Project>

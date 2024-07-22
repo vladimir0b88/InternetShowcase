@@ -42,17 +42,7 @@
                     {
                         @foreach (Product product in products)
                         {
-                            <div class="row mt-1 border border-2 border-danger rounded">
-                                <div class="col-3">
-                                    <img src="@(string.IsNullOrEmpty(product.Images.FirstOrDefault()?.GetImage()) 
-                                                ? "NotFoundImage.jpg" : product.Images.FirstOrDefault()?.GetImage())"
-                                         class="img-fluid mx-auto d-block" />
-                                </div>
-                                <div class="col-9">
-                                    <h3>@product.Name</h3>
-                                    <p class="text-wrap text-break">@product.Description</p>
-                                </div>
-                            </div>
+                           <ProductCardMini Product="product"/>
                         }
                     }
                 </div>

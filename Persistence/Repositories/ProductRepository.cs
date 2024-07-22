@@ -73,7 +73,6 @@ namespace Persistence.Repositories
         public async Task<Result<List<Product>>> GetAll()
         {
             List<Product> list = await context.Products.AsNoTracking()
-                                                       .Include(p => p.Images)
                                                        .ToListAsync();
 
             return new SuccessResult<List<Product>>(list);

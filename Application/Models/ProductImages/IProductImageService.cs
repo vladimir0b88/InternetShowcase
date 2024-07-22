@@ -13,5 +13,7 @@ namespace Application.Models
 
         public Task<Result<List<ProductImage>>> GetImagesByProductId(long productId);
 
+        public Task<Result<ProductImage>> GetFirstImageByProductId(long productId);
+
     }
 }

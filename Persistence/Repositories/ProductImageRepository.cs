@@ -23,7 +23,7 @@ namespace Persistence.Repositories
         {
             ProductImage? image = await context.ProductImages.FirstOrDefaultAsync(pi => pi.Id == id);
 
-            if(image is null)
+            if (image is null)
                 return new NotFoundErrorResult(message: $"Изображение для удаления с id: {id} не найдено",
                                                errors: [ErrorList.NotFound]);
 
@@ -31,6 +31,25 @@ namespace Persistence.Repositories
             await context.SaveChangesAsync();
 
             return new SuccessResult();
+        }
+
+        public async Task<Result<ProductImage>> GetFirstImageByProductId(long productId)
+        {
+            Product? product = await context.Products.AsNoTracking()
+                                                     .Include(p => p.Images)
+                                                     .FirstOrDefaultAsync(p => p.Id == productId);
+
+            if (product is null)
+                return new NotFoundErrorResult<ProductImage>(message: $"Продукт с id: {productId} не найден",
+                                                                   errors: [ErrorList.NotFound]);
+
+            ProductImage? productImage = product.Images.FirstOrDefault();
+
+            if (productImage is null)
+                return new NotFoundErrorResult<ProductImage>(message: $"У продукта с id: {productId} отсутствуют изображения",
+                                                             errors: [ErrorList.NotFound]);
+
+            return new SuccessResult<ProductImage>(productImage);
         }
 
         public async Task<Result<ProductImage>> GetImageById(long imageId)

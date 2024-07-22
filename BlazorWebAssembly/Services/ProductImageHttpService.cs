@@ -64,5 +64,17 @@ namespace BlazorWebAssembly.Services
 
             return result;
         }
+
+        public async Task<Result<ProductImage>> GetFirstImageByProductId(long productId)
+        {
+            var response = await httpClient.GetAsync($"{controllerUri}/Product/{productId}/First");
+
+            var result = await HttpResponseHandler.GetResult<ProductImage>(response);
+
+            var rnd = new Random();
+            await Task.Delay(Constant.ServiceDelay + rnd.Next(100,2000));
+
+            return result;
+        }
     }
 }

@@ -1,0 +1,55 @@
+﻿@inject IProductImageService productImageService
+
+
+@if (Product is not null)
+{
+    <div class="row mt-1 border border-2 border-secondary rounded">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 border-end border-secondary-subtle border-2" style="height: 200px">
+            @if (imageSrc is null)
+            {
+
+                <div class="d-flex align-items-center">
+                    <LoadingSpinner></LoadingSpinner>
+                </div>
+            }
+            else
+            {
+                <img src="@imageSrc" style="height: 100%; width: 100%" class="rounded py-2" />
+            }
+        </div>
+        <div class="col-12 col-sm-12 col-md-6 col-lg-8">
+            <h3>@Product.Name</h3>
+            <h4>@(Product.Cost)р.</h4>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public Product? Product { get; set; }
+
+    private string imageSrc = null!;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetProductImage();
+    }
+
+    private async Task GetProductImage()
+    {
+        var result = await productImageService.GetFirstImageByProductId(Product!.Id);
+
+        switch (result)
+        {
+            case SuccessResult<ProductImage> successResult:
+                imageSrc = successResult.Data.GetImage()!;
+                break;
+
+            case ErrorResult<ProductImage> errorResult:
+                imageSrc = "NotFoundImage.jpg";
+                break;
+        }
+
+    }
+}

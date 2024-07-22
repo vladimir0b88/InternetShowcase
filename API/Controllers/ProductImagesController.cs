@@ -39,6 +39,20 @@ namespace API.Controllers
             };
         }
 
+        [HttpGet("Product/{id}/First")]
+        public async Task<IActionResult> GetFirstImageByProductId(long id)
+        {
+            var result = await service.GetFirstImageByProductId(id);
+
+            return result switch
+            {
+                SuccessResult<ProductImage> => Ok(result),
+                NotFoundErrorResult<ProductImage> => NotFound(result),
+                ErrorResult<ProductImage> => BadRequest(result),
+                _ => throw new ApplicationException()
+            };
+        }
+
 
         [Authorize(Roles = Roles.Administrator)]
         [HttpPost]

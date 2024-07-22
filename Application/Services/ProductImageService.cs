@@ -36,6 +36,13 @@ namespace Application.Services
             return result;
         }
 
+        public async Task<Result<ProductImage>> GetFirstImageByProductId(long productId)
+        {
+            var result = await repository.GetFirstImageByProductId(productId);
+
+            return result;
+        }
+
         public async Task<Result<ProductImage>> GetImageById(long imageId)
         {
             var result = await repository.GetImageById(imageId);
