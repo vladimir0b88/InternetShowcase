@@ -3,23 +3,42 @@
 
 @if (Product is not null)
 {
-    <div class="row mt-1 border border-2 border-secondary rounded">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 border-end border-secondary-subtle border-2" style="height: 200px">
+    @* <div class="col-12 col-sm-12 col-md-6 col-lg-4 border-end border-secondary-subtle border-2" style="height: 200px">
+        @if (imageSrc is null)
+        {
+
+            <div class="d-flex align-items-center justify-content-center" style="height: 100%">
+                <LoadingSpinner></LoadingSpinner>
+            </div>
+        }
+        else
+        {
+            <img src="@imageSrc" style="height: 100%; width: 100%" class="" />
+        }
+    </div>
+    <div class="col-12 col-sm-12 col-md-6 col-lg-8">
+        <h3 class="px-2">@Product.Name</h3>
+        <h5 class="px-2">@(Product.Type?.Name)</h5>
+        <h4 class="px-2">@(Product.Cost)р.</h4>
+    </div> *@
+
+
+    <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+        <div class="p-2 border border-1 border-danger" style="height: ">
             @if (imageSrc is null)
             {
-
-                <div class="d-flex align-items-center">
+                <div class="d-flex align-items-center justify-content-center">
                     <LoadingSpinner></LoadingSpinner>
                 </div>
             }
             else
             {
-                <img src="@imageSrc" style="height: 100%; width: 100%" class="rounded py-2" />
+                <img src="@imageSrc" class="img-fluid" style="max-height:200px; height: 200px; width: 100%" />
             }
-        </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-8">
-            <h3>@Product.Name</h3>
-            <h4>@(Product.Cost)р.</h4>
+
+            <h5 class="px-2">@Product.Name</h5>
+            <h6 class="px-2">@(Product.Type?.Name)</h6>
+            <h6 class="px-2">@(Product.Cost)р.</h6>
         </div>
     </div>
 }

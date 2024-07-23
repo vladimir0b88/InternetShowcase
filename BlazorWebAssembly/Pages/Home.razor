@@ -33,17 +33,19 @@
             <div class="col-12 col-sm-8 col-md-9 col-lg-9">
                 <h3 class="p-3 border-bottom border-success border-2">Все товары</h3>
 
-                <div class="container-fluid">
-                    @if (products is null)
+                <div class="container-fluid p-0">
+                    @if (products is null || products.Count == 0)
                     {
                         <h3>Товары отсутствуют...</h3>
                     }
                     else
                     {
-                        @foreach (Product product in products)
-                        {
-                           <ProductCardMini Product="product"/>
-                        }
+                        <div class="row g-0 mt-2">
+                            @foreach (Product product in products)
+                            {
+                                <ProductCardMini Product="product" />
+                            }
+                        </div>
                     }
                 </div>
             </div>
