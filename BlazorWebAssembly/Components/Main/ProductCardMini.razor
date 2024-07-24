@@ -23,22 +23,31 @@
     </div> *@
 
 
-    <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
-        <div class="p-2 border border-1 border-danger" style="height: ">
+    <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+        <div class="border border-2 border-secondary rounded">
             @if (imageSrc is null)
             {
-                <div class="d-flex align-items-center justify-content-center">
+                <div class="d-flex align-items-center justify-content-center"
+                     style="height:200px">
                     <LoadingSpinner></LoadingSpinner>
                 </div>
             }
             else
             {
-                <img src="@imageSrc" class="img-fluid" style="max-height:200px; height: 200px; width: 100%" />
+                <img src="@imageSrc"
+                     class="img-fluid rounded-top-1"
+                     style="max-height:200px; height: 200px; width: 100%" />
             }
+            <div class="d-flex flex-column justify-content-between"
+                 style="min-height: 110px;">
+                <h5 class="px-2 mt-2">@Product.Name</h5>
+                <div>
+                    <span class="fs-5 text-light d-inline-block m-2 px-2 bg-success rounded">
+                        @(Product.Cost)р
+                    </span>
+                </div>
+            </div>
 
-            <h5 class="px-2">@Product.Name</h5>
-            <h6 class="px-2">@(Product.Type?.Name)</h6>
-            <h6 class="px-2">@(Product.Cost)р.</h6>
         </div>
     </div>
 }

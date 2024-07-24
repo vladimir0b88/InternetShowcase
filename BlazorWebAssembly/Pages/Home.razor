@@ -16,7 +16,7 @@
     else
     {
         <div class="row g-2">
-            <div class="col-12 col-sm-4 col-md-3 col-lg-3">
+            <div class="col-12 col-sm-12 col-md-3 col-lg-2 col-xl-2">
                 <h3 class="p-3 border-bottom border-success border-2">Категории</h3>
                 <ul class="list-group border border-2 border-secondary">
 
@@ -30,17 +30,17 @@
                 </ul>
             </div>
 
-            <div class="col-12 col-sm-8 col-md-9 col-lg-9">
+            <div class="col-12 col-sm-12 col-md-9 col-lg-10 col-xl-10">
                 <h3 class="p-3 border-bottom border-success border-2">Все товары</h3>
 
-                <div class="container-fluid p-0">
+                <div class="container-fluid p-0 mb-3">
                     @if (products is null || products.Count == 0)
                     {
                         <h3>Товары отсутствуют...</h3>
                     }
                     else
                     {
-                        <div class="row g-0 mt-2">
+                        <div class="row g-2">
                             @foreach (Product product in products)
                             {
                                 <ProductCardMini Product="product" />
