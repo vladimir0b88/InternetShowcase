@@ -7,7 +7,8 @@ namespace Application.Services
 {
     public class ProductService(IProductRepository repository, 
                                 IValidator<ProductCreateDto> createValidator,
-                                IValidator<ProductUpdateDto> updateValidator) : IProductService
+                                IValidator<ProductUpdateDto> updateValidator,
+                                IValidator<ProductsFilter> filterValidator) : IProductService
     {
         public async Task<Result<Product>> GetProductById(long id)
         {
@@ -78,6 +79,20 @@ namespace Application.Services
         public async Task<Result<List<Product>>> GetByProductTypeId(long productTypeId)
         {
             var result = await repository.GetByProductTypeId(productTypeId);
+
+            return result;
+        }
+
+        public async Task<Result<List<Product>>> GetProductsByFilter(ProductsFilter filter)
+        {
+            var validationResult = await filterValidator.ValidateAsync(filter);
+
+            if(!validationResult.IsValid)
+                return new ValidationErrorResult<List<Product>>(message: "Фильтр не прошел валидацию",
+                                                                errors: [ErrorList.FailedValidation],
+                                                                validationErrors: validationResult.Errors);
+
+            var result = await repository.GetByFilter(filter);
 
             return result;
         }

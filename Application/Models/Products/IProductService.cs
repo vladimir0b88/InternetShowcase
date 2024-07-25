@@ -17,6 +17,6 @@ namespace Application.Common
 
         Task<Result<List<Product>>> GetByProductTypeId(long productTypeId);
 
-        //Task<Result<List<Product>>> GetProductsByFilter();
+        Task<Result<List<Product>>> GetProductsByFilter(ProductsFilter filter);
     }
 }

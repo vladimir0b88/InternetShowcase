@@ -46,6 +46,10 @@ namespace Application
             // ProductImage
             services.AddScoped<IValidator<ProductImageAddDto>, ProductImageAddDtoValidator>();
 
+            // Filters
+            services.AddScoped<IValidator<ProductsFilter>, ProductsFilterValidator>();
+            services.AddScoped<IValidator<PropertyFilter>, PropertyFilterValidator>();
+
             #endregion
 
             return services;
