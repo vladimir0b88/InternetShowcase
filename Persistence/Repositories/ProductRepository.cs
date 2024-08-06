@@ -160,22 +160,49 @@ namespace Persistence.Repositories
             }
 
 
-            List<Product> products = await productQuery.Skip(filter.ItemsOnPage * (filter.PageNumber - 1))
-                                                       .Take(filter.ItemsOnPage)
-                                                       .ToListAsync();
-
             int totalItems = productQuery.Count();
             int totalPages = totalItems / filter.ItemsOnPage;
 
-            FilteringResult<Product> result = new FilteringResult<Product>()
+            if (totalPages * filter.ItemsOnPage < totalItems)
+                totalPages++;
+
+            if(totalPages < filter.PageNumber)
+                filter.PageNumber = totalPages;
+
+            List<Product> products = new();
+            FilteringResult<Product> result = new();
+
+            if (totalItems < filter.ItemsOnPage * filter.PageNumber)
             {
-                Results = products,
-                SortingMethod = filter.SortingMethod,
-                ItemsOnPage = filter.ItemsOnPage,
-                CurrentPage = filter.PageNumber,
-                TotalPages =  totalPages,
-                TotalItems = totalItems
-            };
+                products = await productQuery.TakeLast(filter.ItemsOnPage)
+                                             .ToListAsync();
+
+                result = new FilteringResult<Product>()
+                {
+                    Results = products,
+                    SortingMethod = filter.SortingMethod,
+                    ItemsOnPage = filter.ItemsOnPage,
+                    CurrentPage = totalPages,
+                    TotalPages = totalPages,
+                    TotalItems = totalItems
+                };
+            }
+            else
+            {
+                products = await productQuery.Skip(filter.ItemsOnPage * (filter.PageNumber - 1))
+                                             .Take(filter.ItemsOnPage)
+                                             .ToListAsync();
+
+                result = new FilteringResult<Product>()
+                {
+                    Results = products,
+                    SortingMethod = filter.SortingMethod,
+                    ItemsOnPage = filter.ItemsOnPage,
+                    CurrentPage = filter.PageNumber,
+                    TotalPages = totalPages,
+                    TotalItems = totalItems
+                };
+            }
 
             return new SuccessResult<FilteringResult<Product>>(result);
         }

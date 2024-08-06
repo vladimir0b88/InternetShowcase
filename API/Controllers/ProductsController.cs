@@ -97,5 +97,20 @@ namespace API.Controllers
                 _ => throw new ApplicationException()
             };
         }
+
+        [HttpPost("Filter")]
+        public async Task<IActionResult> GetProductsByFilter(ProductsFilter filter)
+        {
+            var result = await productService.GetProductsByFilter(filter);
+
+            return result switch
+            {
+                SuccessResult<FilteringResult<Product>> => Ok(result),
+                ValidationErrorResult<FilteringResult<Product>> => StatusCode(422, result),
+                NotFoundErrorResult<FilteringResult<Product>> => NotFound(result),
+                ErrorResult<FilteringResult<Product>> => BadRequest(result),
+                _ => throw new ApplicationException()
+            };
+        }
     }
 }

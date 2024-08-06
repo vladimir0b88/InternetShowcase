@@ -11,8 +11,8 @@ namespace Application.Common
 
         public int PageNumber { get; set; } = 1;
 
-        public long MinCost { get; set; } = 0;
-        public long MaxCost { get; set; } = long.MaxValue;
+        public long? MinCost { get; set; }
+        public long? MaxCost { get; set; }
 
         public List<PropertyFilter>? PropertyFilters { get; set; }
 
@@ -32,15 +32,17 @@ namespace Application.Common
     {
         public ProductsFilterValidator(IValidator<PropertyFilter> validator)
         {
-            RuleFor(pf => pf.ItemsOnPage).NotEmpty().GreaterThan(0);
+            RuleFor(pf => pf.ItemsOnPage).NotEmpty()
+                                         .GreaterThan(0)
+                                         .LessThan(100);
 
             RuleFor(pf => pf.PageNumber).NotEmpty().GreaterThan(0);
 
             RuleFor(pf => pf.MinCost).NotEmpty()
-                                     .GreaterThan(0)
+                                     .GreaterThanOrEqualTo(0)
                                      .LessThan(pf => pf.MaxCost);
 
-            RuleFor(pf => pf.PropertyFilters).SetValidator(validator);
+            RuleForEach(pf => pf.PropertyFilters).SetValidator(validator);
         }
     }
 }

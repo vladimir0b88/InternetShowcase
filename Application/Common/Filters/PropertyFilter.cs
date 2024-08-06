@@ -16,7 +16,8 @@ namespace Application.Common
             RuleFor(pf => pf.PropertyId).NotEmpty().GreaterThan(0);
 
             RuleFor(pf => pf.Values).NotEmpty()
-                                    .Must(list => list.Count > 0).WithMessage("Для фильтрации по свойству необходимо указывать хотя бы одно значение свойства");
+                                    .Must(list => list.Count > 0)
+                                    .WithMessage("Для фильтрации по свойству необходимо указывать хотя бы одно значение свойства");
         }
     }
 }

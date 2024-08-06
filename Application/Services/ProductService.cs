@@ -83,14 +83,14 @@ namespace Application.Services
             return result;
         }
 
-        public async Task<Result<List<Product>>> GetProductsByFilter(ProductsFilter filter)
+        public async Task<Result<FilteringResult<Product>>> GetProductsByFilter(ProductsFilter filter)
         {
             var validationResult = await filterValidator.ValidateAsync(filter);
 
             if(!validationResult.IsValid)
-                return new ValidationErrorResult<List<Product>>(message: "Фильтр не прошел валидацию",
-                                                                errors: [ErrorList.FailedValidation],
-                                                                validationErrors: validationResult.Errors);
+                return new ValidationErrorResult<FilteringResult<Product>>(message: "Фильтр не прошел валидацию",
+                                                                           errors: [ErrorList.FailedValidation],
+                                                                           validationErrors: validationResult.Errors);
 
             var result = await repository.GetByFilter(filter);
 

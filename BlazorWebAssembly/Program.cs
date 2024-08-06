@@ -61,6 +61,10 @@ builder.Services.AddScoped<IValidator<UserRegisterDto>, UserRegisterDtoValidator
 // ProductImage
 builder.Services.AddScoped<IValidator<ProductImageAddDto>, ProductImageAddDtoValidator>();
 
+
+// Filters
+builder.Services.AddScoped<IValidator<ProductsFilter>, ProductsFilterValidator>();
+builder.Services.AddScoped<IValidator<PropertyFilter>, PropertyFilterValidator>();
 #endregion
 
 await builder.Build().RunAsync();

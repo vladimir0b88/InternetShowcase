@@ -9,7 +9,8 @@ namespace BlazorWebAssembly.Services
 {
     public class ProductHttpService(IHttpClientFactory httpClientFactory,
                                     IValidator<ProductCreateDto> createValidator,
-                                    IValidator<ProductUpdateDto> updateValidator) : IProductService
+                                    IValidator<ProductUpdateDto> updateValidator,
+                                    IValidator<ProductsFilter> filterValidator) : IProductService
     {
         private readonly HttpClient httpClient = httpClientFactory.CreateClient("WebApi");
         
@@ -90,6 +91,24 @@ namespace BlazorWebAssembly.Services
             var response = await httpClient.DeleteAsync($"{controllerUri}/{id}");
 
             var result = await HttpResponseHandler.GetResult(response);
+
+            await Task.Delay(Constant.ServiceDelay);
+
+            return result;
+        }
+
+        public async Task<Result<FilteringResult<Product>>> GetProductsByFilter(ProductsFilter filter)
+        {
+            var validationResult = await filterValidator.ValidateAsync(filter);
+
+            if (!validationResult.IsValid)
+                return new ValidationErrorResult<FilteringResult<Product>>(message: "Фильтр продуктов не прошел первичную валидацию",
+                                                 errors: [ErrorList.FailedValidation],
+                                                 validationErrors: validationResult.Errors);
+
+            var response = await httpClient.PostAsJsonAsync($"{controllerUri}/Filter", filter);
+
+            var result = await HttpResponseHandler.GetResult<FilteringResult<Product>>(response);
 
             await Task.Delay(Constant.ServiceDelay);
 
