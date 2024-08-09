@@ -123,7 +123,7 @@ namespace Persistence.Repositories
         {
             if (filter is null)
                 return new ErrorResult<FilteringResult<Product>>(message: "Фильтр не может быть пустым",
-                                                      errors: [ErrorList.IsNull]);
+                                                                 errors: [ErrorList.IsNull]);
 
 
             IQueryable<Product> productQuery = context.Products.AsNoTracking()
@@ -135,6 +135,13 @@ namespace Persistence.Repositories
                                                        p.Type.Id == filter.ProductTypeId);
             }
 
+            if(filter.MinCost is not null)
+                productQuery = productQuery.Where(p => p.Cost >= filter.MinCost);
+
+            if(filter.MaxCost is not null)
+                productQuery = productQuery.Where(p => p.Cost <= filter.MaxCost);
+
+
             if (filter.PropertyFilters is not null)
                 foreach (var propertyFilter in filter.PropertyFilters)
                 {
@@ -142,67 +149,32 @@ namespace Persistence.Repositories
                                                                                       propertyFilter.Values!.Contains(pv.Value!)));
                 }
 
-            switch (filter.SortingMethod)
-            {
-                case SortingMethods.ByNameDesk:
-                    productQuery = productQuery.OrderByDescending(p => p.Name);
-                    break;
-                case SortingMethods.ByNameAsk:
-                    productQuery = productQuery.OrderBy(p => p.Name);
-                    break;
-
-                case SortingMethods.ByCostDesk:
-                    productQuery = productQuery.OrderByDescending(p => p.Cost);
-                    break;
-                case SortingMethods.ByCostAsk:
-                    productQuery = productQuery.OrderBy(p => p.Cost);
-                    break;
-            }
-
+            productQuery = SortByMethod(productQuery, filter.SortingMethod);
 
             int totalItems = productQuery.Count();
             int totalPages = totalItems / filter.ItemsOnPage;
 
-            if (totalPages * filter.ItemsOnPage < totalItems)
+            if (totalItems > totalPages * filter.ItemsOnPage)
                 totalPages++;
 
-            if(totalPages < filter.PageNumber)
+            if (totalPages < filter.PageNumber)
                 filter.PageNumber = totalPages;
 
-            List<Product> products = new();
-            FilteringResult<Product> result = new();
 
-            if (totalItems < filter.ItemsOnPage * filter.PageNumber)
+
+            List<Product> products = await productQuery.Skip(filter.ItemsOnPage * (filter.PageNumber - 1))
+                                                       .Take(filter.ItemsOnPage)
+                                                       .ToListAsync();
+
+            FilteringResult<Product> result = new()
             {
-                products = await productQuery.TakeLast(filter.ItemsOnPage)
-                                             .ToListAsync();
-
-                result = new FilteringResult<Product>()
-                {
-                    Results = products,
-                    SortingMethod = filter.SortingMethod,
-                    ItemsOnPage = filter.ItemsOnPage,
-                    CurrentPage = totalPages,
-                    TotalPages = totalPages,
-                    TotalItems = totalItems
-                };
-            }
-            else
-            {
-                products = await productQuery.Skip(filter.ItemsOnPage * (filter.PageNumber - 1))
-                                             .Take(filter.ItemsOnPage)
-                                             .ToListAsync();
-
-                result = new FilteringResult<Product>()
-                {
-                    Results = products,
-                    SortingMethod = filter.SortingMethod,
-                    ItemsOnPage = filter.ItemsOnPage,
-                    CurrentPage = filter.PageNumber,
-                    TotalPages = totalPages,
-                    TotalItems = totalItems
-                };
-            }
+                Results = products,
+                SortingMethod = filter.SortingMethod,
+                ItemsOnPage = filter.ItemsOnPage,
+                CurrentPage = filter.PageNumber,
+                TotalPages = totalPages,
+                TotalItems = totalItems
+            };
 
             return new SuccessResult<FilteringResult<Product>>(result);
         }

@@ -103,8 +103,8 @@ namespace BlazorWebAssembly.Services
 
             if (!validationResult.IsValid)
                 return new ValidationErrorResult<FilteringResult<Product>>(message: "Фильтр продуктов не прошел первичную валидацию",
-                                                 errors: [ErrorList.FailedValidation],
-                                                 validationErrors: validationResult.Errors);
+                                                                           errors: [ErrorList.FailedValidation],
+                                                                           validationErrors: validationResult.Errors);
 
             var response = await httpClient.PostAsJsonAsync($"{controllerUri}/Filter", filter);
 
