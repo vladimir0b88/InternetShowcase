@@ -131,6 +131,13 @@ namespace Persistence.Repositories
                                                                .Include(p => p.PropertyValues);
             if (filter.ProductTypeId is not null)
             {
+                ProductType? productType = await context.ProductTypes.AsNoTracking()
+                                                                     .FirstOrDefaultAsync(pt => pt.Id == filter.ProductTypeId);
+
+                if (productType is null)
+                    return new ErrorResult<FilteringResult<Product>>(message: "Указан несуществующий тип товара",
+                                                                     errors: [ErrorList.NotFound]);
+
                 productQuery = productQuery.Where(p => p.Type != null &&
                                                        p.Type.Id == filter.ProductTypeId);
             }

@@ -43,7 +43,8 @@ namespace Persistence.Repositories
                 return new NotFoundErrorResult<ProductImage>(message: $"Продукт с id: {productId} не найден",
                                                                    errors: [ErrorList.NotFound]);
 
-            ProductImage? productImage = product.Images.FirstOrDefault();
+            ProductImage? productImage = await context.ProductImages.AsNoTracking()
+                                                                    .FirstOrDefaultAsync(pi => pi.ProductId == productId);
 
             if (productImage is null)
                 return new NotFoundErrorResult<ProductImage>(message: $"У продукта с id: {productId} отсутствуют изображения",

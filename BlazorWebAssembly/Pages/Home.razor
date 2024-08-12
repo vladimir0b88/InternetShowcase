@@ -33,21 +33,41 @@
             <div class="col-12 col-sm-12 col-md-9 col-lg-10 col-xl-10">
                 <h3 class="p-3 border-bottom border-success border-2">Все товары</h3>
 
-                <div class="container-fluid p-0 mb-3">
-                    @if (products is null || products.Count == 0)
-                    {
-                        <h3>Товары отсутствуют...</h3>
-                    }
-                    else
-                    {
-                        <div class="row g-2">
-                            @foreach (Product product in products)
-                            {
-                                <ProductCardMini Product="product" />
-                            }
-                        </div>
-                    }
-                </div>
+                @if(filteringResult is null)
+                {
+                    <LoadingSpinner></LoadingSpinner>
+                }
+                else
+                {
+
+
+                    <div class="container-fluid p-0 mb-2">
+                        @if (products is null || products.Count == 0)
+                        {
+                            <LoadingSpinner></LoadingSpinner>
+                        }
+                        else
+                        {
+                            <div class="row g-2">
+                                @foreach (Product product in products)
+                                {
+                                    <ProductCardMini Product="product" />
+                                }
+                            </div>
+                        }
+                    </div>
+                }
+
+                <Pagination Class="mb-3"
+                            ActivePageNumber="(int)filteringResult.CurrentPage"
+                            TotalPages="(int)filteringResult.TotalPages"
+                            Alignment="Alignment.Center"
+                            FirstLinkIcon="IconName.ChevronDoubleLeft"
+                            PreviousLinkIcon="IconName.ChevronLeft"
+                            NextLinkIcon="IconName.ChevronRight"
+                            LastLinkIcon="IconName.ChevronDoubleRight"
+                            PageChanged="OnPageChangedAsync">
+                </Pagination>
             </div>
 
         </div>
@@ -57,13 +77,29 @@
 @code {
     private List<ProductType>? productTypes = null;
 
+    private FilteringResult<Product>? filteringResult = null;
+
     private List<Product>? products = null;
+
+    private ProductsFilter filter = new()
+        {
+            ItemsOnPage = 12,
+            PageNumber = 1,
+            SortingMethod = ProductsFilter.SortingMethods.ByCostDesk,
+            MinCost = null,
+            MaxCost = null,
+        };
 
     protected override async Task OnInitializedAsync()
     {
         await GetProductTypes();
 
-        await GetProducts();
+        await GetProducts(1);
+    }
+
+    async Task OnPageChangedAsync(int newPageNumber)
+    {
+        await GetProducts(newPageNumber);
     }
 
     async Task GetProductTypes()
@@ -82,17 +118,23 @@
         }
     }
 
-    async Task GetProducts()
+    async Task GetProducts(int pageNumber)
     {
-        var result = await productService.GetAllProducts();
+        filter.PageNumber = pageNumber;
+
+        products = null;
+
+        var result = await productService.GetProductsByFilter(filter);
 
         switch (result)
         {
-            case SuccessResult<List<Product>> successResult:
-                products = successResult.Data;
+            case SuccessResult<FilteringResult<Product>> successResult:
+                filteringResult = successResult.Data;
+                products = successResult.Data.Results;
                 break;
 
-            case ErrorResult<List<Product>> errorResult:
+            case ErrorResult<FilteringResult<Product>> errorResult:
+                filteringResult = null;
                 products = null;
                 break;
         }
