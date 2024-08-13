@@ -8,15 +8,17 @@
 @inject ITypePropertyService typePropertyService
 @inject NavigationManager navManager
 
-<div class="container">
+<div class="container-lg">
     @if (productTypes is null)
     {
-        <LoadingSpinner></LoadingSpinner>
+        <div class="mt-5">
+            <LoadingSpinner></LoadingSpinner>
+        </div>
     }
     else
     {
         <div class="row g-2">
-            <div class="col-12 col-sm-12 col-md-3 col-lg-2 col-xl-2">
+            <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-2">
                 <h3 class="p-3 border-bottom border-success border-2">Категории</h3>
                 <ul class="list-group border border-2 border-secondary">
 
@@ -30,12 +32,52 @@
                 </ul>
             </div>
 
-            <div class="col-12 col-sm-12 col-md-9 col-lg-10 col-xl-10">
-                <h3 class="p-3 border-bottom border-success border-2">Все товары</h3>
+            <div class="col-12 col-sm-12 col-md-9 col-lg-9 col-xl-10">
+                <div class="d-flex flex-row
+                            justify-content-between
+                            border-bottom border-success border-2
+                            mb-2">
 
-                @if(filteringResult is null)
+                    <h3 class="p-3 m-0">Все товары</h3>
+
+                    <div class="d-flex flex-row justify-content-between">
+                        <div class="pt-3 px-2">
+                            <Button Color="ButtonColor.Success" Outline Class="p-0 sort-btn">
+                                 <Icon Name="IconName.SortAlphaDown" Size="IconSize.x4" Class="px-2"></Icon>
+                             </Button>
+
+                             <Button Color="ButtonColor.Success" Outline Class="p-0 sort-btn">
+                                 <Icon Name="IconName.SortAlphaDownAlt" Size="IconSize.x4" Class="px-2"></Icon>
+                             </Button>
+
+                             <Button Color="ButtonColor.Success" Outline Class="p-0 sort-btn">
+                                 <Icon Name="IconName.SortNumericDown" Size="IconSize.x4" Class="px-2"></Icon>
+                             </Button>
+
+                             <Button Color="ButtonColor.Success" Outline Class="p-0 sort-btn">
+                                 <Icon Name="IconName.SortNumericDownAlt" Size="IconSize.x4" Class="px-2"></Icon>
+                             </Button>
+                         </div>
+
+
+                         <Pagination Class="m-0 pt-3 d-none d-lg-inline-flex"
+                                     ActivePageNumber="(int)filteringResult.CurrentPage"
+                                     TotalPages="(int)filteringResult.TotalPages"
+                                     FirstLinkIcon="IconName.ChevronDoubleLeft"
+                                     PreviousLinkIcon="IconName.ChevronLeft"
+                                     NextLinkIcon="IconName.ChevronRight"
+                                     LastLinkIcon="IconName.ChevronDoubleRight"
+                                     PageChanged="OnPageChangedAsync">
+                         </Pagination>
+                     </div>
+                 </div>
+
+
+                 @if (filteringResult is null)
                 {
-                    <LoadingSpinner></LoadingSpinner>
+                    <div class="mt-5">
+                        <LoadingSpinner></LoadingSpinner>
+                    </div>
                 }
                 else
                 {
@@ -44,7 +86,9 @@
                     <div class="container-fluid p-0 mb-2">
                         @if (products is null || products.Count == 0)
                         {
-                            <LoadingSpinner></LoadingSpinner>
+                            <div class="mt-5">
+                                <LoadingSpinner></LoadingSpinner>
+                            </div>
                         }
                         else
                         {
@@ -56,18 +100,18 @@
                             </div>
                         }
                     </div>
-                }
 
-                <Pagination Class="mb-3"
-                            ActivePageNumber="(int)filteringResult.CurrentPage"
-                            TotalPages="(int)filteringResult.TotalPages"
-                            Alignment="Alignment.Center"
-                            FirstLinkIcon="IconName.ChevronDoubleLeft"
-                            PreviousLinkIcon="IconName.ChevronLeft"
-                            NextLinkIcon="IconName.ChevronRight"
-                            LastLinkIcon="IconName.ChevronDoubleRight"
-                            PageChanged="OnPageChangedAsync">
-                </Pagination>
+                    <Pagination Class="mb-2 pt-1 d-lg-none"
+                                ActivePageNumber="(int)filteringResult.CurrentPage"
+                                TotalPages="(int)filteringResult.TotalPages"
+                                Alignment="Alignment.Center"
+                                FirstLinkIcon="IconName.ChevronDoubleLeft"
+                                PreviousLinkIcon="IconName.ChevronLeft"
+                                NextLinkIcon="IconName.ChevronRight"
+                                LastLinkIcon="IconName.ChevronDoubleRight"
+                                PageChanged="OnPageChangedAsync">
+                    </Pagination>
+                }
             </div>
 
         </div>
