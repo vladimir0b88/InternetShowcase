@@ -18,7 +18,10 @@
     else
     {
         <div class="row g-2">
+
+
             <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-2">
+
                 <h3 class="p-3 border-bottom border-success border-2">Категории</h3>
                 <ul class="list-group border border-2 border-secondary">
 
@@ -30,9 +33,12 @@
                     }
 
                 </ul>
+
             </div>
 
+
             <div class="col-12 col-sm-12 col-md-9 col-lg-9 col-xl-10">
+
                 <div class="d-flex flex-row
                             justify-content-between
                             border-bottom border-success border-2
@@ -41,6 +47,18 @@
                     <h3 class="p-3 m-0">Все товары</h3>
 
                     <div class="d-flex flex-row justify-content-between">
+
+                        <div class="pt-3">
+                            <Dropdown Direction="DropdownDirection.DropdownCentered">
+                                <DropdownToggleButton Class="btn btn-outline-success sort-toggle-btn sort-btn p-0">
+                                    <Icon Name="IconName.Search"  Size="IconSize.x4" Class="px-2"></Icon>
+                                </DropdownToggleButton>
+                                <DropdownMenu>
+                                    <DropdownItem>Text1</DropdownItem>
+                                </DropdownMenu>
+                            </Dropdown>
+                        </div>
+
                         <div class="pt-3 px-2">
                             <Button Color="ButtonColor.Success" Outline Class="p-0 sort-btn">
                                  <Icon Name="IconName.SortAlphaDown" Size="IconSize.x4" Class="px-2"></Icon>
@@ -59,21 +77,23 @@
                              </Button>
                          </div>
 
+                         @if (filteringResult is not null)
+                        {
+                            <Pagination Class="m-0 pt-3 d-none d-xl-inline-flex"
+                                        ActivePageNumber="(int)filteringResult.CurrentPage"
+                                        TotalPages="(int)filteringResult.TotalPages"
+                                        FirstLinkIcon="IconName.ChevronDoubleLeft"
+                                        PreviousLinkIcon="IconName.ChevronLeft"
+                                        NextLinkIcon="IconName.ChevronRight"
+                                        LastLinkIcon="IconName.ChevronDoubleRight"
+                                        PageChanged="OnPageChangedAsync">
+                            </Pagination>
+                        }
+                    </div>
+                </div>
 
-                         <Pagination Class="m-0 pt-3 d-none d-lg-inline-flex"
-                                     ActivePageNumber="(int)filteringResult.CurrentPage"
-                                     TotalPages="(int)filteringResult.TotalPages"
-                                     FirstLinkIcon="IconName.ChevronDoubleLeft"
-                                     PreviousLinkIcon="IconName.ChevronLeft"
-                                     NextLinkIcon="IconName.ChevronRight"
-                                     LastLinkIcon="IconName.ChevronDoubleRight"
-                                     PageChanged="OnPageChangedAsync">
-                         </Pagination>
-                     </div>
-                 </div>
 
-
-                 @if (filteringResult is null)
+                @if (filteringResult is null)
                 {
                     <div class="mt-5">
                         <LoadingSpinner></LoadingSpinner>
@@ -101,7 +121,7 @@
                         }
                     </div>
 
-                    <Pagination Class="mb-2 pt-1 d-lg-none"
+                    <Pagination Class="mb-2 pt-1 d-xl-none"
                                 ActivePageNumber="(int)filteringResult.CurrentPage"
                                 TotalPages="(int)filteringResult.TotalPages"
                                 Alignment="Alignment.Center"

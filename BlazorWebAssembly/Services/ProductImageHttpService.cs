@@ -72,7 +72,7 @@ namespace BlazorWebAssembly.Services
             var result = await HttpResponseHandler.GetResult<ProductImage>(response);
 
             var rnd = new Random();
-            await Task.Delay(Constant.ServiceDelay + rnd.Next(100,2000));
+            //await Task.Delay(Constant.ServiceDelay + rnd.Next(100,2000));
 
             return result;
         }

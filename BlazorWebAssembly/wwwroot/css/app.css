@@ -201,7 +201,12 @@ main {
 }
 
     .btn.sort-btn:hover {
+        color: white;
         border-color: #198754;
         background-color: #20ad6b;
         transition: linear 0.4s;
     }
+
+.sort-toggle-btn::after {
+    content:none;
+}
