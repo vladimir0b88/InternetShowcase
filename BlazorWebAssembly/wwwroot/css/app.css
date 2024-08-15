@@ -210,3 +210,7 @@ main {
 .sort-toggle-btn::after {
     content:none;
 }
+
+.search-input:focus-visible{
+    outline:0px solid black;
+}

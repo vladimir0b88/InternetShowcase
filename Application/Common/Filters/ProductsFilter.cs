@@ -15,6 +15,8 @@ namespace Application.Common
         public long? MinCost { get; set; }
         public long? MaxCost { get; set; }
 
+        public string? Name { get; set; }
+
         public List<PropertyFilter>? PropertyFilters { get; set; }
 
         public SortingMethods SortingMethod { get; set; } = SortingMethods.ByNameAsk;
@@ -58,6 +60,12 @@ namespace Application.Common
             When(pf => pf.MaxCost is not null, () =>
             {
                 RuleFor(pf => pf.MaxCost).GreaterThanOrEqualTo(0).WithMessage("Максимальная стоимость должна быть больше нуля");
+            });
+
+
+            When(pf => pf.Name is not null, () =>
+            {
+                RuleFor(pf => pf.Name).MaximumLength(50).WithMessage("Название для поиска не должно превышать 50 символов");
             });
 
             RuleForEach(pf => pf.PropertyFilters).SetValidator(validator);

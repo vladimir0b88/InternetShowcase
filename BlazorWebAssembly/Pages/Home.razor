@@ -51,28 +51,41 @@
                         <div class="pt-3">
                             <Dropdown Direction="DropdownDirection.DropdownCentered">
                                 <DropdownToggleButton Class="btn btn-outline-success sort-toggle-btn sort-btn p-0">
-                                    <Icon Name="IconName.Search"  Size="IconSize.x4" Class="px-2"></Icon>
+                                    <Icon Name="IconName.Search" Size="IconSize.x4" Class="px-2"></Icon>
                                 </DropdownToggleButton>
                                 <DropdownMenu>
-                                    <DropdownItem>Text1</DropdownItem>
+                                    <div class="d-flex flex-row">
+                                        <InputText @bind-Value="@nameFilter" class="border-0 search-input"></InputText>
+                                        <Button @onclick="()=>GetProducts(1,filter.SortingMethod)" Class="">
+                                            <Icon Name="IconName.ArrowRight" Size="IconSize.x5" Class="px-1"></Icon>
+                                        </Button>
+                                    </div>
                                 </DropdownMenu>
                             </Dropdown>
                         </div>
 
                         <div class="pt-3 px-2">
-                            <Button Color="ButtonColor.Success" Outline Class="p-0 sort-btn">
+                            <Button  Color="ButtonColor.Success" Outline Class="p-0 sort-btn"
+                                     Active="filteringResult?.SortingMethod is SortingMethods.ByNameAsk"
+                                     @onclick="()=>GetProducts(1, SortingMethods.ByNameAsk)">
                                  <Icon Name="IconName.SortAlphaDown" Size="IconSize.x4" Class="px-2"></Icon>
                              </Button>
 
-                             <Button Color="ButtonColor.Success" Outline Class="p-0 sort-btn">
+                             <Button Color="ButtonColor.Success" Outline Class="p-0 sort-btn"
+                                     Active="filteringResult?.SortingMethod is SortingMethods.ByNameDesk"
+                                     @onclick="()=>GetProducts(1, SortingMethods.ByNameDesk)">
                                  <Icon Name="IconName.SortAlphaDownAlt" Size="IconSize.x4" Class="px-2"></Icon>
                              </Button>
 
-                             <Button Color="ButtonColor.Success" Outline Class="p-0 sort-btn">
+                             <Button Color="ButtonColor.Success" Outline Class="p-0 sort-btn"
+                                     Active="filteringResult?.SortingMethod is SortingMethods.ByCostAsk"
+                                     @onclick="()=>GetProducts(1, SortingMethods.ByCostAsk)">
                                  <Icon Name="IconName.SortNumericDown" Size="IconSize.x4" Class="px-2"></Icon>
                              </Button>
 
-                             <Button Color="ButtonColor.Success" Outline Class="p-0 sort-btn">
+                             <Button Color="ButtonColor.Success" Outline Class="p-0 sort-btn"
+                                     Active="filteringResult?.SortingMethod is SortingMethods.ByCostDesk"
+                                     @onclick="()=>GetProducts(1, SortingMethods.ByCostDesk)">
                                  <Icon Name="IconName.SortNumericDownAlt" Size="IconSize.x4" Class="px-2"></Icon>
                              </Button>
                          </div>
@@ -145,8 +158,11 @@
 
     private List<Product>? products = null;
 
+    private string? nameFilter = null;
+
     private ProductsFilter filter = new()
         {
+            Name = null,
             ItemsOnPage = 12,
             PageNumber = 1,
             SortingMethod = ProductsFilter.SortingMethods.ByCostDesk,
@@ -163,7 +179,7 @@
 
     async Task OnPageChangedAsync(int newPageNumber)
     {
-        await GetProducts(newPageNumber);
+        await GetProducts(newPageNumber, filter.SortingMethod);
     }
 
     async Task GetProductTypes()
@@ -182,9 +198,11 @@
         }
     }
 
-    async Task GetProducts(int pageNumber)
+    async Task GetProducts(int pageNumber, SortingMethods sortingMethod = SortingMethods.ByCostDesk)
     {
         filter.PageNumber = pageNumber;
+        filter.SortingMethod = sortingMethod;
+        filter.Name = nameFilter?.ToLower();
 
         products = null;
 
@@ -199,8 +217,8 @@
 
             case ErrorResult<FilteringResult<Product>> errorResult:
                 filteringResult = null;
-                products = null;
                 break;
         }
     }
+
 }

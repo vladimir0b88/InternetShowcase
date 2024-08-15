@@ -149,6 +149,11 @@ namespace Persistence.Repositories
                 productQuery = productQuery.Where(p => p.Cost <= filter.MaxCost);
 
 
+            if(filter.Name is not null)
+            {
+                productQuery = productQuery.Where(p => p.Name.ToLower().Contains(filter.Name.ToLower()));
+            }
+
             if (filter.PropertyFilters is not null)
                 foreach (var propertyFilter in filter.PropertyFilters)
                 {
