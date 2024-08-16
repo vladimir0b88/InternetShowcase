@@ -22,7 +22,7 @@
 
             <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-2">
 
-                <h3 class="p-3 border-bottom border-success border-2">Категории</h3>
+                <h3 class="p-2 border-bottom border-success border-2" style="min-height: 56px;">Категории</h3>
                 <ul class="list-group border border-2 border-secondary">
 
                     @foreach (ProductType productType in productTypes)
@@ -42,30 +42,30 @@
                 <div class="d-flex flex-row
                             justify-content-between
                             border-bottom border-success border-2
-                            mb-2">
+                            mb-2 py-2">
 
-                    <h3 class="p-3 m-0">Все товары</h3>
+                    <div class="d-flex flex-row flex-fill">
+                        <div class="input-group">
+                            <InputText @bind-Value="@nameFilter"
+                                       id="search-btn"
+                                       placeholder="Наименование.."
+                                       class="form-control search-input"></InputText>
 
-                    <div class="d-flex flex-row justify-content-between">
 
-                        <div class="pt-3">
-                            <Dropdown Direction="DropdownDirection.DropdownCentered">
-                                <DropdownToggleButton Class="btn btn-outline-success sort-toggle-btn sort-btn p-0">
-                                    <Icon Name="IconName.Search" Size="IconSize.x4" Class="px-2"></Icon>
-                                </DropdownToggleButton>
-                                <DropdownMenu>
-                                    <div class="d-flex flex-row">
-                                        <InputText @bind-Value="@nameFilter" class="border-0 search-input"></InputText>
-                                        <Button @onclick="()=>GetProducts(1,filter.SortingMethod)" Class="">
-                                            <Icon Name="IconName.ArrowRight" Size="IconSize.x5" Class="px-1"></Icon>
-                                        </Button>
-                                    </div>
-                                </DropdownMenu>
-                            </Dropdown>
-                        </div>
+                            <Button Color="ButtonColor.Success" Outline Class="p-0 sort-btn"
+                                     Type="ButtonType.Submit"
+                                     @onsubmit="()=>GetProducts(1,filter.SortingMethod)"
+                                     @onclick="()=>GetProducts(1,filter.SortingMethod)">
+                                 <Icon Name="IconName.Search" Size="IconSize.x4" Class="px-2"></Icon>
+                             </Button>
+                         </div>
 
-                        <div class="pt-3 px-2">
-                            <Button  Color="ButtonColor.Success" Outline Class="p-0 sort-btn"
+                     </div>
+
+                     <div class="d-flex flex-row justify-content-between">
+
+                         <div class="px-2">
+                             <Button Color="ButtonColor.Success" Outline Class="p-0 sort-btn"
                                      Active="filteringResult?.SortingMethod is SortingMethods.ByNameAsk"
                                      @onclick="()=>GetProducts(1, SortingMethods.ByNameAsk)">
                                  <Icon Name="IconName.SortAlphaDown" Size="IconSize.x4" Class="px-2"></Icon>
@@ -90,9 +90,10 @@
                              </Button>
                          </div>
 
-                         @if (filteringResult is not null)
+                         @if (filteringResult is not null &&
+                              filteringResult.TotalPages > 1)
                         {
-                            <Pagination Class="m-0 pt-3 d-none d-xl-inline-flex"
+                            <Pagination Class="m-0 d-none d-xl-inline-flex"
                                         ActivePageNumber="(int)filteringResult.CurrentPage"
                                         TotalPages="(int)filteringResult.TotalPages"
                                         FirstLinkIcon="IconName.ChevronDoubleLeft"
@@ -133,17 +134,21 @@
                             </div>
                         }
                     </div>
+                    @if (products is not null && 
+                         filteringResult.TotalPages > 1)
+                    {
+                        <Pagination Class="mb-2 pt-1 d-xl-none"
+                                    ActivePageNumber="(int)filteringResult.CurrentPage"
+                                    TotalPages="(int)filteringResult.TotalPages"
+                                    Alignment="Alignment.Center"
+                                    FirstLinkIcon="IconName.ChevronDoubleLeft"
+                                    PreviousLinkIcon="IconName.ChevronLeft"
+                                    NextLinkIcon="IconName.ChevronRight"
+                                    LastLinkIcon="IconName.ChevronDoubleRight"
+                                    PageChanged="OnPageChangedAsync">
+                        </Pagination>
+                    }
 
-                    <Pagination Class="mb-2 pt-1 d-xl-none"
-                                ActivePageNumber="(int)filteringResult.CurrentPage"
-                                TotalPages="(int)filteringResult.TotalPages"
-                                Alignment="Alignment.Center"
-                                FirstLinkIcon="IconName.ChevronDoubleLeft"
-                                PreviousLinkIcon="IconName.ChevronLeft"
-                                NextLinkIcon="IconName.ChevronRight"
-                                LastLinkIcon="IconName.ChevronDoubleRight"
-                                PageChanged="OnPageChangedAsync">
-                    </Pagination>
                 }
             </div>
 

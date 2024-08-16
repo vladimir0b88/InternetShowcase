@@ -3,8 +3,10 @@
 
 @if (Product is not null)
 {
+
     <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
         <div class="border border-2 border-secondary rounded">
+
             @if (imageSrc is null)
             {
                 <div class="d-flex align-items-center justify-content-center"
@@ -14,9 +16,11 @@
             }
             else
             {
-                <img src="@imageSrc"
-                     class="img-fluid rounded-top-1"
-                     style="max-height:200px; height: 200px; width: 100%" />
+                <a href="Product/@Product.Id" class="text-reset">
+                    <img src="@imageSrc"
+                         class="img-fluid rounded-top-1"
+                         style="max-height:200px; height: 200px; width: 100%" />
+                </a>
             }
             <div class="d-flex flex-column justify-content-between"
                  style="min-height: 80px;">
@@ -27,7 +31,6 @@
                     </span>
                 </div>
             </div>
-
         </div>
     </div>
 }
@@ -38,7 +41,7 @@
 
     private string imageSrc = null!;
 
-    protected override async Task OnParametersSetAsync()
+    protected override async Task OnInitializedAsync()
     {
         await GetProductImage();
     }
