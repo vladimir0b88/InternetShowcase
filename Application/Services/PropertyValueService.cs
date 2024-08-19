@@ -23,6 +23,13 @@ namespace Application.Services
             return result;
         }
 
+        public async Task<Result<List<UniquePropertyValues>>> GetUniquePropertyValues(long productTypeId)
+        {
+            var result = await repository.GetUniquePropertyValues(productTypeId);
+
+            return result;
+        }
+
         public async Task<Result> UpdatePropertyValue(PropertyValueUpdateDto updateDto)
         {
             var validationResult = await updateValidator.ValidateAsync(updateDto);

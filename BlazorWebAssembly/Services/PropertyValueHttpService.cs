@@ -72,5 +72,14 @@ namespace BlazorWebAssembly.Services
 
             return result;
         }
+
+        public async Task<Result<List<UniquePropertyValues>>> GetUniquePropertyValues(long productTypeId)
+        {
+            var response = await httpClient.GetAsync($"{_controllerUri}/ProductType/{productTypeId}/UniqueValues");
+
+            var result = await HttpResponseHandler.GetResult<List<UniquePropertyValues>>(response);
+
+            return result;
+        }
     }
 }

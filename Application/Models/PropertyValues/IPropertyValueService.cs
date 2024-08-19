@@ -10,5 +10,7 @@ namespace Application.Common
         Task<Result> UpdatePropertyValue(PropertyValueUpdateDto updateDto);
 
         Task<Result> UpdatePropertyValueList(PropertyValueUpdateDtoList updateDtoList);
+
+        Task<Result<List<UniquePropertyValues>>> GetUniquePropertyValues(long productTypeId);
     }
 }

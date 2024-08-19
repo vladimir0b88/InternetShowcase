@@ -9,5 +9,6 @@ namespace Application.Common
         Task<Result> AddPropertyValue(PropertyValue propertyValue);
         Task<Result> UpdatePropertyValue(PropertyValue propertyValue);
         Task<Result> DeletePropertyValueById(long propertyValueId);
+        Task<Result<List<UniquePropertyValues>>> GetUniquePropertyValues(long productTypeId);
     }
 }

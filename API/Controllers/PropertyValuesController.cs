@@ -26,6 +26,21 @@ namespace API.Controllers
         }
 
 
+        [HttpGet("ProductType/{id}/UniqueValues")]
+        public async Task<IActionResult> GetUniquePropertyValuesByProductTypeId(long id)
+        {
+            var result = await propertyValueService.GetUniquePropertyValues(id);
+
+            return result switch
+            {
+                SuccessResult<List<UniquePropertyValues>> => Ok(result),
+                NotFoundErrorResult<List<UniquePropertyValues>> => NotFound(result),
+                ErrorResult<List<UniquePropertyValues>> => BadRequest(result),
+                _ => throw new ApplicationException()
+            };
+        }
+
+
         [HttpGet("Product/{id}")]
         public async Task<IActionResult> GetPropertyValuesByProductId(long id)
         {

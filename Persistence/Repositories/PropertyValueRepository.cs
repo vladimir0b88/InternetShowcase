@@ -22,7 +22,7 @@ namespace Persistence.Repositories
         {
             PropertyValue? propertyValue = await context.PropertyValues.FirstOrDefaultAsync(pv => pv.Id == propertyValueId);
 
-            if(propertyValue is null)
+            if (propertyValue is null)
                 return new NotFoundErrorResult(message: "Значение свойства для удаления не было найдено",
                                                errors: [ErrorList.NotFound]);
 
@@ -57,17 +57,50 @@ namespace Persistence.Repositories
             return new SuccessResult<List<PropertyValue>>(properties);
         }
 
+        public async Task<Result<List<UniquePropertyValues>>> GetUniquePropertyValues(long productTypeId)
+        {
+            ProductType? productType = await context.ProductTypes.AsNoTracking()
+                                                                 .Where(pt => pt.Id == productTypeId)
+                                                                 .Include(pt => pt.Properties)
+                                                                 .FirstOrDefaultAsync();
+
+            if (productType is null)
+                return new NotFoundErrorResult<List<UniquePropertyValues>>(message: $"Тип товара с id: {productTypeId}",
+                                                                           errors: [ErrorList.NotFound]);
+
+            
+
+            List<UniquePropertyValues> list = new();
+
+            foreach (var property in productType.Properties)
+            {
+                UniquePropertyValues values = new()
+                {
+                    TypeProperty = property,
+                    Values = context.PropertyValues.AsNoTracking()
+                                                   .Where(pv => pv.PropertyId == property.Id)
+                                                   .Select(pv => pv.Value)
+                                                   .Distinct()
+                                                   .ToList()!,
+                };
+
+                list.Add(values);
+            }
+
+            return new SuccessResult<List<UniquePropertyValues>>(list);
+        }
+
         public async Task<Result> UpdatePropertyValue(PropertyValue propertyValue)
         {
-            if(propertyValue is null)
+            if (propertyValue is null)
                 return new ErrorResult(message: "Значение свойства для изменения не может быть пустым",
                                        errors: [ErrorList.IsNull]);
 
             PropertyValue? modifyingPropertyValue = await context.PropertyValues.FirstOrDefaultAsync(pv => pv.Id == propertyValue.Id);
 
-            if(modifyingPropertyValue is null)
+            if (modifyingPropertyValue is null)
                 return new NotFoundErrorResult(message: $"Значение свойства с id: {propertyValue.Id} не было найдено",
-                                               errors: [ErrorList.NotFound]);    
+                                               errors: [ErrorList.NotFound]);
 
             modifyingPropertyValue.Value = propertyValue.Value;
 

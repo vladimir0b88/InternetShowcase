@@ -1,0 +1,66 @@
+﻿@page "/Category/{typeId:long}"
+<PageTitle>Просмотр категории</PageTitle>
+
+@inject IProductService productService
+@inject IProductTypeService productTypeService
+@inject NavigationManager navManager
+
+<ErrorModal @ref="modal"></ErrorModal>
+
+<div class="container-lg">
+    @if (productType is null)
+    {
+        <div class="mt-5">
+            <LoadingSpinner></LoadingSpinner>
+        </div>
+    }
+    else
+    {
+        <div class="row g-2">
+
+
+            <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-2">
+
+                <h3 class="p-2 border-bottom border-success border-2" style="min-height: 56px;">Свойства</h3>
+
+            </div>
+
+
+            <div class="col-12 col-sm-12 col-md-9 col-lg-9 col-xl-10">
+
+
+            </div>
+
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public long TypeId { get; set; }
+    private ProductType? productType = null;
+
+    private ErrorModal modal = new();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetProductType();
+    }
+
+    async Task GetProductType()
+    {
+        var result = await productTypeService.GetProductTypeById(TypeId);
+
+        switch (result)
+        {
+            case SuccessResult<ProductType> successResult:
+                productType = successResult.Data;
+                break;
+
+            case ErrorResult<ProductType> errorResult:
+                await modal.ShowModal(errorResult);
+                break;
+        }
+    }
+}
