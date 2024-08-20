@@ -65,29 +65,23 @@ namespace Persistence.Repositories
                                                                  .FirstOrDefaultAsync();
 
             if (productType is null)
-                return new NotFoundErrorResult<List<UniquePropertyValues>>(message: $"Тип товара с id: {productTypeId}",
+                return new NotFoundErrorResult<List<UniquePropertyValues>>(message: $"Тип товара с id: {productTypeId} не найден",
                                                                            errors: [ErrorList.NotFound]);
 
-            
 
-            List<UniquePropertyValues> list = new();
 
-            foreach (var property in productType.Properties)
-            {
-                UniquePropertyValues values = new()
-                {
-                    TypeProperty = property,
-                    Values = context.PropertyValues.AsNoTracking()
-                                                   .Where(pv => pv.PropertyId == property.Id)
-                                                   .Select(pv => pv.Value)
-                                                   .Distinct()
-                                                   .ToList()!,
-                };
+            List<UniquePropertyValues> list = await (from tp in context.TypeProperties
+                                                     where tp.TypeId == productTypeId
+                                                     select new UniquePropertyValues()
+                                                     {
+                                                         TypeProperty = tp,
+                                                         Values = (from pv in context.PropertyValues
+                                                                   where pv.PropertyId == tp.Id && pv.Value != string.Empty
+                                                                   select pv.Value).ToHashSet().ToList(),
+                                                     }).ToListAsync();
 
-                list.Add(values);
-            }
 
-            return new SuccessResult<List<UniquePropertyValues>>(list);
+            return new SuccessResult<List<UniquePropertyValues>>(list.Where(upv => upv.Values.Count > 1).ToList());
         }
 
         public async Task<Result> UpdatePropertyValue(PropertyValue propertyValue)

@@ -27,8 +27,11 @@
 
                     @foreach (ProductType productType in productTypes)
                     {
+
                         <li class="list-group-item">
-                            <span class="fs-5 align-middle">@productType.Name</span>
+                            <a href="Category/@productType.Id">
+                                <span class="fs-5 align-middle text-decoration-none">@productType.Name</span>
+                            </a>
                         </li>
                     }
 
@@ -91,7 +94,7 @@
                          </div>
 
                          @if (filteringResult is not null &&
-                              filteringResult.TotalPages > 1)
+                       filteringResult.TotalPages > 1)
                         {
                             <Pagination Class="m-0 d-none d-xl-inline-flex"
                                         ActivePageNumber="(int)filteringResult.CurrentPage"
@@ -134,8 +137,8 @@
                             </div>
                         }
                     </div>
-                    @if (products is not null && 
-                         filteringResult.TotalPages > 1)
+                    @if (products is not null &&
+                   filteringResult.TotalPages > 1)
                     {
                         <Pagination Class="mb-2 pt-1 d-xl-none"
                                     ActivePageNumber="(int)filteringResult.CurrentPage"
