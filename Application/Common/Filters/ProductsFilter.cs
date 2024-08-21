@@ -30,6 +30,28 @@ namespace Application.Common
             ByNameDesk,
         }
 
+        public void AddPropertyFilterValue(long propertyId, string value)
+        {
+            if (PropertyFilters is null)
+                PropertyFilters = new List<PropertyFilter>();
+
+            PropertyFilter? filter = PropertyFilters.FirstOrDefault(f => f.PropertyId == propertyId);
+
+            if (filter is null)
+            {
+                PropertyFilters.Add(new PropertyFilter()
+                {
+                    PropertyId = propertyId,
+                    Values = [value]
+                });
+            }
+            else
+            {
+                if (!filter.Values.Any(v => v == value))
+                    filter.Values.Add(value);
+            }
+        }
+
         public static IQueryable<Product> SortByMethod(IQueryable<Product> query, SortingMethods sortingMethod) => sortingMethod switch
         {
             SortingMethods.ByNameDesk => query.OrderByDescending(p => p.Name),

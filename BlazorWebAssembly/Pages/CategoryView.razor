@@ -3,6 +3,7 @@
 
 @inject IProductService productService
 @inject IProductTypeService productTypeService
+@inject IPropertyValueService propertyValueService
 @inject NavigationManager navManager
 
 <ErrorModal @ref="modal"></ErrorModal>
@@ -17,16 +18,48 @@
     else
     {
         <div class="row g-2">
+            <div class="col-12 mt-0">
+                <nav aria-label="breadcrumb" class="mx-2">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item text-decoration-underline">
+                            <a href="/" class="text-reset">Каталог</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">@productType.Name</li>
+                    </ol>
+                </nav>
 
+                <h2 class="p-2 mt-2">@productType.Name</h2>
+            </div>
+        </div>
+
+
+        <div class="row g-2">
 
             <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-2">
 
                 <h3 class="p-2 border-bottom border-success border-2" style="min-height: 56px;">Свойства</h3>
 
+                <Accordion AlwaysOpen @ref="accordion" Class="border border-2 border-secondary rounded">
+                     @foreach (var property in uniquePropertyValues)
+                    {
+                        <AccordionItem Title="@(property.TypeProperty.Name)">
+                            <Content>
+                                <div class="form-check">
+                                    @foreach (var propertyValue in property.Values)
+                                    {
+                                        <input type="checkbox" value="@propertyValue" class="form-check-input" />
 
+                                        @propertyValue
+
+                                        <br />
+                                    }
+                                </div>
+                            </Content>
+                        </AccordionItem>
+                    }
+                </Accordion>
 
             </div>
-
 
             <div class="col-12 col-sm-12 col-md-9 col-lg-9 col-xl-10">
 
@@ -127,7 +160,7 @@
                         }
                     </div>
                     @if (products is not null &&
-                         filteringResult.TotalPages > 1)
+                   filteringResult.TotalPages > 1)
                     {
                         <Pagination Class="mb-2 pt-1 d-xl-none"
                                     ActivePageNumber="(int)filteringResult.CurrentPage"
@@ -161,7 +194,11 @@
 
     private ErrorModal modal = new();
 
+    private Accordion accordion = new();
+
     private string? nameFilter = null;
+
+    private List<UniquePropertyValues> uniquePropertyValues = new();
 
     private ProductsFilter filter = new()
         {
@@ -180,6 +217,8 @@
 
         filter.ProductTypeId = TypeId;
 
+        await GetUniquePropertyValues();
+
         await GetProducts(1);
     }
 
@@ -194,6 +233,21 @@
                 break;
 
             case ErrorResult<ProductType> errorResult:
+                await modal.ShowModal(errorResult);
+                break;
+        }
+    }
+
+    async Task GetUniquePropertyValues()
+    {
+        var result = await propertyValueService.GetUniquePropertyValues(productType!.Id);
+
+        switch (result)
+        {
+            case SuccessResult<List<UniquePropertyValues>> successResult:
+                uniquePropertyValues = successResult.Data;
+                break;
+            case ErrorResult<List<UniquePropertyValues>> errorResult:
                 await modal.ShowModal(errorResult);
                 break;
         }
@@ -225,5 +279,11 @@
                 filteringResult = null;
                 break;
         }
+    }
+
+
+    async Task CheckBoxToggle(ChangeEventArgs args, long propertyId, string value)
+    {
+
     }
 }
