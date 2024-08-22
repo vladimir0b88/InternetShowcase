@@ -52,6 +52,23 @@ namespace Application.Common
             }
         }
 
+        public void RemovePropertyFilterValue(long propertyId, string value)
+        {
+            if (PropertyFilters is null) return;
+
+            PropertyFilter? filter = PropertyFilters.FirstOrDefault(f => f.PropertyId == propertyId);
+
+            if (filter is null) return;
+
+            filter.Values.RemoveAll(v => v == value);
+
+            if(filter.Values.Count == 0)
+                PropertyFilters.Remove(filter);
+
+            if (PropertyFilters.Count == 0)
+                PropertyFilters = null;
+        }
+
         public static IQueryable<Product> SortByMethod(IQueryable<Product> query, SortingMethods sortingMethod) => sortingMethod switch
         {
             SortingMethods.ByNameDesk => query.OrderByDescending(p => p.Name),

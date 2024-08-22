@@ -47,9 +47,13 @@
                                 <div class="form-check">
                                     @foreach (var propertyValue in property.Values)
                                     {
-                                        <input type="checkbox" value="@propertyValue" class="form-check-input" />
-
-                                        @propertyValue
+                                        <label class="form-label">
+                                            <input type="checkbox" value="@propertyValue"
+                                                   id="@($"{property.TypeProperty.Id}/{propertyValue}")"
+                                                   @onchange="args => CheckBoxToggle(args, property.TypeProperty.Id, propertyValue)"
+                                                   class="form-check-input" />
+                                            @propertyValue
+                                        </label>
 
                                         <br />
                                     }
@@ -277,13 +281,19 @@
 
             case ErrorResult<FilteringResult<Product>> errorResult:
                 filteringResult = null;
+                await modal.ShowModal(errorResult);
                 break;
         }
     }
 
 
-    async Task CheckBoxToggle(ChangeEventArgs args, long propertyId, string value)
+    void CheckBoxToggle(ChangeEventArgs args, long propertyId, string value)
     {
+        bool isSelected = (bool)args.Value!;
 
+        if (isSelected)
+            filter.AddPropertyFilterValue(propertyId, value);
+        else
+            filter.RemovePropertyFilterValue(propertyId, value);
     }
 }
