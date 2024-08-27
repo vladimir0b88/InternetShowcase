@@ -219,3 +219,14 @@ main {
 .search-input {
     border-color: #6c757d;
 }
+
+.accordion-button:focus {
+    box-shadow: 0 0 0 0 rgba(13,110,253,.25);
+    border-color: #6c757d;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: #20ad6b;
+    color: white;
+    transition: linear 0.4s;
+}

@@ -39,50 +39,82 @@
 
                 <h3 class="p-2 border-bottom border-success border-2" style="min-height: 56px;">Свойства</h3>
 
-                <Accordion AlwaysOpen @ref="accordion" Class="border border-2 border-secondary rounded">
-                     @foreach (var property in uniquePropertyValues)
-                    {
-                        <AccordionItem Title="@(property.TypeProperty.Name)">
+                <div class="">
+                    <Accordion AlwaysOpen @ref="accordion" Class="m-0 p-0 border border-2 border-secondary rounded">
+                         @foreach (var property in uniquePropertyValues)
+                        {
+                            <AccordionItem Title="@(property.TypeProperty.Name)" Class="p-0 m-0 border-0">
+                                <Content>
+                                    <div class="form-check">
+                                        @foreach (var propertyValue in property.Values)
+                                        {
+                                            <label class="form-label">
+                                                <input type="checkbox" value="@propertyValue" class="form-check-input"
+                                                       @onchange="args => CheckBoxToggle(args, property.TypeProperty.Id, propertyValue)"
+                                                       checked="@(filter.PropertyFilters?.Any(pf => pf.PropertyId==property.TypeProperty.Id
+                                                                                                && pf.Values.Contains(propertyValue)))" />
+                                                @propertyValue
+                                            </label>
+
+                                            <br />
+                                        }
+                                    </div>
+                                </Content>
+                            </AccordionItem>
+                        }
+
+                        <AccordionItem Title="Стоимость">
                             <Content>
-                                <div class="form-check">
-                                    @foreach (var propertyValue in property.Values)
-                                    {
-                                        <label class="form-label">
-                                            <input type="checkbox" value="@propertyValue"
-                                                   id="@($"{property.TypeProperty.Id}/{propertyValue}")"
-                                                   @onchange="args => CheckBoxToggle(args, property.TypeProperty.Id, propertyValue)"
-                                                   class="form-check-input" />
-                                            @propertyValue
-                                        </label>
+                                <label class="form-label">
+                                    Минимальная
+                                    <NumberInput @bind-Value="filter.MinCost" Class="form-control" EnableMinMax
+                                                  Min="0"
+                                                  Max="filter.MaxCost<=100 ? 0:filter.MaxCost-100" />
+                                 </label>
 
-                                        <br />
-                                    }
-                                </div>
-                            </Content>
-                        </AccordionItem>
-                    }
-                </Accordion>
+                                 <label class="form-label">
+                                     Максимальная
+                                     <NumberInput @bind-Value="filter.MaxCost" Class="form-control" EnableMinMax
+                                                  Min="filter.MinCost + 100" />
+                                 </label>
+                             </Content>
+                         </AccordionItem>
+                     </Accordion>
+                 </div>
 
-            </div>
 
-            <div class="col-12 col-sm-12 col-md-9 col-lg-9 col-xl-10">
+                 <div class="mt-2 d-flex">
+                     <Button Color="ButtonColor.Success"
+                             Class="flex-fill me-2"
+                             @onclick="()=>GetProducts(1,SortingMethods.ByCostDesk)">
+                         Поиск
+                     </Button>
 
-                <div class="d-flex flex-row
+                     <Button Color="ButtonColor.Secondary"
+                             Class="flex-fill"
+                             @onclick="ResetFilter">
+                         Сброс
+                     </Button>
+                 </div>
+
+             </div>
+
+             <div class="col-12 col-sm-12 col-md-9 col-lg-9 col-xl-10">
+
+                 <div class="d-flex flex-row
                             justify-content-between
                             border-bottom border-success border-2
                             mb-2 py-2">
 
-                    <div class="d-flex flex-row flex-fill">
-                        <div class="input-group">
-                            <InputText @bind-Value="@nameFilter"
-                                       id="search-btn"
-                                       placeholder="Наименование.."
-                                       class="form-control search-input"></InputText>
+                     <div class="d-flex flex-row flex-fill">
+                         <div class="input-group">
+                             <InputText @bind-Value="@nameFilter"
+                                        id="search-btn"
+                                        placeholder="Наименование.."
+                                        class="form-control search-input"></InputText>
 
 
-                            <Button Color="ButtonColor.Success" Outline Class="p-0 sort-btn"
-                                     Type="ButtonType.Submit"
-                                     @onsubmit="()=>GetProducts(1,filter.SortingMethod)"
+                             <Button Color="ButtonColor.Success" Outline Class="p-0 sort-btn"
                                      @onclick="()=>GetProducts(1,filter.SortingMethod)">
                                  <Icon Name="IconName.Search" Size="IconSize.x4" Class="px-2"></Icon>
                              </Button>
@@ -147,13 +179,14 @@
 
 
                     <div class="container-fluid p-0 mb-2">
-                        @if (products is null || products.Count == 0)
+                        @if (filteringResult is null)
                         {
                             <div class="mt-5">
                                 <LoadingSpinner></LoadingSpinner>
                             </div>
                         }
-                        else
+
+                        @if (products is not null)
                         {
                             <div class="row g-2">
                                 @foreach (Product product in products)
@@ -163,7 +196,7 @@
                             </div>
                         }
                     </div>
-                    @if (products is not null &&
+                    @if (products is not null && filteringResult is not null &&
                    filteringResult.TotalPages > 1)
                     {
                         <Pagination Class="mb-2 pt-1 d-xl-none"
@@ -295,5 +328,15 @@
             filter.AddPropertyFilterValue(propertyId, value);
         else
             filter.RemovePropertyFilterValue(propertyId, value);
+    }
+
+    void ResetFilter()
+    {
+        filter.PropertyFilters = null;
+        filter.Name = null;
+        filter.MinCost = null;
+        filter.MaxCost = null;
+        nameFilter = null;
+
     }
 }
