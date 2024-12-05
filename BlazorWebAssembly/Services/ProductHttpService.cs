@@ -2,6 +2,7 @@
 using Application.Models;
 using BlazorWebAssembly.Common;
 using Domain.Entities;
+using ErrorOr;
 using FluentValidation;
 using System.Net.Http.Json;
 
@@ -16,7 +17,7 @@ namespace BlazorWebAssembly.Services
         
         private const string controllerUri = "api/Products";
 
-        public async Task<Result<List<Product>>> GetAllProducts()
+        public async Task<ErrorOr<List<Product>>> GetAllProducts()
         {
             var response = await httpClient.GetAsync(controllerUri);
 
@@ -27,7 +28,7 @@ namespace BlazorWebAssembly.Services
             return result;
         }
 
-        public async Task<Result<List<Product>>> GetByProductTypeId(long productTypeId)
+        public async Task<ErrorOr<List<Product>>> GetByProductTypeId(long productTypeId)
         {
             var response = await httpClient.GetAsync($"{controllerUri}/ProductType/{productTypeId}");
 
@@ -38,7 +39,7 @@ namespace BlazorWebAssembly.Services
             return result;
         }
 
-        public async Task<Result<Product>> GetProductById(long id)
+        public async Task<ErrorOr<Product>> GetProductById(long id)
         {
             var response = await httpClient.GetAsync($"{controllerUri}/{id}");
 
@@ -49,14 +50,12 @@ namespace BlazorWebAssembly.Services
             return result;
         }
 
-        public async Task<Result> AddProduct(ProductCreateDto productDto)
+        public async Task<ErrorOr<Created>> AddProduct(ProductCreateDto productDto)
         {
             var validationResult = await createValidator.ValidateAsync(productDto);
 
             if (!validationResult.IsValid)
-                return new ValidationErrorResult(message: "Продукт для создания не прошел валидацию",
-                                                 errors: [ErrorList.FailedValidation],
-                                                 validationErrors: validationResult.Errors);
+                return validationResult.Errors.ConvertAll(x => Error.Validation(code: x.PropertyName, description: x.ErrorMessage));
 
             var response = await httpClient.PostAsJsonAsync(controllerUri, productDto);
 
@@ -67,14 +66,12 @@ namespace BlazorWebAssembly.Services
             return result;
         }
 
-        public async Task<Result> UpdateProduct(ProductUpdateDto updateDto)
+        public async Task<ErrorOr> UpdateProduct(ProductUpdateDto updateDto)
         {
             var validationResult = await updateValidator.ValidateAsync(updateDto);
 
             if (!validationResult.IsValid)
-                return new ValidationErrorResult(message: "Продукт для модификации не прошел валидацию",
-                                                 errors: [ErrorList.FailedValidation],
-                                                 validationErrors: validationResult.Errors);
+                return validationResult.Errors.ConvertAll(x => Error.Validation(code: x.PropertyName, description: x.ErrorMessage));
 
 
             var response = await httpClient.PutAsJsonAsync(controllerUri, updateDto);
@@ -86,7 +83,7 @@ namespace BlazorWebAssembly.Services
             return result;
         }
 
-        public async Task<Result> DeleteProductById(long id)
+        public async Task<ErrorOr<Deleted>> DeleteProductById(long id)
         {
             var response = await httpClient.DeleteAsync($"{controllerUri}/{id}");
 
@@ -97,14 +94,12 @@ namespace BlazorWebAssembly.Services
             return result;
         }
 
-        public async Task<Result<FilteringResult<Product>>> GetProductsByFilter(ProductsFilter filter)
+        public async Task<ErrorOr<FilteringResult<Product>>> GetProductsByFilter(ProductsFilter filter)
         {
             var validationResult = await filterValidator.ValidateAsync(filter);
 
             if (!validationResult.IsValid)
-                return new ValidationErrorResult<FilteringResult<Product>>(message: "Фильтр продуктов не прошел первичную валидацию",
-                                                                           errors: [ErrorList.FailedValidation],
-                                                                           validationErrors: validationResult.Errors);
+                return validationResult.Errors.ConvertAll(x => Error.Validation(code: x.PropertyName, description: x.ErrorMessage));
 
             var response = await httpClient.PostAsJsonAsync($"{controllerUri}/Filter", filter);
 

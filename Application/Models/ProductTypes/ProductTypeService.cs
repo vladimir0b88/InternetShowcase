@@ -1,36 +1,34 @@
-﻿using Application.Common;
-using Application.Models;
-using Domain.Entities;
+﻿using Domain.Entities;
+using ErrorOr;
 using FluentValidation;
 
-namespace Application.Services
+namespace Application.Models
 {
     public class ProductTypeService (IProductTypeRepository repository,
                                      IValidator<ProductTypeCreateDto> createDtoValidator,
                                      IValidator<ProductTypeUpdateDto> updateDtoValidator) : IProductTypeService
     {
-        public async Task<Result<List<ProductType>>> GetAllProductTypes()
+        public async Task<ErrorOr<List<ProductType>>> GetAllProductTypes()
         {
             var result = await repository.GetAllProductTypes();
 
             return result;
         }
 
-        public async Task<Result<ProductType>> GetProductTypeById(long id)
+        public async Task<ErrorOr<ProductType>> GetProductTypeById(long id)
         {
             var result = await repository.GetProductTypeById(id);
 
             return result;
         }
 
-        public async Task<Result> AddProductType(ProductTypeCreateDto dto)
+        public async Task<ErrorOr<Created>> AddProductType(ProductTypeCreateDto dto)
         {
             var validationResult = await createDtoValidator.ValidateAsync(dto);
 
             if (!validationResult.IsValid)
-                return new ValidationErrorResult(message: "Тип продукта для создания не прошел валидацию",
-                                                 errors: [ErrorList.FailedValidation],
-                                                 validationErrors: validationResult.Errors);
+                return validationResult.Errors.ConvertAll(x => Error.Validation(code: x.PropertyName, description: x.ErrorMessage));
+
 
             ProductType productType = new ProductType() 
             {
@@ -42,7 +40,7 @@ namespace Application.Services
             return result;
         }
 
-        public async Task<Result> DeleteProductTypeById(long id)
+        public async Task<ErrorOr<Deleted>> DeleteProductTypeById(long id)
         {
             var result = await repository.DeleteProductTypeById(id);
 
@@ -50,14 +48,12 @@ namespace Application.Services
         }
 
 
-        public async Task<Result> UpdateProductType(ProductTypeUpdateDto dto)
+        public async Task<ErrorOr<Updated>> UpdateProductType(ProductTypeUpdateDto dto)
         {
             var validationResult = await updateDtoValidator.ValidateAsync(dto);
 
             if(!validationResult.IsValid)
-                return new ValidationErrorResult(message: "Тип продукта для изменения не прошел валидацию",
-                                                 errors: [ErrorList.FailedValidation],
-                                                 validationErrors: validationResult.Errors);
+               return validationResult.Errors.ConvertAll(x => Error.Validation(code: x.PropertyName, description: x.ErrorMessage));
 
             ProductType productType = new ProductType()
             {

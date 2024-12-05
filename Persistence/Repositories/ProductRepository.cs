@@ -1,5 +1,7 @@
 ﻿using Application.Common;
+using Application.Models;
 using Domain.Entities;
+using ErrorOr;
 using Microsoft.EntityFrameworkCore;
 using static Application.Common.ProductsFilter;
 
@@ -7,7 +9,7 @@ namespace Persistence.Repositories
 {
     public class ProductRepository(ApplicationDbContext context) : IProductRepository
     {
-        public async Task<Result<Product>> GetProductById(long id)
+        public async Task<ErrorOr<Product>> GetProductById(long id)
         {
             Product? product = await context.Products.AsNoTracking()
                                                      .Include(p => p.PropertyValues)
@@ -17,33 +19,30 @@ namespace Persistence.Repositories
                                                      .FirstOrDefaultAsync(p => p.Id == id);
 
             if (product is null)
-                return new NotFoundErrorResult<Product>(message: $"Продукт c id: {id} не был найден",
-                                                        errors: [ErrorList.NotFound]);
+                return Error.NotFound(description: $"Продукт c id: {id} не был найден");
 
-            return new SuccessResult<Product>(product);
+            return product;
         }
 
 
-        public async Task<Result> DeleteProductById(long id)
+        public async Task<ErrorOr<Deleted>> DeleteProductById(long id)
         {
             Product? product = await context.Products.FirstOrDefaultAsync(p => p.Id == id);
 
             if (product is null)
-                return new NotFoundErrorResult(message: $"Продукт для удаления с id: {id} не найден",
-                                               errors: [ErrorList.NotFound]);
+                return Error.NotFound(description: $"Продукт для удаления с id: {id} не найден");
 
 
             context.Products.Remove(product);
             await context.SaveChangesAsync();
 
-            return new SuccessResult();
+            return Result.Deleted;
         }
 
-        public async Task<Result> AddProduct(Product product)
+        public async Task<ErrorOr<Created>> AddProduct(Product product)
         {
             if (product is null)
-                return new ErrorResult(message: "Нельзя добавить пустой продукт",
-                                        errors: [ErrorList.IsNull]);
+                return Error.Validation(description: "Нельзя добавить пустой продукт");
 
 
             await context.Products.AddAsync(product);
@@ -68,30 +67,28 @@ namespace Persistence.Repositories
             }
             await context.SaveChangesAsync();
 
-            return new SuccessResult();
+            return Result.Created;
         }
 
-        public async Task<Result<List<Product>>> GetAll()
+        public async Task<ErrorOr<List<Product>>> GetAll()
         {
             List<Product> list = await context.Products.AsNoTracking()
                                                        .Include(p => p.Type)
                                                        .ToListAsync();
 
-            return new SuccessResult<List<Product>>(list);
+            return list;
         }
 
-        public async Task<Result> UpdateProduct(Product product)
+        public async Task<ErrorOr<Updated>> UpdateProduct(Product product)
         {
             if (product is null)
-                return new ErrorResult(message: "Продукт для изменения не может быть пустым",
-                                       errors: [ErrorList.IsNull]);
+                return Error.Validation(description: "Продукт для изменения не может быть пустым");
 
 
             Product? modifyingProduct = await context.Products.FirstOrDefaultAsync(p => p.Id == product.Id);
 
             if (modifyingProduct is null)
-                return new NotFoundErrorResult(message: $"Продукт для изменения с id: {product.Id} не был найден",
-                                               errors: [ErrorList.NotFound]);
+                return Error.NotFound(description: $"Продукт для изменения с id: {product.Id} не был найден");
 
             modifyingProduct.Name = product.Name;
             modifyingProduct.Description = product.Description;
@@ -101,29 +98,27 @@ namespace Persistence.Repositories
             context.Update(modifyingProduct);
             await context.SaveChangesAsync();
 
-            return new SuccessResult();
+            return Result.Updated;
         }
 
-        public async Task<Result<List<Product>>> GetByProductTypeId(long productTypeId)
+        public async Task<ErrorOr<List<Product>>> GetByProductTypeId(long productTypeId)
         {
             ProductType? productType = await context.ProductTypes.AsNoTracking().FirstOrDefaultAsync(p => p.Id == productTypeId);
 
             if (productType is null)
-                return new NotFoundErrorResult<List<Product>>(message: $"Не найден тип продукта с id: {productTypeId}",
-                                                              errors: [ErrorList.NotFound]);
+                return Error.NotFound(description: $"Не найден тип продукта с id: {productTypeId}");
 
             List<Product> list = await context.Products.AsNoTracking()
                                                        .Where(p => p.TypeId == productTypeId)
                                                        .ToListAsync();
 
-            return new SuccessResult<List<Product>>(list);
+            return list;
         }
 
-        public async Task<Result<FilteringResult<Product>>> GetByFilter(ProductsFilter filter)
+        public async Task<ErrorOr<FilteringResult<Product>>> GetByFilter(ProductsFilter filter)
         {
             if (filter is null)
-                return new ErrorResult<FilteringResult<Product>>(message: "Фильтр не может быть пустым",
-                                                                 errors: [ErrorList.IsNull]);
+                return Error.Validation(description: "Фильтр не может быть пустым");
 
 
             IQueryable<Product> productQuery = context.Products.AsNoTracking()
@@ -135,21 +130,20 @@ namespace Persistence.Repositories
                                                                      .FirstOrDefaultAsync(pt => pt.Id == filter.ProductTypeId);
 
                 if (productType is null)
-                    return new ErrorResult<FilteringResult<Product>>(message: "Указан несуществующий тип товара",
-                                                                     errors: [ErrorList.NotFound]);
+                    return Error.Validation(description: "Указан несуществующий тип товара");
 
                 productQuery = productQuery.Where(p => p.Type != null &&
                                                        p.Type.Id == filter.ProductTypeId);
             }
 
-            if(filter.MinCost is not null)
+            if (filter.MinCost is not null)
                 productQuery = productQuery.Where(p => p.Cost >= filter.MinCost);
 
-            if(filter.MaxCost is not null)
+            if (filter.MaxCost is not null)
                 productQuery = productQuery.Where(p => p.Cost <= filter.MaxCost);
 
 
-            if(filter.Name is not null)
+            if (filter.Name is not null)
             {
                 productQuery = productQuery.Where(p => p.Name.ToLower().Contains(filter.Name.ToLower()));
             }
@@ -180,7 +174,7 @@ namespace Persistence.Repositories
 
             FilteringResult<Product> result = new()
             {
-                Results = products,
+                Result = products,
                 SortingMethod = filter.SortingMethod,
                 ItemsOnPage = filter.ItemsOnPage,
                 CurrentPage = filter.PageNumber,
@@ -188,7 +182,7 @@ namespace Persistence.Repositories
                 TotalItems = totalItems
             };
 
-            return new SuccessResult<FilteringResult<Product>>(result);
+            return result;
         }
     }
 }

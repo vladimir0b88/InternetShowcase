@@ -1,6 +1,6 @@
 ﻿using Domain.Entities;
 
-namespace Application.Common
+namespace Application.Models
 {
     public interface IJwtService
     {

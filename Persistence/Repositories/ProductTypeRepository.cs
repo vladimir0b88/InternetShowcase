@@ -1,76 +1,73 @@
-﻿using Application.Common;
+﻿using Application.Models;
 using Domain.Entities;
+using ErrorOr;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistence.Repositories
 {
     public class ProductTypeRepository(ApplicationDbContext context) : IProductTypeRepository
     {
-        public async Task<Result<List<ProductType>>> GetAllProductTypes()
+        public async Task<ErrorOr<List<ProductType>>> GetAllProductTypes()
         {
-            List<ProductType> productTypes = await context.ProductTypes.AsNoTracking().ToListAsync();
+            List<ProductType> productTypes = await context.ProductTypes.AsNoTracking()
+                                                                       .ToListAsync();
 
-            return new SuccessResult<List<ProductType>>(productTypes);
+            return productTypes;
         }
         
-        public async Task<Result<ProductType>> GetProductTypeById(long id)
+        public async Task<ErrorOr<ProductType>> GetProductTypeById(long id)
         {
             ProductType? productType = await context.ProductTypes.AsNoTracking()
                                                                  .Include(pt => pt.Products)
                                                                  .Include(pt => pt.Properties)
                                                                  .FirstOrDefaultAsync(pt => pt.Id == id);
 
-            if(productType is null)
-                return new NotFoundErrorResult<ProductType>(message: $"Тип товара с id: {id} не найден",
-                                                            errors: [ErrorList.NotFound]);
+            if (productType is null)
+                return Error.NotFound(description: $"Тип товара с id: {id} не найден");
 
-            return new SuccessResult<ProductType>(productType);
+            return productType;
         }
 
-        public async Task<Result> AddProductType(ProductType newProductType)
+        public async Task<ErrorOr<Created>> AddProductType(ProductType newProductType)
         {
             if (newProductType is null)
-                return new ErrorResult(message: "Тип продукта не может быть пустым",
-                                       errors: [ErrorList.IsNull]);
+                return Error.Validation(description: "Тип продукта не может быть пустым");
 
             await context.ProductTypes.AddAsync(newProductType);
             await context.SaveChangesAsync();
 
-            return new SuccessResult();
+            return Result.Created;
         }
 
-        public async Task<Result> DeleteProductTypeById(long id)
+        public async Task<ErrorOr<Deleted>> DeleteProductTypeById(long id)
         {
             ProductType? productType = await context.ProductTypes.FirstOrDefaultAsync(pt => pt.Id == id);
 
-            if(productType is null)
-                return new NotFoundErrorResult(message: $"Тип продукта с id: {id} не найден",
-                                               errors: [ErrorList.NotFound]);
+            if (productType is null)
+                return Error.NotFound(description: $"Тип продукта с id: {id} не найден");
 
             context.ProductTypes.Remove(productType);
             await context.SaveChangesAsync();
 
-            return new SuccessResult();
+            return Result.Deleted;
         }
 
-        public async Task<Result> UpdateProductType(ProductType productType)
+        public async Task<ErrorOr<Updated>> UpdateProductType(ProductType productType)
         {
-            if(productType is null)
-                return new ErrorResult(message: "Тип продукта не может быть пустым",
-                                       errors: [ErrorList.IsNull]);
+            if (productType is null)
+                return Error.Validation(description: "Тип продукта не может быть пустым");
 
             ProductType? modifyingProductType = await context.ProductTypes.FirstOrDefaultAsync(pt => pt.Id == productType.Id);
 
             if (modifyingProductType is null)
-                return new NotFoundErrorResult(message: $"Тип продукта с id: {productType.Id} не найден",
-                                               errors: [ErrorList.NotFound]);
+                return Error.NotFound(description: $"Тип продукта с id: {productType.Id} не найден");
 
             modifyingProductType.Name = productType.Name;
 
             context.Update(modifyingProductType);
             await context.SaveChangesAsync();
 
-            return new SuccessResult();
+            return Result.Updated;
         }
 
         public async Task<bool> ExistById(long id)

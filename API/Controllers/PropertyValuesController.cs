@@ -2,6 +2,7 @@
 using Application.Models;
 using Domain.Constants;
 using Domain.Entities;
+using ErrorOr;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,77 +14,47 @@ namespace API.Controllers
     {
         [Authorize(Roles = Roles.Administrator)]
         [HttpGet]
-        public async Task<IActionResult> GetAllPropertyValues()
+        public async Task<ActionResult<List<PropertyValue>>> GetAllPropertyValues()
         {
             var result = await propertyValueService.GetAllPropertyValues();
 
-            return result switch
-            {
-                SuccessResult<List<PropertyValue>> => Ok(result),
-                ErrorResult<List<PropertyValue>> => BadRequest(result),
-                _ => throw new ApplicationException()
-            };
+            return this.SendResponse(result);
         }
 
 
         [HttpGet("ProductType/{id}/UniqueValues")]
-        public async Task<IActionResult> GetUniquePropertyValuesByProductTypeId(long id)
+        public async Task<ActionResult<List<UniquePropertyValues>>> GetUniquePropertyValuesByProductTypeId(long id)
         {
             var result = await propertyValueService.GetUniquePropertyValues(id);
 
-            return result switch
-            {
-                SuccessResult<List<UniquePropertyValues>> => Ok(result),
-                NotFoundErrorResult<List<UniquePropertyValues>> => NotFound(result),
-                ErrorResult<List<UniquePropertyValues>> => BadRequest(result),
-                _ => throw new ApplicationException()
-            };
+            return this.SendResponse(result);
         }
 
 
         [HttpGet("Product/{id}")]
-        public async Task<IActionResult> GetPropertyValuesByProductId(long id)
+        public async Task<ActionResult<List<PropertyValue>>> GetPropertyValuesByProductId(long id)
         {
             var result = await propertyValueService.GetPropertyValuesByProductId(id);
 
-            return result switch
-            {
-                SuccessResult<List<PropertyValue>> => Ok(result),
-                ErrorResult<List<PropertyValue>> => BadRequest(result),
-                _ => throw new ApplicationException()
-            };
+            return this.SendResponse(result);
         }
 
         [Authorize(Roles = Roles.Administrator)]
         [HttpPut]
-        public async Task<IActionResult> UpdatePropertyValue([FromBody]PropertyValueUpdateDto updateDto)
+        public async Task<ActionResult<Updated>> UpdatePropertyValue([FromBody]PropertyValueUpdateDto updateDto)
         {
             var result = await propertyValueService.UpdatePropertyValue(updateDto);
 
-            return result switch
-            {
-                SuccessResult => Ok(result),
-                ValidationErrorResult => StatusCode(422, result),
-                NotFoundErrorResult => NotFound(result),
-                ErrorResult => BadRequest(result),
-                _ => throw new ApplicationException()
-            };
+            return this.SendResponse(result);
         }
 
         [Authorize(Roles = Roles.Administrator)]
         [HttpPut("List")]
-        public async Task<IActionResult> UpdatePropertyValueList([FromBody] PropertyValueUpdateDtoList updateDtoList)
+        public async Task<ActionResult<Updated>> UpdatePropertyValueList([FromBody] PropertyValueUpdateDtoList updateDtoList)
         {
             var result = await propertyValueService.UpdatePropertyValueList(updateDtoList);
 
-            return result switch
-            {
-                SuccessResult => Ok(result),
-                ValidationErrorResult => StatusCode(422, result),
-                NotFoundErrorResult => NotFound(result),
-                ErrorResult => BadRequest(result),
-                _ => throw new ApplicationException()
-            };
+            return this.SendResponse(result);
         }
 
     }

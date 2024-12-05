@@ -2,6 +2,7 @@
 using Application.Models;
 using Domain.Constants;
 using Domain.Entities;
+using ErrorOr;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,78 +13,49 @@ namespace API.Controllers
     public class ProductTypesController(IProductTypeService productTypeService) : ControllerBase
     {
         [HttpGet]
-        public async Task<IActionResult> GetAllProductTypes()
+        public async Task<ActionResult<List<ProductType>>> GetAllProductTypes()
         {
             var result = await productTypeService.GetAllProductTypes();
 
-            return result switch
-            {
-                SuccessResult<List<ProductType>> => Ok(result),
-                ErrorResult<List<ProductType>> => BadRequest(result),
-                _ => throw new ApplicationException()
-            };
+            return this.SendResponse(result);
         }
 
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetProductTypeById(long id)
+        public async Task<ActionResult<ProductType>> GetProductTypeById(long id)
         {
             var result = await productTypeService.GetProductTypeById(id);
 
-            return result switch
-            {
-                SuccessResult<ProductType> => Ok(result),
-                NotFoundErrorResult<ProductType> => NotFound(result),
-                _ => throw new ApplicationException()
-            };
+            return this.SendResponse(result);
         }
 
 
         [Authorize(Policy = Policies.CanCreate)]
         [HttpPost]
-        public async Task<IActionResult> AddProductType([FromBody] ProductTypeCreateDto createDto)
+        public async Task<ActionResult<Created>> AddProductType([FromBody] ProductTypeCreateDto createDto)
         {
             var result = await productTypeService.AddProductType(createDto);
 
-            return result switch
-            {
-                SuccessResult => Created(),
-                ValidationErrorResult => StatusCode(422, result),
-                ErrorResult => BadRequest(result),
-                _ => throw new ApplicationException()
-            };
+            return this.SendResponse(result);
         }
 
-        [Authorize(Roles=Roles.Administrator)]
+        [Authorize(Roles = Roles.Administrator)]
         [HttpPut]
-        public async Task<IActionResult> UpdateProductType([FromBody] ProductTypeUpdateDto updateDto)
+        public async Task<ActionResult<Updated>> UpdateProductType([FromBody] ProductTypeUpdateDto updateDto)
         {
             var result = await productTypeService.UpdateProductType(updateDto);
 
-            return result switch
-            {
-                SuccessResult => Ok(result),
-                ValidationErrorResult => StatusCode(422, result),
-                NotFoundErrorResult => NotFound(result),
-                ErrorResult => BadRequest(result),
-                _ => throw new ApplicationException()
-            };
+            return this.SendResponse(result);
         }
 
 
         [Authorize(Roles = Roles.Administrator)]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProductById(long id)
+        public async Task<ActionResult<Deleted>> DeleteProductById(long id)
         {
             var result = await productTypeService.DeleteProductTypeById(id);
 
-            return result switch
-            {
-                SuccessResult => Ok(result),
-                NotFoundErrorResult => NotFound(result),
-                ErrorResult => BadRequest(result),
-                _ => throw new ApplicationException()
-            };
+            return this.SendResponse(result);
         }
     }
 }

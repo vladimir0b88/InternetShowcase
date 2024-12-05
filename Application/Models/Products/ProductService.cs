@@ -1,37 +1,35 @@
 ﻿using Application.Common;
-using Application.Models;
 using Domain.Entities;
+using ErrorOr;
 using FluentValidation;
 
-namespace Application.Services
+namespace Application.Models
 {
-    public class ProductService(IProductRepository repository, 
+    public class ProductService(IProductRepository repository,
                                 IValidator<ProductCreateDto> createValidator,
                                 IValidator<ProductUpdateDto> updateValidator,
                                 IValidator<ProductsFilter> filterValidator) : IProductService
     {
-        public async Task<Result<Product>> GetProductById(long id)
+        public async Task<ErrorOr<Product>> GetProductById(long id)
         {
             var result = await repository.GetProductById(id);
 
             return result;
         }
 
-        public async Task<Result> DeleteProductById(long id)
+        public async Task<ErrorOr<Deleted>> DeleteProductById(long id)
         {
             var result = await repository.DeleteProductById(id);
 
             return result;
         }
 
-        public async Task<Result> AddProduct(ProductCreateDto productDto)
+        public async Task<ErrorOr<Created>> AddProduct(ProductCreateDto productDto)
         {
             var validationResult = await createValidator.ValidateAsync(productDto);
 
             if (!validationResult.IsValid)
-                return new ValidationErrorResult(message: "Продукт для создания не прошел валидацию",
-                                                 errors: [ErrorList.FailedValidation],
-                                                 validationErrors: validationResult.Errors);
+                return validationResult.Errors.ConvertAll(x => Error.Validation(code: x.PropertyName, description: x.ErrorMessage));
 
             Product newProduct = new Product()
             {
@@ -41,26 +39,24 @@ namespace Application.Services
                 TypeId = productDto.TypeId,
             };
 
-            var result  = await repository.AddProduct(newProduct);
+            var result = await repository.AddProduct(newProduct);
 
             return result;
         }
 
-        public async Task<Result<List<Product>>> GetAllProducts()
+        public async Task<ErrorOr<List<Product>>> GetAllProducts()
         {
             var result = await repository.GetAll();
 
             return result;
         }
 
-        public async Task<Result> UpdateProduct(ProductUpdateDto updateDto)
+        public async Task<ErrorOr<Updated>> UpdateProduct(ProductUpdateDto updateDto)
         {
             var validationResult = await updateValidator.ValidateAsync(updateDto);
 
             if (!validationResult.IsValid)
-                return new ValidationErrorResult(message: "Продукт для модификации не прошел валидацию",
-                                                 errors: [ErrorList.FailedValidation],
-                                                 validationErrors: validationResult.Errors);
+                return validationResult.Errors.ConvertAll(x => Error.Validation(code: x.PropertyName, description: x.ErrorMessage));
 
             Product product = new Product()
             {
@@ -76,21 +72,19 @@ namespace Application.Services
             return result;
         }
 
-        public async Task<Result<List<Product>>> GetByProductTypeId(long productTypeId)
+        public async Task<ErrorOr<List<Product>>> GetByProductTypeId(long productTypeId)
         {
             var result = await repository.GetByProductTypeId(productTypeId);
 
             return result;
         }
 
-        public async Task<Result<FilteringResult<Product>>> GetProductsByFilter(ProductsFilter filter)
+        public async Task<ErrorOr<FilteringResult<Product>>> GetProductsByFilter(ProductsFilter filter)
         {
             var validationResult = await filterValidator.ValidateAsync(filter);
 
-            if(!validationResult.IsValid)
-                return new ValidationErrorResult<FilteringResult<Product>>(message: "Фильтр не прошел валидацию",
-                                                                           errors: [ErrorList.FailedValidation],
-                                                                           validationErrors: validationResult.Errors);
+            if (!validationResult.IsValid)
+                return validationResult.Errors.ConvertAll(x => Error.Validation(code: x.PropertyName, description: x.ErrorMessage));
 
             var result = await repository.GetByFilter(filter);
 

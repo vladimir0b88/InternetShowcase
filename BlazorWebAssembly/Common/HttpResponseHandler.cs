@@ -1,14 +1,16 @@
 ﻿using Application.Common;
 using System.Net;
 using System.Net.Http.Json;
+using ErrorOr;
 
 namespace BlazorWebAssembly.Common
 {
     public static class HttpResponseHandler
     {
-        public static async Task<Result> GetResult(HttpResponseMessage? response)
+        public static async Task<IErrorOr> GetResult(HttpResponseMessage? response)
         {
             if (response is null)
+
                 return new ErrorResult(message: "Ответ от сервера не получен",
                                        errors: [ErrorList.ServerUnavailable]);
 

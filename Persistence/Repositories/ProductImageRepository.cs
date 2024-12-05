@@ -1,81 +1,77 @@
 ﻿using Application.Common;
 using Application.Models;
 using Domain.Entities;
+using ErrorOr;
 using Microsoft.EntityFrameworkCore;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Persistence.Repositories
 {
     internal class ProductImageRepository(ApplicationDbContext context) : IProductImageRepository
     {
-        public async Task<Result> AddImage(ProductImage image)
+        public async Task<ErrorOr<Created>> AddImage(ProductImage image)
         {
             if (image is null)
-                return new ErrorResult(message: "Невозможно добавить пустое изображение",
-                                       errors: [ErrorList.IsNull]);
+                return Error.Validation(description: "Невозможно добавить пустое изображение");
 
             await context.ProductImages.AddAsync(image);
             await context.SaveChangesAsync();
 
-            return new SuccessResult();
+            return Result.Created;
         }
 
-        public async Task<Result> DeleteImage(long id)
+        public async Task<ErrorOr<Deleted>> DeleteImage(long id)
         {
             ProductImage? image = await context.ProductImages.FirstOrDefaultAsync(pi => pi.Id == id);
 
             if (image is null)
-                return new NotFoundErrorResult(message: $"Изображение для удаления с id: {id} не найдено",
-                                               errors: [ErrorList.NotFound]);
+                return Error.NotFound(description: $"Изображение для удаления с id: {id} не найдено");
 
             context.ProductImages.Remove(image);
             await context.SaveChangesAsync();
 
-            return new SuccessResult();
+            return Result.Deleted;
         }
 
-        public async Task<Result<ProductImage>> GetFirstImageByProductId(long productId)
+        public async Task<ErrorOr<ProductImage>> GetFirstImageByProductId(long productId)
         {
             Product? product = await context.Products.AsNoTracking()
                                                      .Include(p => p.Images)
                                                      .FirstOrDefaultAsync(p => p.Id == productId);
 
             if (product is null)
-                return new NotFoundErrorResult<ProductImage>(message: $"Продукт с id: {productId} не найден",
-                                                                   errors: [ErrorList.NotFound]);
+                return Error.NotFound(description: $"Продукт с id: {productId} не найден");
 
             ProductImage? productImage = await context.ProductImages.AsNoTracking()
                                                                     .FirstOrDefaultAsync(pi => pi.ProductId == productId);
 
             if (productImage is null)
-                return new NotFoundErrorResult<ProductImage>(message: $"У продукта с id: {productId} отсутствуют изображения",
-                                                             errors: [ErrorList.NotFound]);
+                return Error.NotFound(description: $"У продукта с id: {productId} отсутствуют изображения");
 
-            return new SuccessResult<ProductImage>(productImage);
+            return productImage;
         }
 
-        public async Task<Result<ProductImage>> GetImageById(long imageId)
+        public async Task<ErrorOr<ProductImage>> GetImageById(long imageId)
         {
             ProductImage? image = await context.ProductImages.AsNoTracking()
                                                              .FirstOrDefaultAsync(pi => pi.Id == imageId);
 
-            if (image is null)
-                return new NotFoundErrorResult<ProductImage>(message: $"Изображение с id: {imageId} не найдено",
-                                                             errors: [ErrorList.NotFound]);
+            if (image is null) 
+                return Error.NotFound(description: $"Изображение с id: {imageId} не найдено");
 
-            return new SuccessResult<ProductImage>(image);
+            return image;
         }
 
-        public async Task<Result<List<ProductImage>>> GetImagesByProductId(long productId)
+        public async Task<ErrorOr<List<ProductImage>>> GetImagesByProductId(long productId)
         {
             Product? product = await context.Products.AsNoTracking()
                                                      .Include(p => p.Images)
                                                      .FirstOrDefaultAsync(p => p.Id == productId);
 
             if (product is null)
-                return new NotFoundErrorResult<List<ProductImage>>(message: $"Продукт с id: {productId} не найден",
-                                                                   errors: [ErrorList.NotFound]);
+                return Error.NotFound(description: $"Продукт с id: {productId} не найден");
 
-            return new SuccessResult<List<ProductImage>>(product.Images.ToList());
+            return product.Images.ToList();
         }
     }
 }

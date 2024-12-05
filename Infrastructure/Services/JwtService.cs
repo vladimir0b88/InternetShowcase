@@ -1,4 +1,4 @@
-﻿using Application.Common;
+﻿using Application.Models;
 using Domain.Entities;
 using Infrastructure.Common;
 using Microsoft.Extensions.Options;

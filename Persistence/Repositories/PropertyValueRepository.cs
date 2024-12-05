@@ -1,63 +1,62 @@
 ﻿using Application.Common;
+using Application.Models;
 using Domain.Entities;
+using ErrorOr;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistence.Repositories
 {
     public class PropertyValueRepository(ApplicationDbContext context) : IPropertyValueRepository
     {
-        public async Task<Result> AddPropertyValue(PropertyValue propertyValue)
+        public async Task<ErrorOr<Created>> AddPropertyValue(PropertyValue propertyValue)
         {
             if (propertyValue is null)
-                return new ErrorResult(message: "Значение свойства не может быть пустым",
-                                       errors: [ErrorList.IsNull]);
+                return Error.Validation("Значение свойства не может быть пустым");
 
             await context.PropertyValues.AddAsync(propertyValue);
             await context.SaveChangesAsync();
 
-            return new SuccessResult();
+            return Result.Created;
         }
 
-        public async Task<Result> DeletePropertyValueById(long propertyValueId)
+        public async Task<ErrorOr<Deleted>> DeletePropertyValueById(long propertyValueId)
         {
             PropertyValue? propertyValue = await context.PropertyValues.FirstOrDefaultAsync(pv => pv.Id == propertyValueId);
 
             if (propertyValue is null)
-                return new NotFoundErrorResult(message: "Значение свойства для удаления не было найдено",
-                                               errors: [ErrorList.NotFound]);
+                return Error.NotFound(description: "Значение свойства для удаления не было найдено");
 
             context.PropertyValues.Remove(propertyValue);
             await context.SaveChangesAsync();
 
-            return new SuccessResult();
+            return Result.Deleted;
         }
 
-        public async Task<Result<List<PropertyValue>>> GetAllPropertyValues()
+        public async Task<ErrorOr<List<PropertyValue>>> GetAllPropertyValues()
         {
             List<PropertyValue> list = await context.PropertyValues.AsNoTracking()
                                                                    .ToListAsync();
 
-            return new SuccessResult<List<PropertyValue>>(list);
+            return list;
         }
 
-        public async Task<Result<List<PropertyValue>>> GetPropertyValuesByProductId(long productId)
+        public async Task<ErrorOr<List<PropertyValue>>> GetPropertyValuesByProductId(long productId)
         {
             Product? product = await context.Products.AsNoTracking()
                                                      .FirstOrDefaultAsync(p => p.Id == productId);
 
             if (product is null)
-                return new NotFoundErrorResult<List<PropertyValue>>(message: $"Продукт с id: {productId} не был найден",
-                                                                    errors: [ErrorList.NotFound]);
+                return Error.NotFound(description: $"Продукт с id: {productId} не был найден");
 
             List<PropertyValue> properties = await context.PropertyValues.AsNoTracking()
                                                                          .Where(pv => pv.ProductId == productId)
                                                                          .Include(pv => pv.TypeProperty)
                                                                          .ToListAsync();
 
-            return new SuccessResult<List<PropertyValue>>(properties);
+            return properties;
         }
 
-        public async Task<Result<List<UniquePropertyValues>>> GetUniquePropertyValues(long productTypeId)
+        public async Task<ErrorOr<List<UniquePropertyValues>>> GetUniquePropertyValues(long productTypeId)
         {
             ProductType? productType = await context.ProductTypes.AsNoTracking()
                                                                  .Where(pt => pt.Id == productTypeId)
@@ -65,9 +64,7 @@ namespace Persistence.Repositories
                                                                  .FirstOrDefaultAsync();
 
             if (productType is null)
-                return new NotFoundErrorResult<List<UniquePropertyValues>>(message: $"Тип товара с id: {productTypeId} не найден",
-                                                                           errors: [ErrorList.NotFound]);
-
+                return Error.NotFound(description: $"Тип товара с id: {productTypeId} не найден");
 
 
             List<UniquePropertyValues> list = await (from tp in context.TypeProperties
@@ -81,27 +78,26 @@ namespace Persistence.Repositories
                                                      }).ToListAsync();
 
 
-            return new SuccessResult<List<UniquePropertyValues>>(list.Where(upv => upv.Values.Count > 1).ToList());
+            return list.Where(upv => upv.Values.Count > 1)
+                       .ToList();
         }
 
-        public async Task<Result> UpdatePropertyValue(PropertyValue propertyValue)
+        public async Task<ErrorOr<Updated>> UpdatePropertyValue(PropertyValue propertyValue)
         {
             if (propertyValue is null)
-                return new ErrorResult(message: "Значение свойства для изменения не может быть пустым",
-                                       errors: [ErrorList.IsNull]);
+                return Error.Validation("Значение свойства для изменения не может быть пустым");
 
             PropertyValue? modifyingPropertyValue = await context.PropertyValues.FirstOrDefaultAsync(pv => pv.Id == propertyValue.Id);
 
             if (modifyingPropertyValue is null)
-                return new NotFoundErrorResult(message: $"Значение свойства с id: {propertyValue.Id} не было найдено",
-                                               errors: [ErrorList.NotFound]);
+                return Error.Validation($"Значение свойства с id: {propertyValue.Id} не было найдено");
 
             modifyingPropertyValue.Value = propertyValue.Value;
 
             context.Update(modifyingPropertyValue);
             await context.SaveChangesAsync();
 
-            return new SuccessResult();
+            return Result.Updated;
         }
     }
 }

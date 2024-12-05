@@ -1,29 +1,27 @@
-﻿using Application.Common;
-using Application.Models;
-using Domain.Entities;
+﻿using Domain.Entities;
+using ErrorOr;
 using FluentValidation;
 
-namespace Application.Services
+namespace Application.Models
 {
     public class TypePropertyService(ITypePropertyRepository repository,
                                      IValidator<TypePropertyCreateDto> createValidator,
                                      IValidator<TypePropertyUpdateDto> updateValidator) : ITypePropertyService
     {
-        public async Task<Result<List<TypeProperty>>> GetAllTypeProperties()
+        public async Task<ErrorOr<List<TypeProperty>>> GetAllTypeProperties()
         {
             var result = await repository.GetAllTypeProperties();
 
             return result;
         }
 
-        public async Task<Result> AddProperty(TypePropertyCreateDto createDto)
+        public async Task<ErrorOr<Created>> AddProperty(TypePropertyCreateDto createDto)
         {
             var validationResult = await createValidator.ValidateAsync(createDto);
 
             if (!validationResult.IsValid)
-                return new ValidationErrorResult(message: "Свойство типа товара не прошло валидацию",
-                                                 errors: [ErrorList.FailedValidation],
-                                                 validationResult.Errors);
+                return validationResult.Errors.ConvertAll(x => Error.Validation(code: x.PropertyName, description: x.ErrorMessage));
+
 
             TypeProperty newProperty = new TypeProperty()
             {
@@ -36,7 +34,7 @@ namespace Application.Services
             return result;
         }
 
-        public async Task<Result> DeleteProperty(long propertyId)
+        public async Task<ErrorOr<Deleted>> DeleteProperty(long propertyId)
         {
             var result = await repository.DeleteProperty(propertyId);
 
@@ -44,21 +42,20 @@ namespace Application.Services
         }
 
 
-        public async Task<Result<List<TypeProperty>>> GetPropertiesByProductTypeId(long typeId)
+        public async Task<ErrorOr<List<TypeProperty>>> GetPropertiesByProductTypeId(long typeId)
         {
             var result = await repository.GetPropertiesByTypeId(typeId);
 
             return result;
         }
 
-        public async Task<Result> UpdateProperty(TypePropertyUpdateDto updateDto)
+        public async Task<ErrorOr<Updated>> UpdateProperty(TypePropertyUpdateDto updateDto)
         {
             var validationResult = await updateValidator.ValidateAsync(updateDto);
 
             if(!validationResult.IsValid)
-                return new ValidationErrorResult(message: "Свойство типа товара для изменения не прошло валидацию",
-                                                 errors: [ErrorList.FailedValidation], 
-                                                 validationResult.Errors);
+                return validationResult.Errors.ConvertAll(x => Error.Validation(code: x.PropertyName, description: x.ErrorMessage));
+
 
             TypeProperty property = new TypeProperty()
             {
@@ -71,7 +68,7 @@ namespace Application.Services
             return result;
         }
 
-        public async Task<Result<TypeProperty>> GetPropertyById(long propertyId)
+        public async Task<ErrorOr<TypeProperty>> GetPropertyById(long propertyId)
         {
             var result = await repository.GetPropertyById(propertyId);
 

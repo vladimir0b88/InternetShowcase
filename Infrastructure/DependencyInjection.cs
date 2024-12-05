@@ -1,4 +1,4 @@
-﻿using Application.Common;
+﻿using Application.Models;
 using Infrastructure.Common;
 using Infrastructure.Services;
 using Microsoft.Extensions.Configuration;

@@ -1,52 +1,48 @@
-﻿using Application.Common;
-using Application.Models;
-using Domain.Constants;
+﻿using Domain.Constants;
 using Domain.Entities;
+using ErrorOr;
 using FluentValidation;
 
-namespace Application.Services
+namespace Application.Models
 {
     internal class UserService(IUserRepository repository,
                                IPasswordHashService passHashService,
                                IJwtService jwtService,
                                IValidator<UserRegisterDto> createValidator) : IUserService
     {
-        public async Task<Result<List<User>>> GetAllUsers()
+        public async Task<ErrorOr<List<User>>> GetAllUsers()
         {
             var result = await repository.GetAll();
 
             return result;
         }
 
-        public async Task<Result<string>> Login(UserLoginDto loginDto)
+        public async Task<ErrorOr<string>> Login(UserLoginDto loginDto)
         {
             var searchResult = await repository.GetByEmail(loginDto.Email);
 
-            if (searchResult is ErrorResult<User> errorResult)
-                return new ErrorResult<string>(message: errorResult.Message,
-                                               errors: errorResult.Errors);
+            if (searchResult.IsError)
+                return searchResult.Errors;
 
-            User user = searchResult.Data;
+            User user = searchResult.Value;
 
             var isCorrectPass = passHashService.Verify(loginDto.Password, user.PasswordHash);
 
             if (isCorrectPass == false)
-                return new ErrorResult<string>(message: "Неправильный пароль",
-                                               errors: [ErrorList.AuthError]);
+                return Error.Failure(description: "Неправильный пароль");
 
             var token = jwtService.GenerateToken(user);
 
-            return new SuccessResult<string>(token);
+            return token;
         }
 
-        public async Task<Result> Register(UserRegisterDto createDto)
+        public async Task<ErrorOr<Created>> Register(UserRegisterDto createDto)
         {
             var validationResult = await createValidator.ValidateAsync(createDto);
 
             if(!validationResult.IsValid)
-                return new ValidationErrorResult(message: "Не удалось зарегистрировать пользователя, данные не прошли валидацию",
-                                                 errors: [ErrorList.FailedValidation],
-                                                 validationErrors: validationResult.Errors);
+                return validationResult.Errors.ConvertAll(x => Error.Validation(code: x.PropertyName, description: x.ErrorMessage));
+
 
             User user = new User()
             {

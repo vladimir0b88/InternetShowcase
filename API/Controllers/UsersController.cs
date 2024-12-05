@@ -2,6 +2,7 @@
 using Application.Models;
 using Domain.Constants;
 using Domain.Entities;
+using ErrorOr;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,52 +10,35 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UsersController (IUserService userService): ControllerBase
+    public class UsersController(IUserService userService) : ControllerBase
     {
         [HttpPost("Register")]
-        public async Task<IActionResult> Register([FromBody] UserRegisterDto registerDto)
+        public async Task<ActionResult<Created>> Register([FromBody] UserRegisterDto registerDto)
         {
             var result = await userService.Register(registerDto);
 
-            return result switch
-            {
-                SuccessResult => Created(),
-                ValidationErrorResult => StatusCode(422, result),
-                ErrorResult => BadRequest(result),
-                _ => throw new ApplicationException()
-            };
+            return this.SendResponse(result);
         }
 
         [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromBody] UserLoginDto loginDto)
+        public async Task<ActionResult<string>> Login([FromBody] UserLoginDto loginDto)
         {
             var result = await userService.Login(loginDto);
 
-            if (result is SuccessResult<string> successResult)
-                Response.Cookies.Append("jwt-token", successResult.Data);
-            
-            return result switch
-            {
-                SuccessResult<string> => Ok(result),
-                ValidationErrorResult<string> => StatusCode(422, result),
-                ErrorResult<string> => BadRequest(result),
-                _ => throw new ApplicationException()
-            }; ;
+            if (!result.IsError)
+                Response.Cookies.Append("jwt-token", result.Value);
+
+            return this.SendResponse(result);
         }
 
 
         [Authorize(Roles = Roles.Administrator)]
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<ActionResult<List<User>>> GetAll()
         {
             var result = await userService.GetAllUsers();
 
-            return result switch
-            {
-                SuccessResult<List<User>> => Ok(result),
-                ErrorResult<List<User>> => BadRequest(result),
-                _ => throw new ApplicationException()
-            };
+            return this.SendResponse(result);
         }
 
     }

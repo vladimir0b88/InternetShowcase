@@ -1,43 +1,42 @@
 ﻿using Application.Common;
-using Application.Models;
 using Domain.Entities;
+using ErrorOr;
 using FluentValidation;
 
-namespace Application.Services
+namespace Application.Models
 {
     public class PropertyValueService(IPropertyValueRepository repository,
                                       IValidator<PropertyValueUpdateDto> updateValidator,
                                       IValidator<PropertyValueUpdateDtoList> listUpdateValidator) : IPropertyValueService
     {
-        public async Task<Result<List<PropertyValue>>> GetAllPropertyValues()
+        public async Task<ErrorOr<List<PropertyValue>>> GetAllPropertyValues()
         {
             var result = await repository.GetAllPropertyValues();
 
             return result;
         }
 
-        public async Task<Result<List<PropertyValue>>> GetPropertyValuesByProductId(long productId)
+        public async Task<ErrorOr<List<PropertyValue>>> GetPropertyValuesByProductId(long productId)
         {
             var result = await repository.GetPropertyValuesByProductId(productId);
 
             return result;
         }
 
-        public async Task<Result<List<UniquePropertyValues>>> GetUniquePropertyValues(long productTypeId)
+        public async Task<ErrorOr<List<UniquePropertyValues>>> GetUniquePropertyValues(long productTypeId)
         {
             var result = await repository.GetUniquePropertyValues(productTypeId);
 
             return result;
         }
 
-        public async Task<Result> UpdatePropertyValue(PropertyValueUpdateDto updateDto)
+        public async Task<ErrorOr<Updated>> UpdatePropertyValue(PropertyValueUpdateDto updateDto)
         {
             var validationResult = await updateValidator.ValidateAsync(updateDto);
 
             if (!validationResult.IsValid)
-                return new ValidationErrorResult(message: "Значение свойства не прошло валидацию",
-                                                 errors: [ErrorList.FailedValidation],
-                                                 validationErrors: validationResult.Errors);
+                return validationResult.Errors.ConvertAll(x => Error.Validation(code: x.PropertyName, description: x.ErrorMessage));
+
 
             PropertyValue propertyValue = new PropertyValue()
             {
@@ -50,16 +49,15 @@ namespace Application.Services
             return result;
         }
 
-        public async Task<Result> UpdatePropertyValueList(PropertyValueUpdateDtoList updateDtoList)
+        public async Task<ErrorOr<Updated>> UpdatePropertyValueList(PropertyValueUpdateDtoList updateDtoList)
         {
             var validationResult = await listUpdateValidator.ValidateAsync(updateDtoList);
 
             if(!validationResult.IsValid)
-                return new ValidationErrorResult(message: "Значение характеристик товара не прошли валидацию",
-                                                 errors: [ErrorList.FailedValidation],
-                                                 validationErrors: validationResult.Errors);
+                return validationResult.Errors.ConvertAll(x => Error.Validation(code: x.PropertyName, description: x.ErrorMessage));
 
-            Result result = new SuccessResult();
+
+            List<Error> errors = [];
 
             foreach (var updateDto in updateDtoList.List)
             {
@@ -71,11 +69,14 @@ namespace Application.Services
 
                 var tempResult = await repository.UpdatePropertyValue(propertyValue);
 
-                if (tempResult is ErrorResult errorResult)
-                    result = errorResult;
+                if (tempResult.IsError)
+                    errors.AddRange(tempResult.Errors);
             }
 
-            return result;
+            if(errors.Count > 0)
+                return errors;
+
+            return Result.Updated;
         }
     }
 }

@@ -1,16 +1,16 @@
-﻿using Application.Common;
+﻿using Application.Models;
 using Domain.Entities;
+using ErrorOr;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistence.Repositories
 {
     public class TypePropertyRepository(ApplicationDbContext context) : ITypePropertyRepository
     {
-        public async Task<Result> AddProperty(TypeProperty property)
+        public async Task<ErrorOr<Created>> AddProperty(TypeProperty property)
         {
             if (property is null)
-                return new ErrorResult(message: "Свойство типа продукта не может быть пустым",
-                                       errors: [ErrorList.IsNull]);
+                return Error.Validation(description: "Свойство типа продукта не может быть пустым");
 
             await context.TypeProperties.AddAsync(property);
             await context.SaveChangesAsync();
@@ -31,76 +31,72 @@ namespace Persistence.Repositories
             }
             await context.SaveChangesAsync();
 
-            return new SuccessResult();
+            return Result.Created;
         }
 
-        public async Task<Result> DeleteProperty(long id)
+        public async Task<ErrorOr<Deleted>> DeleteProperty(long id)
         {
             TypeProperty? property = await context.TypeProperties.FirstOrDefaultAsync(p => p.Id == id);
 
             if (property is null)
-                return new NotFoundErrorResult(message: $"Свойство типа продукта с id: {id} не найдено",
-                                               errors: [ErrorList.NotFound]);
+                return Error.NotFound(description: $"Свойство типа продукта с id: {id} не найдено");
 
             context.TypeProperties.Remove(property);
             await context.SaveChangesAsync();
 
-            return new SuccessResult();
+            return Result.Deleted;
         }
 
-        public async Task<Result<List<TypeProperty>>> GetAllTypeProperties()
+        public async Task<ErrorOr<List<TypeProperty>>> GetAllTypeProperties()
         {
             List<TypeProperty> list = await context.TypeProperties.AsNoTracking()
                                                                   .ToListAsync();
 
-            return new SuccessResult<List<TypeProperty>>(list);
+            return list;
         }
 
-        public async Task<Result<List<TypeProperty>>> GetPropertiesByTypeId(long productTypeId)
+        public async Task<ErrorOr<List<TypeProperty>>> GetPropertiesByTypeId(long productTypeId)
         {
             ProductType? productType = await context.ProductTypes.AsNoTracking()
                                                                  .FirstOrDefaultAsync(pt => pt.Id == productTypeId);
 
             if (productType is null)
-                return new NotFoundErrorResult<List<TypeProperty>>(message: $"Не найден тип продукта с id: {productTypeId}");
+                return Error.NotFound(description: $"Не найден тип продукта с id: {productTypeId}");
 
             List<TypeProperty> list = await context.TypeProperties.AsNoTracking()
                                                                   .Where(p => p.TypeId == productTypeId)
                                                                   .ToListAsync();
 
-            return new SuccessResult<List<TypeProperty>>(list);
+            return list;
         }
 
-        public async Task<Result<TypeProperty>> GetPropertyById(long propertyId)
+        public async Task<ErrorOr<TypeProperty>> GetPropertyById(long propertyId)
         {
             TypeProperty? typeProperty = await context.TypeProperties.AsNoTracking()
                                                                      .FirstOrDefaultAsync (tp => tp.Id == propertyId);
 
             if(typeProperty is null)
-                return new NotFoundErrorResult<TypeProperty>(message: $"Свойство с id: {propertyId} не найден",
-                                                             errors: [ErrorList.NotFound]);
+                return Error.NotFound(description: $"Свойство с id: {propertyId} не найден");
 
-            return new SuccessResult<TypeProperty>(typeProperty);
+            return typeProperty;
         }
 
-        public async Task<Result> UpdateProperty(TypeProperty property)
+        public async Task<ErrorOr<Updated>> UpdateProperty(TypeProperty property)
         {
             if(property is null)
-                return new ErrorResult(message: "Свойство типа продукта для изменения не может быть пустым",
-                                       errors: [ErrorList.IsNull]);
+                return Error.Validation(description: "Свойство типа продукта для изменения не может быть пустым");
 
             TypeProperty? modifyingProperty = await context.TypeProperties.FirstOrDefaultAsync(p => p.Id == property.Id);
 
             if(modifyingProperty is null)
-                return new NotFoundErrorResult(message: $"Свойство типа товара для изменения с id: {property.Id} не было найдено",
-                                               errors: [ErrorList.NotFound]);
+                return Error.NotFound(description: $"Свойство типа товара для изменения с id: {property.Id} не было найдено");
 
             modifyingProperty.Name = property.Name;
 
             context.Update(modifyingProperty);
             await context.SaveChangesAsync();
 
-            return new SuccessResult();
+            return Result.Updated;
         }
     }
 }
