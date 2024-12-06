@@ -1,5 +1,4 @@
-﻿using Application.Common;
-using Application.Models;
+﻿using Application.Models;
 using Domain.Constants;
 using Domain.Entities;
 using ErrorOr;
@@ -15,7 +14,7 @@ namespace API.Controllers
         [HttpPost("Register")]
         public async Task<ActionResult<Created>> Register([FromBody] UserRegisterDto registerDto)
         {
-            var result = await userService.Register(registerDto);
+            var result = await userService.RegisterAsync(registerDto);
 
             return this.SendResponse(result);
         }
@@ -23,7 +22,7 @@ namespace API.Controllers
         [HttpPost("Login")]
         public async Task<ActionResult<string>> Login([FromBody] UserLoginDto loginDto)
         {
-            var result = await userService.Login(loginDto);
+            var result = await userService.LoginAsync(loginDto);
 
             if (!result.IsError)
                 Response.Cookies.Append("jwt-token", result.Value);
@@ -36,7 +35,7 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<List<User>>> GetAll()
         {
-            var result = await userService.GetAllUsers();
+            var result = await userService.GetAllAsync();
 
             return this.SendResponse(result);
         }

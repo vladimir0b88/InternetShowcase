@@ -41,7 +41,7 @@ else
 
     async Task GetProducts()
     {
-        var result = await productService.GetAllProducts();
+        var result = await productService.GetAllAsync();
 
         switch (result)
         {

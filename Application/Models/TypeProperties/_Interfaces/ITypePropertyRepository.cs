@@ -5,16 +5,16 @@ namespace Application.Models
 {
     public interface ITypePropertyRepository
     {
-        Task<ErrorOr<List<TypeProperty>>> GetAllTypeProperties();
+        Task<ErrorOr<List<TypeProperty>>> GetAllAsync();
 
-        Task<ErrorOr<TypeProperty>> GetPropertyById(long propertyId);
+        Task<ErrorOr<TypeProperty>> GetByIdAsync(long propertyId);
 
-        Task<ErrorOr<List<TypeProperty>>> GetPropertiesByTypeId(long typeId);
+        Task<ErrorOr<List<TypeProperty>>> GetByTypeIdAsync(long typeId);
 
-        Task<ErrorOr<Created>> AddProperty(TypeProperty property);
+        Task<ErrorOr<Created>> InsertAsync(TypeProperty property);
 
-        Task<ErrorOr<Deleted>> DeleteProperty(long propertyId);
+        Task<ErrorOr<Deleted>> DeleteAsync(long propertyId);
 
-        Task<ErrorOr<Updated>> UpdateProperty(TypeProperty property);
+        Task<ErrorOr<Updated>> UpdateAsync(TypeProperty property);
     }
 }

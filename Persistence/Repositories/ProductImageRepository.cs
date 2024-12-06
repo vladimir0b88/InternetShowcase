@@ -9,7 +9,7 @@ namespace Persistence.Repositories
 {
     internal class ProductImageRepository(ApplicationDbContext context) : IProductImageRepository
     {
-        public async Task<ErrorOr<Created>> AddImage(ProductImage image)
+        public async Task<ErrorOr<Created>> InsertAsync(ProductImage image)
         {
             if (image is null)
                 return Error.Validation(description: "Невозможно добавить пустое изображение");
@@ -20,7 +20,7 @@ namespace Persistence.Repositories
             return Result.Created;
         }
 
-        public async Task<ErrorOr<Deleted>> DeleteImage(long id)
+        public async Task<ErrorOr<Deleted>> DeleteByIdAsync(long id)
         {
             ProductImage? image = await context.ProductImages.FirstOrDefaultAsync(pi => pi.Id == id);
 
@@ -33,7 +33,7 @@ namespace Persistence.Repositories
             return Result.Deleted;
         }
 
-        public async Task<ErrorOr<ProductImage>> GetFirstImageByProductId(long productId)
+        public async Task<ErrorOr<ProductImage>> GetFirstByProductIdAsync(long productId)
         {
             Product? product = await context.Products.AsNoTracking()
                                                      .Include(p => p.Images)
@@ -51,7 +51,7 @@ namespace Persistence.Repositories
             return productImage;
         }
 
-        public async Task<ErrorOr<ProductImage>> GetImageById(long imageId)
+        public async Task<ErrorOr<ProductImage>> GetByIdAsync(long imageId)
         {
             ProductImage? image = await context.ProductImages.AsNoTracking()
                                                              .FirstOrDefaultAsync(pi => pi.Id == imageId);
@@ -62,7 +62,7 @@ namespace Persistence.Repositories
             return image;
         }
 
-        public async Task<ErrorOr<List<ProductImage>>> GetImagesByProductId(long productId)
+        public async Task<ErrorOr<List<ProductImage>>> GetAllByProductIdAsync(long productId)
         {
             Product? product = await context.Products.AsNoTracking()
                                                      .Include(p => p.Images)

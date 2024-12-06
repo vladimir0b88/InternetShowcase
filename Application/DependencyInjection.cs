@@ -24,15 +24,15 @@ namespace Application
 
             #region Validators
             // Product
-            services.AddScoped<IValidator<ProductCreateDto>, ProductCreateDtoValidator>();
+            services.AddScoped<IValidator<ProductAddDto>, ProductAddDtoValidator>();
             services.AddScoped<IValidator<ProductUpdateDto>, ProductUpdateDtoValidator>();
 
             // ProductType
-            services.AddScoped<IValidator<ProductTypeCreateDto>, ProductTypeCreateDtoValidator>();
+            services.AddScoped<IValidator<ProductTypeAddDto>, ProductTypeAddDtoValidator>();
             services.AddScoped<IValidator<ProductTypeUpdateDto>, ProductTypeUpdateDtoValidator>();
 
             // TypeProperty
-            services.AddScoped<IValidator<TypePropertyCreateDto>, TypePropertyCreateDtoValidator>();
+            services.AddScoped<IValidator<TypePropertyAddDto>, TypePropertyAddDtoValidator>();
             services.AddScoped<IValidator<TypePropertyUpdateDto>, TypePropertyUpdateDtoValidator>();
 
             // PropertyValue

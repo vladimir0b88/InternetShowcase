@@ -6,9 +6,9 @@ namespace Application.Models
 {
     public interface IUserService
     {
-        Task<ErrorOr<List<User>>> GetAllUsers();
-        Task<ErrorOr<Created>> Register(UserRegisterDto createDto);
+        Task<ErrorOr<List<User>>> GetAllAsync();
+        Task<ErrorOr<Created>> RegisterAsync(UserRegisterDto createDto);
 
-        Task<ErrorOr<string>> Login(UserLoginDto loginDto);
+        Task<ErrorOr<string>> LoginAsync(UserLoginDto loginDto);
     }
 }

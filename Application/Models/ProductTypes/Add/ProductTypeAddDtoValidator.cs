@@ -2,9 +2,9 @@
 
 namespace Application.Models
 {
-    public class ProductTypeCreateDtoValidator : AbstractValidator<ProductTypeCreateDto>
+    public class ProductTypeAddDtoValidator : AbstractValidator<ProductTypeAddDto>
     {
-        public ProductTypeCreateDtoValidator()
+        public ProductTypeAddDtoValidator()
         {
             RuleFor(p => p.Name).NotEmpty().MaximumLength(64);
         }

@@ -6,17 +6,18 @@ namespace Application.Models
 {
     public interface IProductRepository
     {
-        Task<ErrorOr<List<Product>>> GetAll();
-        Task<ErrorOr<Product>> GetProductById(long id);
+        Task<ErrorOr<List<Product>>> GetAllAsync();
 
-        Task<ErrorOr<Deleted>> DeleteProductById(long id);
+        Task<ErrorOr<Product>> GetByIdAsync(long id);
 
-        Task<ErrorOr<Created>> AddProduct(Product product);
+        Task<ErrorOr<Deleted>> DeleteByIdAsync(long id);
 
-        Task<ErrorOr<Updated>> UpdateProduct(Product product);
+        Task<ErrorOr<Created>> InsertAsync(Product product);
 
-        Task<ErrorOr<List<Product>>> GetByProductTypeId(long productTypeId);
+        Task<ErrorOr<Updated>> UpdateAsync(Product product);
 
-        Task<ErrorOr<FilteringResult<Product>>> GetByFilter(ProductsFilter filter);
+        Task<ErrorOr<List<Product>>> GetByProductTypeIdAsync(long productTypeId);
+
+        Task<ErrorOr<FilteringResult<Product>>> GetByFilterAsync(ProductsFilter filter);
     }
 }

@@ -38,7 +38,7 @@ else
 
     async Task GetUsers()
     {
-        var result = await userService.GetAllUsers();
+        var result = await userService.GetAllAsync();
 
         switch (result)
         {

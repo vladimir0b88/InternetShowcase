@@ -7,7 +7,7 @@ namespace Persistence.Repositories
 {
     public class TypePropertyRepository(ApplicationDbContext context) : ITypePropertyRepository
     {
-        public async Task<ErrorOr<Created>> AddProperty(TypeProperty property)
+        public async Task<ErrorOr<Created>> InsertAsync(TypeProperty property)
         {
             if (property is null)
                 return Error.Validation(description: "Свойство типа продукта не может быть пустым");
@@ -34,7 +34,7 @@ namespace Persistence.Repositories
             return Result.Created;
         }
 
-        public async Task<ErrorOr<Deleted>> DeleteProperty(long id)
+        public async Task<ErrorOr<Deleted>> DeleteAsync(long id)
         {
             TypeProperty? property = await context.TypeProperties.FirstOrDefaultAsync(p => p.Id == id);
 
@@ -47,7 +47,7 @@ namespace Persistence.Repositories
             return Result.Deleted;
         }
 
-        public async Task<ErrorOr<List<TypeProperty>>> GetAllTypeProperties()
+        public async Task<ErrorOr<List<TypeProperty>>> GetAllAsync()
         {
             List<TypeProperty> list = await context.TypeProperties.AsNoTracking()
                                                                   .ToListAsync();
@@ -55,7 +55,7 @@ namespace Persistence.Repositories
             return list;
         }
 
-        public async Task<ErrorOr<List<TypeProperty>>> GetPropertiesByTypeId(long productTypeId)
+        public async Task<ErrorOr<List<TypeProperty>>> GetByTypeIdAsync(long productTypeId)
         {
             ProductType? productType = await context.ProductTypes.AsNoTracking()
                                                                  .FirstOrDefaultAsync(pt => pt.Id == productTypeId);
@@ -70,7 +70,7 @@ namespace Persistence.Repositories
             return list;
         }
 
-        public async Task<ErrorOr<TypeProperty>> GetPropertyById(long propertyId)
+        public async Task<ErrorOr<TypeProperty>> GetByIdAsync(long propertyId)
         {
             TypeProperty? typeProperty = await context.TypeProperties.AsNoTracking()
                                                                      .FirstOrDefaultAsync (tp => tp.Id == propertyId);
@@ -81,7 +81,7 @@ namespace Persistence.Repositories
             return typeProperty;
         }
 
-        public async Task<ErrorOr<Updated>> UpdateProperty(TypeProperty property)
+        public async Task<ErrorOr<Updated>> UpdateAsync(TypeProperty property)
         {
             if(property is null)
                 return Error.Validation(description: "Свойство типа продукта для изменения не может быть пустым");

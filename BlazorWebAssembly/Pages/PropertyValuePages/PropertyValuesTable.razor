@@ -39,7 +39,7 @@ else
 
     async Task GetPropertyValues()
     {
-        var result = await propertyValueService.GetAllPropertyValues();
+        var result = await propertyValueService.GetAllAsync();
 
         switch (result)
         {

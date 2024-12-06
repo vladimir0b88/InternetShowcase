@@ -36,7 +36,7 @@
 
     private async Task Submit()
     {
-        var result = await userService.Login(loginDto);
+        var result = await userService.LoginAsync(loginDto);
 
         if (result is ErrorResult<string> errorResult)
         {

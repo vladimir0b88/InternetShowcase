@@ -8,7 +8,7 @@ using System.Net.Http.Json;
 namespace BlazorWebAssembly.Services
 {
     public class TypePropertyHttpService(IHttpClientFactory httpClientFactory,
-                                         IValidator<TypePropertyCreateDto> createValidator,
+                                         IValidator<TypePropertyAddDto> createValidator,
                                          IValidator<TypePropertyUpdateDto> updateValidator) : ITypePropertyService
     {
         private readonly HttpClient httpClient = httpClientFactory.CreateClient("WebApi");
@@ -25,7 +25,7 @@ namespace BlazorWebAssembly.Services
 
             return result;
         }
-        public async Task<Result> AddProperty(TypePropertyCreateDto createDto)
+        public async Task<Result> AddProperty(TypePropertyAddDto createDto)
         {
             var validationResult = await createValidator.ValidateAsync(createDto);
 

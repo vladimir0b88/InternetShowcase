@@ -135,7 +135,7 @@ else
 
     async Task GetProductType()
     {
-        var result = await productTypeService.GetProductTypeById(TypeId);
+        var result = await productTypeService.GetByIdAsync(TypeId);
 
         switch (result)
         {
@@ -151,7 +151,7 @@ else
 
     async Task GetTypeProperties()
     {
-        var result = await typePropertyService.GetPropertiesByProductTypeId(TypeId);
+        var result = await typePropertyService.GetByProductTypeIdAsync(TypeId);
 
         switch (result)
         {
@@ -168,7 +168,7 @@ else
 
     async Task GetProducts()
     {
-        var result = await productService.GetByProductTypeId(TypeId);
+        var result = await productService.GetByProductTypeIdAsync(TypeId);
 
         switch (result)
         {
@@ -184,7 +184,7 @@ else
 
     async Task DeleteTypePropertyById(long id)
     {
-        var result = await typePropertyService.DeleteProperty(id);
+        var result = await typePropertyService.DeleteAsync(id);
 
         if (result is ErrorResult errorResult)
         {

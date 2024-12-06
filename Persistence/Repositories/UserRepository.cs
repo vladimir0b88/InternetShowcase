@@ -7,7 +7,7 @@ namespace Persistence.Repositories
 {
     public class UserRepository(ApplicationDbContext context) : IUserRepository
     {
-        public async Task<ErrorOr<Created>> AddUser(User user)
+        public async Task<ErrorOr<Created>> AddUserAsync(User user)
         {
             if (user is null)
                 return Error.Validation(description: "Нельзя добавить пустого пользователя");
@@ -24,7 +24,7 @@ namespace Persistence.Repositories
             return Result.Created;
         }
 
-        public async Task<ErrorOr<List<User>>> GetAll()
+        public async Task<ErrorOr<List<User>>> GetAllAsync()
         {
             List<User> users = await context.Users.AsNoTracking()
                                                   .ToListAsync();
@@ -32,7 +32,7 @@ namespace Persistence.Repositories
             return users;
         }
 
-        public async Task<ErrorOr<User>> GetByEmail(string email)
+        public async Task<ErrorOr<User>> GetByEmailAsync(string email)
         {
             User? user = await context.Users.AsNoTracking()
                                             .FirstOrDefaultAsync(u => u.Email == email);

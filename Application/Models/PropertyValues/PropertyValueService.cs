@@ -5,37 +5,37 @@ using FluentValidation;
 
 namespace Application.Models
 {
-    public class PropertyValueService(IPropertyValueRepository repository,
+    public class PropertyValueService(IPropertyValueRepository propertyValueRepository,
                                       IValidator<PropertyValueUpdateDto> updateValidator,
                                       IValidator<PropertyValueUpdateDtoList> listUpdateValidator) : IPropertyValueService
     {
-        public async Task<ErrorOr<List<PropertyValue>>> GetAllPropertyValues()
+        public async Task<ErrorOr<List<PropertyValue>>> GetAllAsync()
         {
-            var result = await repository.GetAllPropertyValues();
+            var result = await propertyValueRepository.GetAllAsync();
 
             return result;
         }
 
-        public async Task<ErrorOr<List<PropertyValue>>> GetPropertyValuesByProductId(long productId)
+        public async Task<ErrorOr<List<PropertyValue>>> GetByProductIdAsync(long productId)
         {
-            var result = await repository.GetPropertyValuesByProductId(productId);
+            var result = await propertyValueRepository.GetByProductIdAsync(productId);
 
             return result;
         }
 
-        public async Task<ErrorOr<List<UniquePropertyValues>>> GetUniquePropertyValues(long productTypeId)
+        public async Task<ErrorOr<List<UniquePropertyValues>>> GetUniquesByProductTypeIdAsync(long productTypeId)
         {
-            var result = await repository.GetUniquePropertyValues(productTypeId);
+            var result = await propertyValueRepository.GetUniquesByProductTypeIdAsync(productTypeId);
 
             return result;
         }
 
-        public async Task<ErrorOr<Updated>> UpdatePropertyValue(PropertyValueUpdateDto updateDto)
+        public async Task<ErrorOr<Updated>> UpdateAsync(PropertyValueUpdateDto updateDto)
         {
             var validationResult = await updateValidator.ValidateAsync(updateDto);
 
             if (!validationResult.IsValid)
-                return validationResult.Errors.ConvertAll(x => Error.Validation(code: x.PropertyName, description: x.ErrorMessage));
+                return validationResult.GetGeneralError();
 
 
             PropertyValue propertyValue = new PropertyValue()
@@ -44,17 +44,17 @@ namespace Application.Models
                 Value = updateDto.Value,
             };
 
-            var result = await repository.UpdatePropertyValue(propertyValue);
+            var result = await propertyValueRepository.UpdateAsync(propertyValue);
 
             return result;
         }
 
-        public async Task<ErrorOr<Updated>> UpdatePropertyValueList(PropertyValueUpdateDtoList updateDtoList)
+        public async Task<ErrorOr<Updated>> UpdateListAsync(PropertyValueUpdateDtoList updateDtoList)
         {
             var validationResult = await listUpdateValidator.ValidateAsync(updateDtoList);
 
-            if(!validationResult.IsValid)
-                return validationResult.Errors.ConvertAll(x => Error.Validation(code: x.PropertyName, description: x.ErrorMessage));
+            if (!validationResult.IsValid)
+                return validationResult.GetGeneralError();
 
 
             List<Error> errors = [];
@@ -67,7 +67,7 @@ namespace Application.Models
                     Value = updateDto.Value,
                 };
 
-                var tempResult = await repository.UpdatePropertyValue(propertyValue);
+                var tempResult = await propertyValueRepository.UpdateAsync(propertyValue);
 
                 if (tempResult.IsError)
                     errors.AddRange(tempResult.Errors);

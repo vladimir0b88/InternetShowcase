@@ -1,5 +1,4 @@
-﻿using Application.Common;
-using Application.Models;
+﻿using Application.Models;
 using Domain.Constants;
 using Domain.Entities;
 using ErrorOr;
@@ -17,7 +16,7 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<List<TypeProperty>>> GetAllTypeProperties()
         {
-            var result = await propertyService.GetAllTypeProperties();
+            var result = await propertyService.GetAllAsync();
 
             return this.SendResponse(result);
         }
@@ -25,24 +24,24 @@ namespace API.Controllers
         [HttpGet("{propertyId}")]
         public async Task<ActionResult<TypeProperty>> GetPropertyById(long propertyId)
         {
-            var result = await propertyService.GetPropertyById(propertyId);
+            var result = await propertyService.GetByIdAsync(propertyId);
 
             return this.SendResponse(result);
         }
 
-        [HttpGet("ProductType/{id}")]
-        public async Task<ActionResult<List<TypeProperty>>> GetPropertiesByProductTypeId(long id)
+        [HttpGet("ProductType/{typeId}")]
+        public async Task<ActionResult<List<TypeProperty>>> GetPropertiesByProductTypeId(long typeId)
         {
-            var result = await propertyService.GetPropertiesByProductTypeId(id);
+            var result = await propertyService.GetByProductTypeIdAsync(typeId);
 
             return this.SendResponse(result);
         }
 
         [Authorize(Roles = Roles.Administrator)]
         [HttpPost]
-        public async Task<ActionResult<Created>> AddTypeProperty([FromBody]TypePropertyCreateDto createDto)
+        public async Task<ActionResult<Created>> AddTypeProperty([FromBody]TypePropertyAddDto createDto)
         {
-            var result = await propertyService.AddProperty(createDto);
+            var result = await propertyService.AddAsync(createDto);
 
             return this.SendResponse(result);
         }
@@ -51,7 +50,7 @@ namespace API.Controllers
         [HttpPut]
         public async Task<ActionResult<Updated>> UpdateTypeProperty([FromBody]TypePropertyUpdateDto updateDto)
         {
-            var result = await propertyService.UpdateProperty(updateDto);
+            var result = await propertyService.UpdateAsync(updateDto);
 
             return this.SendResponse(result);
         }
@@ -60,7 +59,7 @@ namespace API.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Deleted>> DeleteTypeProperty(long id)
         {
-            var result = await propertyService.DeleteProperty(id);
+            var result = await propertyService.DeleteAsync(id);
 
             return this.SendResponse(result);
         }

@@ -9,28 +9,31 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductImagesController(IProductImageService service) : ControllerBase
+    public class ProductImagesController(IProductImageService prodImageService) : ControllerBase
     {
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ProductImage>> GetImageById(long id)
+
+        [HttpGet("{imageId}")]
+        public async Task<ActionResult<ProductImage>> GetImageById(long imageId)
         {
-            var result = await service.GetImageById(id);
+            var result = await prodImageService.GetByIdAsync(imageId);
 
             return this.SendResponse(result);
         }
 
-        [HttpGet("Product/{id}")]
-        public async Task<ActionResult<List<ProductImage>>> GetImageByProductId(long id)
+
+        [HttpGet("Product/{productId}")]
+        public async Task<ActionResult<List<ProductImage>>> GetImagesByProductId(long productId)
         {
-            var result = await service.GetImagesByProductId(id);
+            var result = await prodImageService.GetAllByProductIdAsync(productId);
 
             return this.SendResponse(result);
         }
 
-        [HttpGet("Product/{id}/First")]
-        public async Task<ActionResult<ProductImage>> GetFirstImageByProductId(long id)
+
+        [HttpGet("Product/{productId}/First")]
+        public async Task<ActionResult<ProductImage>> GetFirstImageByProductId(long productId)
         {
-            var result = await service.GetFirstImageByProductId(id);
+            var result = await prodImageService.GetFirstByProductIdAsync(productId);
 
             return this.SendResponse(result);
         }
@@ -40,16 +43,17 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<Created>> UploadImage([FromBody] ProductImageAddDto addDto)
         {
-            var result = await service.AddImage(addDto);
+            var result = await prodImageService.AddAsync(addDto);
 
             return this.SendResponse(result);
         }
 
+
         [Authorize(Roles = Roles.Administrator)]
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Deleted>> DeleteImageById(long id)
+        [HttpDelete("{imageId}")]
+        public async Task<ActionResult<Deleted>> DeleteImageById(long imageId)
         {
-            var result = await service.DeleteImage(id);
+            var result = await prodImageService.DeleteByIdAsync(imageId);
 
             return this.SendResponse(result);
         }

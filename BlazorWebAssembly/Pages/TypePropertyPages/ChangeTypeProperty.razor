@@ -40,7 +40,7 @@
 
     async Task Submit()
     {
-        var result = await typePropertyService.UpdateProperty(updateDto);
+        var result = await typePropertyService.UpdateAsync(updateDto);
 
         if (result is ErrorResult errorResult)
         {
@@ -58,7 +58,7 @@
 
     async Task GetUpdateDto()
     {
-        var result = await typePropertyService.GetPropertyById(PropertyId);
+        var result = await typePropertyService.GetByIdAsync(PropertyId);
 
         switch (result)
         {

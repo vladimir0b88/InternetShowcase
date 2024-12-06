@@ -8,7 +8,7 @@ namespace Persistence.Repositories
 {
     public class PropertyValueRepository(ApplicationDbContext context) : IPropertyValueRepository
     {
-        public async Task<ErrorOr<Created>> AddPropertyValue(PropertyValue propertyValue)
+        public async Task<ErrorOr<Created>> InsertAsync(PropertyValue propertyValue)
         {
             if (propertyValue is null)
                 return Error.Validation("Значение свойства не может быть пустым");
@@ -19,7 +19,7 @@ namespace Persistence.Repositories
             return Result.Created;
         }
 
-        public async Task<ErrorOr<Deleted>> DeletePropertyValueById(long propertyValueId)
+        public async Task<ErrorOr<Deleted>> DeleteByIdAsync(long propertyValueId)
         {
             PropertyValue? propertyValue = await context.PropertyValues.FirstOrDefaultAsync(pv => pv.Id == propertyValueId);
 
@@ -32,7 +32,7 @@ namespace Persistence.Repositories
             return Result.Deleted;
         }
 
-        public async Task<ErrorOr<List<PropertyValue>>> GetAllPropertyValues()
+        public async Task<ErrorOr<List<PropertyValue>>> GetAllAsync()
         {
             List<PropertyValue> list = await context.PropertyValues.AsNoTracking()
                                                                    .ToListAsync();
@@ -40,7 +40,7 @@ namespace Persistence.Repositories
             return list;
         }
 
-        public async Task<ErrorOr<List<PropertyValue>>> GetPropertyValuesByProductId(long productId)
+        public async Task<ErrorOr<List<PropertyValue>>> GetByProductIdAsync(long productId)
         {
             Product? product = await context.Products.AsNoTracking()
                                                      .FirstOrDefaultAsync(p => p.Id == productId);
@@ -56,7 +56,7 @@ namespace Persistence.Repositories
             return properties;
         }
 
-        public async Task<ErrorOr<List<UniquePropertyValues>>> GetUniquePropertyValues(long productTypeId)
+        public async Task<ErrorOr<List<UniquePropertyValues>>> GetUniquesByProductTypeIdAsync(long productTypeId)
         {
             ProductType? productType = await context.ProductTypes.AsNoTracking()
                                                                  .Where(pt => pt.Id == productTypeId)
@@ -82,7 +82,7 @@ namespace Persistence.Repositories
                        .ToList();
         }
 
-        public async Task<ErrorOr<Updated>> UpdatePropertyValue(PropertyValue propertyValue)
+        public async Task<ErrorOr<Updated>> UpdateAsync(PropertyValue propertyValue)
         {
             if (propertyValue is null)
                 return Error.Validation("Значение свойства для изменения не может быть пустым");

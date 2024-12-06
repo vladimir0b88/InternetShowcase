@@ -1,25 +1,26 @@
-﻿using Domain.Constants;
+﻿using Application.Common;
+using Domain.Constants;
 using Domain.Entities;
 using ErrorOr;
 using FluentValidation;
 
 namespace Application.Models
 {
-    internal class UserService(IUserRepository repository,
+    internal class UserService(IUserRepository userRepository,
                                IPasswordHashService passHashService,
                                IJwtService jwtService,
                                IValidator<UserRegisterDto> createValidator) : IUserService
     {
-        public async Task<ErrorOr<List<User>>> GetAllUsers()
+        public async Task<ErrorOr<List<User>>> GetAllAsync()
         {
-            var result = await repository.GetAll();
+            var result = await userRepository.GetAllAsync();
 
             return result;
         }
 
-        public async Task<ErrorOr<string>> Login(UserLoginDto loginDto)
+        public async Task<ErrorOr<string>> LoginAsync(UserLoginDto loginDto)
         {
-            var searchResult = await repository.GetByEmail(loginDto.Email);
+            var searchResult = await userRepository.GetByEmailAsync(loginDto.Email);
 
             if (searchResult.IsError)
                 return searchResult.Errors;
@@ -36,13 +37,12 @@ namespace Application.Models
             return token;
         }
 
-        public async Task<ErrorOr<Created>> Register(UserRegisterDto createDto)
+        public async Task<ErrorOr<Created>> RegisterAsync(UserRegisterDto createDto)
         {
             var validationResult = await createValidator.ValidateAsync(createDto);
 
-            if(!validationResult.IsValid)
-                return validationResult.Errors.ConvertAll(x => Error.Validation(code: x.PropertyName, description: x.ErrorMessage));
-
+            if (!validationResult.IsValid)
+                return validationResult.GetGeneralError();
 
             User user = new User()
             {
@@ -52,7 +52,7 @@ namespace Application.Models
                 Role = string.IsNullOrEmpty(createDto.Role) ? Roles.Guest : createDto.Role,
             };
 
-            var result = await repository.AddUser(user);
+            var result = await userRepository.AddUserAsync(user);
 
             return result;
         }

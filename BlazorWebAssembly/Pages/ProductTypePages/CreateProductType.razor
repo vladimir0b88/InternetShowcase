@@ -28,13 +28,13 @@
 
 
 @code {
-    private ProductTypeCreateDto createDto = new();
+    private ProductTypeAddDto createDto = new();
 
     private ErrorModal modal = new();
 
     async Task Submit()
     {
-        var result = await productTypeService.AddProductType(createDto);
+        var result = await productTypeService.AddAsync(createDto);
 
         if (result is ErrorResult errorResult)
         {

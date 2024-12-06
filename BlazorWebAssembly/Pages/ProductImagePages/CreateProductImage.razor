@@ -60,7 +60,7 @@
 
     private async Task GetProduct()
     {
-        var result = await productService.GetProductById(ProductId);
+        var result = await productService.GetByIdAsync(ProductId);
 
         switch (result)
         {
@@ -102,7 +102,7 @@
 
     private async Task Submit()
     {
-        var result = await productImageService.AddImage(addImageDto);
+        var result = await productImageService.AddAsync(addImageDto);
 
         switch (result)
         {

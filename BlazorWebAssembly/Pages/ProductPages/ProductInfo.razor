@@ -107,7 +107,7 @@
 
     async Task GetProduct()
     {
-        var result = await productService.GetProductById(ProductId);
+        var result = await productService.GetByIdAsync(ProductId);
 
         switch (result)
         {
@@ -123,7 +123,7 @@
 
     async Task DeleteProduct()
     {
-        var result = await productService.DeleteProductById(product!.Id);
+        var result = await productService.DeleteByIdAsync(product!.Id);
 
         switch (result)
         {

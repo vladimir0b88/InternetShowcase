@@ -42,7 +42,7 @@ else
 
     private ProductType? productType = null;
 
-    private TypePropertyCreateDto createDto = new();
+    private TypePropertyAddDto createDto = new();
 
     private ErrorModal modal = new();
 
@@ -53,7 +53,7 @@ else
 
     async Task GetProductType()
     {
-        var result = await productTypeService.GetProductTypeById(TypeId);
+        var result = await productTypeService.GetByIdAsync(TypeId);
 
         switch (result)
         {
@@ -70,7 +70,7 @@ else
 
     async Task Submit()
     {
-        var result = await typePropertyService.AddProperty(createDto);
+        var result = await typePropertyService.AddAsync(createDto);
 
         if (result is ErrorResult errorResult)
         {

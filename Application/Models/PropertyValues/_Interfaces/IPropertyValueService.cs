@@ -6,12 +6,12 @@ namespace Application.Models
 {
     public interface IPropertyValueService
     {
-        Task<ErrorOr<List<PropertyValue>>> GetAllPropertyValues();
-        Task<ErrorOr<List<PropertyValue>>> GetPropertyValuesByProductId(long productId);
-        Task<ErrorOr<Updated>> UpdatePropertyValue(PropertyValueUpdateDto updateDto);
+        Task<ErrorOr<List<PropertyValue>>> GetAllAsync();
+        Task<ErrorOr<List<PropertyValue>>> GetByProductIdAsync(long productId);
+        Task<ErrorOr<Updated>> UpdateAsync(PropertyValueUpdateDto updateDto);
 
-        Task<ErrorOr<Updated>> UpdatePropertyValueList(PropertyValueUpdateDtoList updateDtoList);
+        Task<ErrorOr<Updated>> UpdateListAsync(PropertyValueUpdateDtoList updateDtoList);
 
-        Task<ErrorOr<List<UniquePropertyValues>>> GetUniquePropertyValues(long productTypeId);
+        Task<ErrorOr<List<UniquePropertyValues>>> GetUniquesByProductTypeIdAsync(long productTypeId);
     }
 }

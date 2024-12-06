@@ -1,33 +1,34 @@
-﻿using Domain.Entities;
+﻿using Application.Common;
+using Domain.Entities;
 using ErrorOr;
 using FluentValidation;
 
 namespace Application.Models
 {
-    public class ProductTypeService (IProductTypeRepository repository,
-                                     IValidator<ProductTypeCreateDto> createDtoValidator,
+    public class ProductTypeService (IProductTypeRepository productTypeRepository,
+                                     IValidator<ProductTypeAddDto> createDtoValidator,
                                      IValidator<ProductTypeUpdateDto> updateDtoValidator) : IProductTypeService
     {
-        public async Task<ErrorOr<List<ProductType>>> GetAllProductTypes()
+        public async Task<ErrorOr<List<ProductType>>> GetAllAsync()
         {
-            var result = await repository.GetAllProductTypes();
+            var result = await productTypeRepository.GetAllAsync();
 
             return result;
         }
 
-        public async Task<ErrorOr<ProductType>> GetProductTypeById(long id)
+        public async Task<ErrorOr<ProductType>> GetByIdAsync(long id)
         {
-            var result = await repository.GetProductTypeById(id);
+            var result = await productTypeRepository.GetByIdAsync(id);
 
             return result;
         }
 
-        public async Task<ErrorOr<Created>> AddProductType(ProductTypeCreateDto dto)
+        public async Task<ErrorOr<Created>> AddAsync(ProductTypeAddDto dto)
         {
             var validationResult = await createDtoValidator.ValidateAsync(dto);
 
             if (!validationResult.IsValid)
-                return validationResult.Errors.ConvertAll(x => Error.Validation(code: x.PropertyName, description: x.ErrorMessage));
+                return validationResult.GetGeneralError();
 
 
             ProductType productType = new ProductType() 
@@ -35,25 +36,26 @@ namespace Application.Models
                 Name = dto.Name,
             };
 
-            var result = await repository.AddProductType(productType);
+            var result = await productTypeRepository.InsertAsync(productType);
 
             return result;
         }
 
-        public async Task<ErrorOr<Deleted>> DeleteProductTypeById(long id)
+        public async Task<ErrorOr<Deleted>> DeleteByIdAsync(long id)
         {
-            var result = await repository.DeleteProductTypeById(id);
+            var result = await productTypeRepository.DeleteByIdAsync(id);
 
             return result;
         }
 
 
-        public async Task<ErrorOr<Updated>> UpdateProductType(ProductTypeUpdateDto dto)
+        public async Task<ErrorOr<Updated>> UpdateAsync(ProductTypeUpdateDto dto)
         {
             var validationResult = await updateDtoValidator.ValidateAsync(dto);
 
-            if(!validationResult.IsValid)
-               return validationResult.Errors.ConvertAll(x => Error.Validation(code: x.PropertyName, description: x.ErrorMessage));
+            if (!validationResult.IsValid)
+                return validationResult.GetGeneralError();
+
 
             ProductType productType = new ProductType()
             {
@@ -61,7 +63,7 @@ namespace Application.Models
                 Name = dto.Name,
             };
 
-            var result = await repository.UpdateProductType(productType);
+            var result = await productTypeRepository.UpdateAsync(productType);
 
             return result;
         }

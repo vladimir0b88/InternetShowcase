@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace BlazorWebAssembly.Validators
 {
-    public class ProductTypeCreateDtoClientValidator : AbstractValidator<ProductTypeCreateDto>
+    public class ProductTypeCreateDtoClientValidator : AbstractValidator<ProductTypeAddDto>
     {
         public ProductTypeCreateDtoClientValidator()
         {

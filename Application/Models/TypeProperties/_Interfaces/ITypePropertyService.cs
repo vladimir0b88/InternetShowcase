@@ -5,16 +5,16 @@ namespace Application.Models
 {
     public interface ITypePropertyService
     {
-        Task<ErrorOr<List<TypeProperty>>> GetAllTypeProperties();
+        Task<ErrorOr<List<TypeProperty>>> GetAllAsync();
 
-        Task<ErrorOr<List<TypeProperty>>> GetPropertiesByProductTypeId(long typeId);
+        Task<ErrorOr<List<TypeProperty>>> GetByProductTypeIdAsync(long typeId);
 
-        Task<ErrorOr<TypeProperty>> GetPropertyById(long propertyId);
+        Task<ErrorOr<TypeProperty>> GetByIdAsync(long propertyId);
 
-        Task<ErrorOr<Created>> AddProperty(TypePropertyCreateDto createDto);
+        Task<ErrorOr<Created>> AddAsync(TypePropertyAddDto createDto);
 
-        Task<ErrorOr<Deleted>> DeleteProperty(long propertyId);
+        Task<ErrorOr<Deleted>> DeleteAsync(long propertyId);
 
-        Task<ErrorOr<Updated>> UpdateProperty(TypePropertyUpdateDto updateDto);
+        Task<ErrorOr<Updated>> UpdateAsync(TypePropertyUpdateDto updateDto);
     }
 }

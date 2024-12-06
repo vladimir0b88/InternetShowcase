@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace BlazorWebAssembly.Validators
 {
-    public class TypePropertyCreateDtoClientValidator : AbstractValidator<TypePropertyCreateDto>
+    public class TypePropertyCreateDtoClientValidator : AbstractValidator<TypePropertyAddDto>
     {
         public TypePropertyCreateDtoClientValidator()
         {

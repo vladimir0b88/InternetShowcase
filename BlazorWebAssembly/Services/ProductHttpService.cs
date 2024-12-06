@@ -9,7 +9,7 @@ using System.Net.Http.Json;
 namespace BlazorWebAssembly.Services
 {
     public class ProductHttpService(IHttpClientFactory httpClientFactory,
-                                    IValidator<ProductCreateDto> createValidator,
+                                    IValidator<ProductAddDto> createValidator,
                                     IValidator<ProductUpdateDto> updateValidator,
                                     IValidator<ProductsFilter> filterValidator) : IProductService
     {
@@ -17,7 +17,7 @@ namespace BlazorWebAssembly.Services
         
         private const string controllerUri = "api/Products";
 
-        public async Task<ErrorOr<List<Product>>> GetAllProducts()
+        public async Task<ErrorOr<List<Product>>> GetAllAsync()
         {
             var response = await httpClient.GetAsync(controllerUri);
 
@@ -28,7 +28,7 @@ namespace BlazorWebAssembly.Services
             return result;
         }
 
-        public async Task<ErrorOr<List<Product>>> GetByProductTypeId(long productTypeId)
+        public async Task<ErrorOr<List<Product>>> GetByProductTypeIdAsync(long productTypeId)
         {
             var response = await httpClient.GetAsync($"{controllerUri}/ProductType/{productTypeId}");
 
@@ -39,7 +39,7 @@ namespace BlazorWebAssembly.Services
             return result;
         }
 
-        public async Task<ErrorOr<Product>> GetProductById(long id)
+        public async Task<ErrorOr<Product>> GetByIdAsync(long id)
         {
             var response = await httpClient.GetAsync($"{controllerUri}/{id}");
 
@@ -50,7 +50,7 @@ namespace BlazorWebAssembly.Services
             return result;
         }
 
-        public async Task<ErrorOr<Created>> AddProduct(ProductCreateDto productDto)
+        public async Task<ErrorOr<Created>> AddAsync(ProductAddDto productDto)
         {
             var validationResult = await createValidator.ValidateAsync(productDto);
 
@@ -83,7 +83,7 @@ namespace BlazorWebAssembly.Services
             return result;
         }
 
-        public async Task<ErrorOr<Deleted>> DeleteProductById(long id)
+        public async Task<ErrorOr<Deleted>> DeleteByIdAsync(long id)
         {
             var response = await httpClient.DeleteAsync($"{controllerUri}/{id}");
 
@@ -94,7 +94,7 @@ namespace BlazorWebAssembly.Services
             return result;
         }
 
-        public async Task<ErrorOr<FilteringResult<Product>>> GetProductsByFilter(ProductsFilter filter)
+        public async Task<ErrorOr<FilteringResult<Product>>> GetByFilterAsync(ProductsFilter filter)
         {
             var validationResult = await filterValidator.ValidateAsync(filter);
 

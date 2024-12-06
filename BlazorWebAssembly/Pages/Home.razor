@@ -194,7 +194,7 @@
 
     async Task GetProductTypes()
     {
-        var result = await productTypeService.GetAllProductTypes();
+        var result = await productTypeService.GetAllAsync();
 
         switch (result)
         {
@@ -216,7 +216,7 @@
 
         products = null;
 
-        var result = await productService.GetProductsByFilter(filter);
+        var result = await productService.GetByFilterAsync(filter);
 
         switch (result)
         {

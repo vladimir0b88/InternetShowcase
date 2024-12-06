@@ -45,7 +45,7 @@ else
 
     async Task Submit()
     {
-        var result = await productTypeService.UpdateProductType(updateDto!);
+        var result = await productTypeService.UpdateAsync(updateDto!);
 
         if (result is ErrorResult errorResult)
         {
@@ -64,7 +64,7 @@ else
 
     async Task GetUpdateDto()
     {
-        var result = await productTypeService.GetProductTypeById(TypeId);
+        var result = await productTypeService.GetByIdAsync(TypeId);
 
         switch (result)
         {

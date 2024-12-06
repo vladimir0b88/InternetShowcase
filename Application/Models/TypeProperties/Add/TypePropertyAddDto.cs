@@ -1,7 +1,7 @@
 ﻿
 namespace Application.Models
 {
-    public class TypePropertyCreateDto
+    public class TypePropertyAddDto
     {
         public long? TypeId { get; set; }
 

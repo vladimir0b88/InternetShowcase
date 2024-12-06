@@ -6,11 +6,11 @@ namespace Application.Models
 {
     public interface IPropertyValueRepository
     {
-        Task<ErrorOr<List<PropertyValue>>> GetAllPropertyValues();
-        Task<ErrorOr<List<PropertyValue>>> GetPropertyValuesByProductId(long productId);
-        Task<ErrorOr<Created>> AddPropertyValue(PropertyValue propertyValue);
-        Task<ErrorOr<Updated>> UpdatePropertyValue(PropertyValue propertyValue);
-        Task<ErrorOr<Deleted>> DeletePropertyValueById(long propertyValueId);
-        Task<ErrorOr<List<UniquePropertyValues>>> GetUniquePropertyValues(long productTypeId);
+        Task<ErrorOr<List<PropertyValue>>> GetAllAsync();
+        Task<ErrorOr<List<PropertyValue>>> GetByProductIdAsync(long productId);
+        Task<ErrorOr<Created>> InsertAsync(PropertyValue propertyValue);
+        Task<ErrorOr<Updated>> UpdateAsync(PropertyValue propertyValue);
+        Task<ErrorOr<Deleted>> DeleteByIdAsync(long propertyValueId);
+        Task<ErrorOr<List<UniquePropertyValues>>> GetUniquesByProductTypeIdAsync(long productTypeId);
     }
 }

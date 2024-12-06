@@ -261,7 +261,7 @@
 
     async Task GetProductType()
     {
-        var result = await productTypeService.GetProductTypeById(TypeId);
+        var result = await productTypeService.GetByIdAsync(TypeId);
 
         switch (result)
         {
@@ -277,7 +277,7 @@
 
     async Task GetUniquePropertyValues()
     {
-        var result = await propertyValueService.GetUniquePropertyValues(productType!.Id);
+        var result = await propertyValueService.GetUniquesByProductTypeIdAsync(productType!.Id);
 
         switch (result)
         {
@@ -303,7 +303,7 @@
 
         products = null;
 
-        var result = await productService.GetProductsByFilter(filter);
+        var result = await productService.GetByFilterAsync(filter);
 
         switch (result)
         {

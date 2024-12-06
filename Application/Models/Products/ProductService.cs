@@ -5,31 +5,32 @@ using FluentValidation;
 
 namespace Application.Models
 {
-    public class ProductService(IProductRepository repository,
-                                IValidator<ProductCreateDto> createValidator,
+    public class ProductService(IProductRepository productRepository,
+                                IValidator<ProductAddDto> createValidator,
                                 IValidator<ProductUpdateDto> updateValidator,
                                 IValidator<ProductsFilter> filterValidator) : IProductService
     {
-        public async Task<ErrorOr<Product>> GetProductById(long id)
+        public async Task<ErrorOr<Product>> GetByIdAsync(long id)
         {
-            var result = await repository.GetProductById(id);
+            var result = await productRepository.GetByIdAsync(id);
 
             return result;
         }
 
-        public async Task<ErrorOr<Deleted>> DeleteProductById(long id)
+        public async Task<ErrorOr<Deleted>> DeleteByIdAsync(long id)
         {
-            var result = await repository.DeleteProductById(id);
+            var result = await productRepository.DeleteByIdAsync(id);
 
             return result;
         }
 
-        public async Task<ErrorOr<Created>> AddProduct(ProductCreateDto productDto)
+        public async Task<ErrorOr<Created>> AddAsync(ProductAddDto productDto)
         {
             var validationResult = await createValidator.ValidateAsync(productDto);
 
             if (!validationResult.IsValid)
-                return validationResult.Errors.ConvertAll(x => Error.Validation(code: x.PropertyName, description: x.ErrorMessage));
+                return validationResult.GetGeneralError();
+
 
             Product newProduct = new Product()
             {
@@ -39,24 +40,24 @@ namespace Application.Models
                 TypeId = productDto.TypeId,
             };
 
-            var result = await repository.AddProduct(newProduct);
+            var result = await productRepository.InsertAsync(newProduct);
 
             return result;
         }
 
-        public async Task<ErrorOr<List<Product>>> GetAllProducts()
+        public async Task<ErrorOr<List<Product>>> GetAllAsync()
         {
-            var result = await repository.GetAll();
+            var result = await productRepository.GetAllAsync();
 
             return result;
         }
 
-        public async Task<ErrorOr<Updated>> UpdateProduct(ProductUpdateDto updateDto)
+        public async Task<ErrorOr<Updated>> UpdateAsync(ProductUpdateDto updateDto)
         {
             var validationResult = await updateValidator.ValidateAsync(updateDto);
 
             if (!validationResult.IsValid)
-                return validationResult.Errors.ConvertAll(x => Error.Validation(code: x.PropertyName, description: x.ErrorMessage));
+                return validationResult.GetGeneralError();
 
             Product product = new Product()
             {
@@ -67,26 +68,27 @@ namespace Application.Models
                 TypeId = updateDto.TypeId,
             };
 
-            var result = await repository.UpdateProduct(product);
+            var result = await productRepository.UpdateAsync(product);
 
             return result;
         }
 
-        public async Task<ErrorOr<List<Product>>> GetByProductTypeId(long productTypeId)
+        public async Task<ErrorOr<List<Product>>> GetByProductTypeIdAsync(long productTypeId)
         {
-            var result = await repository.GetByProductTypeId(productTypeId);
+            var result = await productRepository.GetByProductTypeIdAsync(productTypeId);
 
             return result;
         }
 
-        public async Task<ErrorOr<FilteringResult<Product>>> GetProductsByFilter(ProductsFilter filter)
+        public async Task<ErrorOr<FilteringResult<Product>>> GetByFilterAsync(ProductsFilter filter)
         {
             var validationResult = await filterValidator.ValidateAsync(filter);
 
             if (!validationResult.IsValid)
-                return validationResult.Errors.ConvertAll(x => Error.Validation(code: x.PropertyName, description: x.ErrorMessage));
+                return validationResult.GetGeneralError();
 
-            var result = await repository.GetByFilter(filter);
+
+            var result = await productRepository.GetByFilterAsync(filter);
 
             return result;
         }

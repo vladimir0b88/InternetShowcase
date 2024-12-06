@@ -15,15 +15,15 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Product>>> GetAllProducts()
         {
-            var result = await productService.GetAllProducts();
+            var result = await productService.GetAllAsync();
 
             return this.SendResponse(result);
         }
 
-        [HttpGet("ProductType/{id}")]
-        public async Task<ActionResult<List<Product>>> GetProductsByProductTypeId(long id)
+        [HttpGet("ProductType/{typeId}")]
+        public async Task<ActionResult<List<Product>>> GetProductsByProductTypeId(long typeId)
         {
-            var result = await productService.GetByProductTypeId(id);
+            var result = await productService.GetByProductTypeIdAsync(typeId);
 
             return this.SendResponse(result);
         }
@@ -32,16 +32,16 @@ namespace API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProductById(long id)
         {
-            var result = await productService.GetProductById(id);
+            var result = await productService.GetByIdAsync(id);
 
             return this.SendResponse(result);
         }
 
         [Authorize(Roles = Roles.Administrator)]
         [HttpPost]
-        public async Task<ActionResult<Created>> AddProduct([FromBody] ProductCreateDto createDto)
+        public async Task<ActionResult<Created>> AddProduct([FromBody] ProductAddDto createDto)
         {
-            var result = await productService.AddProduct(createDto);
+            var result = await productService.AddAsync(createDto);
 
             return this.SendResponse(result);
         }
@@ -50,7 +50,7 @@ namespace API.Controllers
         [HttpPut]
         public async Task<ActionResult<Updated>> UpdateProduct([FromBody] ProductUpdateDto updateDto)
         {
-            var result = await productService.UpdateProduct(updateDto);
+            var result = await productService.UpdateAsync(updateDto);
 
             return this.SendResponse(result);
         }
@@ -59,15 +59,15 @@ namespace API.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Deleted>> DeleteProductById(long id)
         {
-            var result = await productService.DeleteProductById(id);
+            var result = await productService.DeleteByIdAsync(id);
 
             return this.SendResponse(result);
         }
 
         [HttpPost("Filter")]
-        public async Task<ActionResult<FilteringResult<Product>>> GetProductsByFilter(ProductsFilter filter)
+        public async Task<ActionResult<FilteringResult<Product>>> GetProductsByFilter([FromBody]ProductsFilter filter)
         {
-            var result = await productService.GetProductsByFilter(filter);
+            var result = await productService.GetByFilterAsync(filter);
 
             return this.SendResponse(result);
         }

@@ -56,7 +56,7 @@
     [Parameter]
     public long TypeId { get; set; }
 
-    private ProductCreateDto createDto = new ProductCreateDto();
+    private ProductAddDto createDto = new ProductAddDto();
     private ProductType? productType = null;
 
     private ErrorModal modal = new();
@@ -68,7 +68,7 @@
 
     private async Task GetProductType()
     {
-        var result = await productTypeService.GetProductTypeById(TypeId);
+        var result = await productTypeService.GetByIdAsync(TypeId);
 
         switch (result)
         {
@@ -86,7 +86,7 @@
 
     private async Task Submit()
     {
-        var result = await productService.AddProduct(createDto!);
+        var result = await productService.AddAsync(createDto!);
 
         if (result is ErrorResult errorResult)
         {

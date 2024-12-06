@@ -43,7 +43,7 @@
 
     private async Task Submit()
     {
-        var result = await userService.Register(registerDto);
+        var result = await userService.RegisterAsync(registerDto);
 
         if (result is ErrorResult errorResult)
         {

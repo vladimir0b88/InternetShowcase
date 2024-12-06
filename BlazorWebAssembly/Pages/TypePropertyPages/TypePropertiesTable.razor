@@ -37,7 +37,7 @@ else
 
     async Task GetTypeProperties()
     {
-        var result = await typePropertyService.GetAllTypeProperties();
+        var result = await typePropertyService.GetAllAsync();
 
         switch (result)
         {

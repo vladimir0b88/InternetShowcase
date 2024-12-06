@@ -73,7 +73,7 @@ else
 
     async Task DeleteProductType(long id)
     {
-        var result = await productTypeService.DeleteProductTypeById(id);
+        var result = await productTypeService.DeleteByIdAsync(id);
 
         if (result is ErrorResult errorResult)
         {
@@ -88,7 +88,7 @@ else
     {
         allProductTypes = null;
 
-        var result = await productTypeService.GetAllProductTypes();
+        var result = await productTypeService.GetAllAsync();
 
         switch (result)
         {

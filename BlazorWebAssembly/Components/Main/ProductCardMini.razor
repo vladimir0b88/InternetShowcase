@@ -49,7 +49,7 @@
     private async Task GetProductImage()
     {
         imageSrc = null;
-        var result = await productImageService.GetFirstImageByProductId(Product!.Id);
+        var result = await productImageService.GetFirstByProductIdAsync(Product!.Id);
 
         switch (result)
         {

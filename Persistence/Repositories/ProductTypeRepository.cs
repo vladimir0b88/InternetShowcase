@@ -7,7 +7,7 @@ namespace Persistence.Repositories
 {
     public class ProductTypeRepository(ApplicationDbContext context) : IProductTypeRepository
     {
-        public async Task<ErrorOr<List<ProductType>>> GetAllProductTypes()
+        public async Task<ErrorOr<List<ProductType>>> GetAllAsync()
         {
             List<ProductType> productTypes = await context.ProductTypes.AsNoTracking()
                                                                        .ToListAsync();
@@ -15,7 +15,7 @@ namespace Persistence.Repositories
             return productTypes;
         }
         
-        public async Task<ErrorOr<ProductType>> GetProductTypeById(long id)
+        public async Task<ErrorOr<ProductType>> GetByIdAsync(long id)
         {
             ProductType? productType = await context.ProductTypes.AsNoTracking()
                                                                  .Include(pt => pt.Products)
@@ -28,18 +28,18 @@ namespace Persistence.Repositories
             return productType;
         }
 
-        public async Task<ErrorOr<Created>> AddProductType(ProductType newProductType)
+        public async Task<ErrorOr<Created>> InsertAsync(ProductType productType)
         {
-            if (newProductType is null)
+            if (productType is null)
                 return Error.Validation(description: "Тип продукта не может быть пустым");
 
-            await context.ProductTypes.AddAsync(newProductType);
+            await context.ProductTypes.AddAsync(productType);
             await context.SaveChangesAsync();
 
             return Result.Created;
         }
 
-        public async Task<ErrorOr<Deleted>> DeleteProductTypeById(long id)
+        public async Task<ErrorOr<Deleted>> DeleteByIdAsync(long id)
         {
             ProductType? productType = await context.ProductTypes.FirstOrDefaultAsync(pt => pt.Id == id);
 
@@ -52,7 +52,7 @@ namespace Persistence.Repositories
             return Result.Deleted;
         }
 
-        public async Task<ErrorOr<Updated>> UpdateProductType(ProductType productType)
+        public async Task<ErrorOr<Updated>> UpdateAsync(ProductType productType)
         {
             if (productType is null)
                 return Error.Validation(description: "Тип продукта не может быть пустым");
@@ -70,7 +70,7 @@ namespace Persistence.Repositories
             return Result.Updated;
         }
 
-        public async Task<bool> ExistById(long id)
+        public async Task<bool> ExistByIdAsync(long id)
         {
             ProductType? productType = await context.ProductTypes.AsNoTracking()
                                                                  .FirstOrDefaultAsync(pt => pt.Id == id);

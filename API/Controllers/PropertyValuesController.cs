@@ -16,43 +16,45 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<List<PropertyValue>>> GetAllPropertyValues()
         {
-            var result = await propertyValueService.GetAllPropertyValues();
+            var result = await propertyValueService.GetAllAsync();
 
             return this.SendResponse(result);
         }
 
 
-        [HttpGet("ProductType/{id}/UniqueValues")]
-        public async Task<ActionResult<List<UniquePropertyValues>>> GetUniquePropertyValuesByProductTypeId(long id)
+        [HttpGet("ProductType/{typeId}/UniqueValues")]
+        public async Task<ActionResult<List<UniquePropertyValues>>> GetUniquePropertyValuesByProductTypeId(long typeId)
         {
-            var result = await propertyValueService.GetUniquePropertyValues(id);
+            var result = await propertyValueService.GetUniquesByProductTypeIdAsync(typeId);
 
             return this.SendResponse(result);
         }
 
 
-        [HttpGet("Product/{id}")]
-        public async Task<ActionResult<List<PropertyValue>>> GetPropertyValuesByProductId(long id)
+        [HttpGet("Product/{productId}")]
+        public async Task<ActionResult<List<PropertyValue>>> GetPropertyValuesByProductId(long productId)
         {
-            var result = await propertyValueService.GetPropertyValuesByProductId(id);
+            var result = await propertyValueService.GetByProductIdAsync(productId);
 
             return this.SendResponse(result);
         }
+
 
         [Authorize(Roles = Roles.Administrator)]
         [HttpPut]
         public async Task<ActionResult<Updated>> UpdatePropertyValue([FromBody]PropertyValueUpdateDto updateDto)
         {
-            var result = await propertyValueService.UpdatePropertyValue(updateDto);
+            var result = await propertyValueService.UpdateAsync(updateDto);
 
             return this.SendResponse(result);
         }
+
 
         [Authorize(Roles = Roles.Administrator)]
         [HttpPut("List")]
         public async Task<ActionResult<Updated>> UpdatePropertyValueList([FromBody] PropertyValueUpdateDtoList updateDtoList)
         {
-            var result = await propertyValueService.UpdatePropertyValueList(updateDtoList);
+            var result = await propertyValueService.UpdateListAsync(updateDtoList);
 
             return this.SendResponse(result);
         }

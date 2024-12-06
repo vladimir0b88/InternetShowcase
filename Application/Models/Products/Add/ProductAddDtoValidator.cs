@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace Application.Models
 {
-    public class ProductCreateDtoValidator : AbstractValidator<ProductCreateDto>
+    public class ProductAddDtoValidator : AbstractValidator<ProductAddDto>
     {
-        public ProductCreateDtoValidator(IProductTypeRepository productTypeRepository)
+        public ProductAddDtoValidator(IProductTypeRepository productTypeRepository)
         {
             RuleFor(p => p.Name).NotEmpty().MaximumLength(64);
 
@@ -18,7 +18,7 @@ namespace Application.Models
                 if (typeId is null)
                     return;
 
-                bool typeExist = await productTypeRepository.ExistById((long)typeId);
+                bool typeExist = await productTypeRepository.ExistByIdAsync((long)typeId);
 
                 if (!typeExist)
                     context.AddFailure($"Указанный тип продукта с id: {typeId} не существует");

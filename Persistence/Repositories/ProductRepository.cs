@@ -9,11 +9,11 @@ namespace Persistence.Repositories
 {
     public class ProductRepository(ApplicationDbContext context) : IProductRepository
     {
-        public async Task<ErrorOr<Product>> GetProductById(long id)
+        public async Task<ErrorOr<Product>> GetByIdAsync(long id)
         {
             Product? product = await context.Products.AsNoTracking()
                                                      .Include(p => p.PropertyValues)
-                                                     .ThenInclude(pv => pv.TypeProperty)
+                                                        .ThenInclude(pv => pv.TypeProperty)
                                                      .Include(p => p.Type)
                                                      .Include(p => p.Images)
                                                      .FirstOrDefaultAsync(p => p.Id == id);
@@ -25,7 +25,7 @@ namespace Persistence.Repositories
         }
 
 
-        public async Task<ErrorOr<Deleted>> DeleteProductById(long id)
+        public async Task<ErrorOr<Deleted>> DeleteByIdAsync(long id)
         {
             Product? product = await context.Products.FirstOrDefaultAsync(p => p.Id == id);
 
@@ -39,7 +39,7 @@ namespace Persistence.Repositories
             return Result.Deleted;
         }
 
-        public async Task<ErrorOr<Created>> AddProduct(Product product)
+        public async Task<ErrorOr<Created>> InsertAsync(Product product)
         {
             if (product is null)
                 return Error.Validation(description: "Нельзя добавить пустой продукт");
@@ -70,7 +70,7 @@ namespace Persistence.Repositories
             return Result.Created;
         }
 
-        public async Task<ErrorOr<List<Product>>> GetAll()
+        public async Task<ErrorOr<List<Product>>> GetAllAsync()
         {
             List<Product> list = await context.Products.AsNoTracking()
                                                        .Include(p => p.Type)
@@ -79,7 +79,7 @@ namespace Persistence.Repositories
             return list;
         }
 
-        public async Task<ErrorOr<Updated>> UpdateProduct(Product product)
+        public async Task<ErrorOr<Updated>> UpdateAsync(Product product)
         {
             if (product is null)
                 return Error.Validation(description: "Продукт для изменения не может быть пустым");
@@ -90,10 +90,10 @@ namespace Persistence.Repositories
             if (modifyingProduct is null)
                 return Error.NotFound(description: $"Продукт для изменения с id: {product.Id} не был найден");
 
-            modifyingProduct.Name = product.Name;
+            modifyingProduct.Name        = product.Name;
             modifyingProduct.Description = product.Description;
-            modifyingProduct.Cost = product.Cost;
-            modifyingProduct.TypeId = product.TypeId;
+            modifyingProduct.Cost        = product.Cost;
+            modifyingProduct.TypeId      = product.TypeId;
 
             context.Update(modifyingProduct);
             await context.SaveChangesAsync();
@@ -101,7 +101,7 @@ namespace Persistence.Repositories
             return Result.Updated;
         }
 
-        public async Task<ErrorOr<List<Product>>> GetByProductTypeId(long productTypeId)
+        public async Task<ErrorOr<List<Product>>> GetByProductTypeIdAsync(long productTypeId)
         {
             ProductType? productType = await context.ProductTypes.AsNoTracking().FirstOrDefaultAsync(p => p.Id == productTypeId);
 
@@ -115,7 +115,7 @@ namespace Persistence.Repositories
             return list;
         }
 
-        public async Task<ErrorOr<FilteringResult<Product>>> GetByFilter(ProductsFilter filter)
+        public async Task<ErrorOr<FilteringResult<Product>>> GetByFilterAsync(ProductsFilter filter)
         {
             if (filter is null)
                 return Error.Validation(description: "Фильтр не может быть пустым");
@@ -174,12 +174,12 @@ namespace Persistence.Repositories
 
             FilteringResult<Product> result = new()
             {
-                Result = products,
+                Result        = products,
                 SortingMethod = filter.SortingMethod,
-                ItemsOnPage = filter.ItemsOnPage,
-                CurrentPage = filter.PageNumber,
-                TotalPages = totalPages,
-                TotalItems = totalItems
+                ItemsOnPage   = filter.ItemsOnPage,
+                CurrentPage   = filter.PageNumber,
+                TotalPages    = totalPages,
+                TotalItems    = totalItems
             };
 
             return result;

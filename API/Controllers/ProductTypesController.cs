@@ -1,5 +1,4 @@
-﻿using Application.Common;
-using Application.Models;
+﻿using Application.Models;
 using Domain.Constants;
 using Domain.Entities;
 using ErrorOr;
@@ -15,16 +14,16 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<List<ProductType>>> GetAllProductTypes()
         {
-            var result = await productTypeService.GetAllProductTypes();
+            var result = await productTypeService.GetAllAsync();
 
             return this.SendResponse(result);
         }
 
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ProductType>> GetProductTypeById(long id)
+        [HttpGet("{typeId}")]
+        public async Task<ActionResult<ProductType>> GetProductTypeById(long typeId)
         {
-            var result = await productTypeService.GetProductTypeById(id);
+            var result = await productTypeService.GetByIdAsync(typeId);
 
             return this.SendResponse(result);
         }
@@ -32,9 +31,9 @@ namespace API.Controllers
 
         [Authorize(Policy = Policies.CanCreate)]
         [HttpPost]
-        public async Task<ActionResult<Created>> AddProductType([FromBody] ProductTypeCreateDto createDto)
+        public async Task<ActionResult<Created>> AddProductType([FromBody] ProductTypeAddDto createDto)
         {
-            var result = await productTypeService.AddProductType(createDto);
+            var result = await productTypeService.AddAsync(createDto);
 
             return this.SendResponse(result);
         }
@@ -43,17 +42,17 @@ namespace API.Controllers
         [HttpPut]
         public async Task<ActionResult<Updated>> UpdateProductType([FromBody] ProductTypeUpdateDto updateDto)
         {
-            var result = await productTypeService.UpdateProductType(updateDto);
+            var result = await productTypeService.UpdateAsync(updateDto);
 
             return this.SendResponse(result);
         }
 
 
         [Authorize(Roles = Roles.Administrator)]
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Deleted>> DeleteProductById(long id)
+        [HttpDelete("{typeId}")]
+        public async Task<ActionResult<Deleted>> DeleteProductById(long typeId)
         {
-            var result = await productTypeService.DeleteProductTypeById(id);
+            var result = await productTypeService.DeleteByIdAsync(typeId);
 
             return this.SendResponse(result);
         }

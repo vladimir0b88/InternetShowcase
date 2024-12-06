@@ -19,7 +19,7 @@ namespace Application.Models
             {
                 if (typeId is not null)
                 {
-                    bool typeExist = await productTypeRepository.ExistById((long)typeId);
+                    bool typeExist = await productTypeRepository.ExistByIdAsync((long)typeId);
 
                     if (!typeExist)
                         context.AddFailure($"Указанный тип продукта с id: {typeId} не существует");

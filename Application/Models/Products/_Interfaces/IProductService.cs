@@ -6,18 +6,18 @@ namespace Application.Models
 {
     public interface IProductService
     {
-        Task<ErrorOr<Product>> GetProductById(long id);
+        Task<ErrorOr<Product>> GetByIdAsync(long id);
 
-        Task<ErrorOr<Deleted>> DeleteProductById(long id);
+        Task<ErrorOr<Deleted>> DeleteByIdAsync(long id);
 
-        Task<ErrorOr<Created>> AddProduct(ProductCreateDto productDto);
+        Task<ErrorOr<Created>> AddAsync(ProductAddDto productDto);
 
-        Task<ErrorOr<List<Product>>> GetAllProducts();
+        Task<ErrorOr<List<Product>>> GetAllAsync();
 
-        Task<ErrorOr<Updated>> UpdateProduct(ProductUpdateDto updateDto);
+        Task<ErrorOr<Updated>> UpdateAsync(ProductUpdateDto updateDto);
 
-        Task<ErrorOr<List<Product>>> GetByProductTypeId(long productTypeId);
+        Task<ErrorOr<List<Product>>> GetByProductTypeIdAsync(long productTypeId);
 
-        Task<ErrorOr<FilteringResult<Product>>> GetProductsByFilter(ProductsFilter filter);
+        Task<ErrorOr<FilteringResult<Product>>> GetByFilterAsync(ProductsFilter filter);
     }
 }

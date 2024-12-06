@@ -40,15 +40,15 @@ builder.Services.AddScoped<IProductImageService, ProductImageHttpService>();
 
 #region Validators
 // Product
-builder.Services.AddScoped<IValidator<ProductCreateDto>, ProductCreateDtoClientValidator>();
+builder.Services.AddScoped<IValidator<ProductAddDto>, ProductCreateDtoClientValidator>();
 builder.Services.AddScoped<IValidator<ProductUpdateDto>, ProductUpdateDtoClientValidator>();
 
 // ProductType
-builder.Services.AddScoped<IValidator<ProductTypeCreateDto>, ProductTypeCreateDtoClientValidator>();
+builder.Services.AddScoped<IValidator<ProductTypeAddDto>, ProductTypeCreateDtoClientValidator>();
 builder.Services.AddScoped<IValidator<ProductTypeUpdateDto>, ProductTypeUpdateDtoClientValidator>();
 
 // TypeProperty
-builder.Services.AddScoped<IValidator<TypePropertyCreateDto>, TypePropertyCreateDtoClientValidator>();
+builder.Services.AddScoped<IValidator<TypePropertyAddDto>, TypePropertyCreateDtoClientValidator>();
 builder.Services.AddScoped<IValidator<TypePropertyUpdateDto>, TypePropertyUpdateDtoClientValidator>();
 
 // PropertyValue

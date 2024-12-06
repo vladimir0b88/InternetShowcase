@@ -1,6 +1,6 @@
 ﻿namespace Application.Models
 {
-    public class ProductTypeCreateDto
+    public class ProductTypeAddDto
     {
         public string Name { get; set; } = string.Empty;
     }

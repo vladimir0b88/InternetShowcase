@@ -52,7 +52,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        var result = await productService.GetProductById(ProductId);
+        var result = await productService.GetByIdAsync(ProductId);
 
         if (result is ErrorResult<Product> errorResult)
         {
@@ -76,7 +76,7 @@ else
 
     private async Task UpdatePropertyValues()
     {
-        var result = await propertyValueService.UpdatePropertyValueList(updateList!);
+        var result = await propertyValueService.UpdateListAsync(updateList!);
 
         if (result is ErrorResult errorResult)
         {

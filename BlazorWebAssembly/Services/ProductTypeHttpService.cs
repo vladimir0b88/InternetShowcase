@@ -8,7 +8,7 @@ using System.Net.Http.Json;
 namespace BlazorWebAssembly.Services
 {
     public class ProductTypeHttpService(IHttpClientFactory httpClientFactory,
-                                        IValidator<ProductTypeCreateDto> createValidator,
+                                        IValidator<ProductTypeAddDto> createValidator,
                                         IValidator<ProductTypeUpdateDto> updateValidator) : IProductTypeService
     {
         private readonly HttpClient httpClient = httpClientFactory.CreateClient("WebApi");
@@ -37,7 +37,7 @@ namespace BlazorWebAssembly.Services
             return result;
         }
 
-        public async Task<Result> AddProductType(ProductTypeCreateDto dto)
+        public async Task<Result> AddProductType(ProductTypeAddDto dto)
         {
             var validationResult = await createValidator.ValidateAsync(dto);
 
