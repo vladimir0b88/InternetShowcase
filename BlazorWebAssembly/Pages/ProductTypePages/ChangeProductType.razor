@@ -47,9 +47,9 @@ else
     {
         var result = await productTypeService.UpdateAsync(updateDto!);
 
-        if (result is ErrorResult errorResult)
+        if (result.IsError)
         {
-            await modal.ShowModal(errorResult);
+            await modal.ShowModal(result);
             return;
         }
 
@@ -66,20 +66,17 @@ else
     {
         var result = await productTypeService.GetByIdAsync(TypeId);
 
-        switch (result)
+        if (result.IsError)
         {
-            case SuccessResult<ProductType> successResult:
-                ProductType productType = successResult.Data!;
-                updateDto = new ProductTypeUpdateDto()
-                    {
-                        Id = productType.Id,
-                        Name = productType.Name,
-                    };
-                break;
-
-            case ErrorResult<ProductType> errorResult:
-                await modal.ShowModal(errorResult);
-                break;
+            await modal.ShowModal(result);
+            return;
         }
+
+        ProductType productType = result.Value;
+        updateDto = new ProductTypeUpdateDto()
+            {
+                Id = productType.Id,
+                Name = productType.Name,
+            };
     }
 }

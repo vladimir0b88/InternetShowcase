@@ -1,11 +1,11 @@
 ﻿using Application.Common;
 using Application.Models;
-using BlazorWebAssembly.Common;
 using Domain.Entities;
+using ErrorOr;
 using FluentValidation;
 using System.Net.Http.Json;
 
-namespace BlazorWebAssembly.Services
+namespace BlazorWebAssembly.Common
 {
     public class TypePropertyHttpService(IHttpClientFactory httpClientFactory,
                                          IValidator<TypePropertyAddDto> createValidator,
@@ -15,78 +15,74 @@ namespace BlazorWebAssembly.Services
 
         private const string _controllerUri = "api/TypeProperties";
 
-        public async Task<Result<List<TypeProperty>>> GetPropertiesByProductTypeId(long typeId)
+        public async Task<ErrorOr<List<TypeProperty>>> GetByProductTypeIdAsync(long typeId)
         {
             var response = await httpClient.GetAsync($"{_controllerUri}/ProductType/{typeId}");
 
-            var result = await HttpResponseHandler.GetResult<List<TypeProperty>>(response);
+            var result = await HttpResponseHandler.GetResultAsync<List<TypeProperty>>(response);
 
             await Task.Delay(Constant.ServiceDelay);
 
             return result;
         }
-        public async Task<Result> AddProperty(TypePropertyAddDto createDto)
+        public async Task<ErrorOr<Created>> AddAsync(TypePropertyAddDto createDto)
         {
             var validationResult = await createValidator.ValidateAsync(createDto);
 
             if (!validationResult.IsValid)
-                return new ValidationErrorResult(message: "Свойство типа товара для создания не прошло валидацию",
-                                                 errors: [ErrorList.FailedValidation],
-                                                 validationErrors: validationResult.Errors);
+                return validationResult.GetGeneralError();
 
             var response = await httpClient.PostAsJsonAsync(_controllerUri, createDto);
 
-            var result = await HttpResponseHandler.GetResult(response);
+            var result = await HttpResponseHandler.GetResultAsync<Created>(response);
 
             await Task.Delay(Constant.ServiceDelay);
 
             return result;
         }
-        public async Task<Result> UpdateProperty(TypePropertyUpdateDto updateDto)
+        public async Task<ErrorOr<Updated>> UpdateAsync(TypePropertyUpdateDto updateDto)
         {
             var validationResult = await updateValidator.ValidateAsync(updateDto);
 
             if (!validationResult.IsValid)
-                return new ValidationErrorResult(message: "Свойство типа товара для создания не прошло валидацию",
-                                                 errors: [ErrorList.FailedValidation],
-                                                 validationErrors: validationResult.Errors);
-            
+                return validationResult.GetGeneralError();
+
             var response = await httpClient.PutAsJsonAsync(_controllerUri, updateDto);
 
-            var result = await HttpResponseHandler.GetResult(response);
+            var result = await HttpResponseHandler.GetResultAsync<Updated>(response);
 
             await Task.Delay(Constant.ServiceDelay);
 
             return result;
         }
 
-        public async Task<Result> DeleteProperty(long propertyId)
+        public async Task<ErrorOr<Deleted>> DeleteAsync(long propertyId)
         {
             var response = await httpClient.DeleteAsync($"{_controllerUri}/{propertyId}");
 
-            var result = await HttpResponseHandler.GetResult(response);
+            var result = await HttpResponseHandler.GetResultAsync<Deleted>(response);
 
             await Task.Delay(Constant.ServiceDelay);
 
             return result;
         }
 
-        public async Task<Result<List<TypeProperty>>> GetAllTypeProperties()
+        public async Task<ErrorOr<List<TypeProperty>>> GetAllAsync()
         {
             var response = await httpClient.GetAsync(_controllerUri);
 
-            var result = await HttpResponseHandler.GetResult<List<TypeProperty>>(response);
+            var result = await HttpResponseHandler.GetResultAsync<List<TypeProperty>>(response);
 
             await Task.Delay(Constant.ServiceDelay);
 
             return result;
         }
 
-        public async Task<Result<TypeProperty>> GetPropertyById(long propertyId)
+        public async Task<ErrorOr<TypeProperty>> GetByIdAsync(long propertyId)
         {
             var response = await httpClient.GetAsync($"{_controllerUri}/{propertyId}");
 
-            var result = await HttpResponseHandler.GetResult<TypeProperty>(response);
+            var result = await HttpResponseHandler.GetResultAsync<TypeProperty>(response);
 
             await Task.Delay(Constant.ServiceDelay);
 

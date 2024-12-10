@@ -4,8 +4,6 @@ using Application.Models;
 using Blazored.LocalStorage;
 using BlazorWebAssembly;
 using BlazorWebAssembly.Common;
-using BlazorWebAssembly.Services;
-using BlazorWebAssembly.Validators;
 using FluentValidation;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;

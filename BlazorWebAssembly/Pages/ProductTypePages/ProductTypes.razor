@@ -75,9 +75,9 @@ else
     {
         var result = await productTypeService.DeleteByIdAsync(id);
 
-        if (result is ErrorResult errorResult)
+        if (result.IsError)
         {
-            await modal.ShowModal(errorResult);
+            await modal.ShowModal(result);
             return;
         }
 
@@ -90,16 +90,13 @@ else
 
         var result = await productTypeService.GetAllAsync();
 
-        switch (result)
+        if(result.IsError)
         {
-            case SuccessResult<List<ProductType>> successResult:
-                allProductTypes = successResult.Data?.AsQueryable();
-                break;
-
-            case ErrorResult<List<ProductType>> errorResult:
-                allProductTypes = null;
-                await modal.ShowModal(errorResult);
-                break;
+            allProductTypes = null;
+            await modal.ShowModal(result);
+            return;
         }
+
+        allProductTypes = result.Value.AsQueryable();
     }
 }

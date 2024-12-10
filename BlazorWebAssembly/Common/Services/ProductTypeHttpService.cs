@@ -1,11 +1,11 @@
 ﻿using Application.Common;
 using Application.Models;
-using BlazorWebAssembly.Common;
 using Domain.Entities;
+using ErrorOr;
 using FluentValidation;
 using System.Net.Http.Json;
 
-namespace BlazorWebAssembly.Services
+namespace BlazorWebAssembly.Common
 {
     public class ProductTypeHttpService(IHttpClientFactory httpClientFactory,
                                         IValidator<ProductTypeAddDto> createValidator,
@@ -15,69 +15,65 @@ namespace BlazorWebAssembly.Services
 
         private const string _controllerUri = "api/ProductTypes";
 
-        public async Task<Result<List<ProductType>>> GetAllProductTypes()
+        public async Task<ErrorOr<List<ProductType>>> GetAllAsync()
         {
             var response = await httpClient.GetAsync(_controllerUri);
 
-            var result = await HttpResponseHandler.GetResult<List<ProductType>>(response);
+            var result = await HttpResponseHandler.GetResultAsync<List<ProductType>>(response);
 
             await Task.Delay(Constant.ServiceDelay);
 
             return result;
         }
 
-        public async Task<Result<ProductType>> GetProductTypeById(long id)
+        public async Task<ErrorOr<ProductType>> GetByIdAsync(long id)
         {
             var response = await httpClient.GetAsync($"{_controllerUri}/{id}");
 
-            var result = await HttpResponseHandler.GetResult<ProductType>(response);
+            var result = await HttpResponseHandler.GetResultAsync<ProductType>(response);
 
             await Task.Delay(Constant.ServiceDelay);
 
             return result;
         }
 
-        public async Task<Result> AddProductType(ProductTypeAddDto dto)
+        public async Task<ErrorOr<Created>> AddAsync(ProductTypeAddDto dto)
         {
             var validationResult = await createValidator.ValidateAsync(dto);
 
             if(!validationResult.IsValid)
-                return new ValidationErrorResult(message: "Тип товара для создания не прошел валидацию",
-                                                 errors: [ErrorList.FailedValidation],
-                                                 validationErrors: validationResult.Errors);
+                return validationResult.GetGeneralError();
 
             var response = await httpClient.PostAsJsonAsync(_controllerUri, dto);
 
-            var result = await HttpResponseHandler.GetResult(response);
+            var result = await HttpResponseHandler.GetResultAsync<Created>(response);
 
             await Task.Delay(Constant.ServiceDelay);
 
             return result;
         }
 
-        public async Task<Result> UpdateProductType(ProductTypeUpdateDto dto)
+        public async Task<ErrorOr<Updated>> UpdateAsync(ProductTypeUpdateDto dto)
         {
             var validationResult = await updateValidator.ValidateAsync(dto);
 
             if (!validationResult.IsValid)
-                return new ValidationErrorResult(message: "Тип товара для изменения не прошел валидацию",
-                                                 errors: [ErrorList.FailedValidation],
-                                                 validationErrors: validationResult.Errors);
+                return validationResult.GetGeneralError();
 
             var response = await httpClient.PutAsJsonAsync(_controllerUri, dto);
 
-            var result = await HttpResponseHandler.GetResult(response);
+            var result = await HttpResponseHandler.GetResultAsync<Updated>(response);
 
             await Task.Delay(Constant.ServiceDelay);
 
             return result;
         }
 
-        public async Task<Result> DeleteProductTypeById(long id)
+        public async Task<ErrorOr<Deleted>> DeleteByIdAsync(long id)
         {
             var response = await httpClient.DeleteAsync($"{_controllerUri}/{id}");
 
-            var result = await HttpResponseHandler.GetResult(response);
+            var result = await HttpResponseHandler.GetResultAsync<Deleted>(response);
 
             await Task.Delay(Constant.ServiceDelay);
 

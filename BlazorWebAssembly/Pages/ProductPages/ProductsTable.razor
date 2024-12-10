@@ -43,15 +43,12 @@ else
     {
         var result = await productService.GetAllAsync();
 
-        switch (result)
+        if(result.IsError)
         {
-            case SuccessResult<List<Product>> successResult:
-                products = successResult.Data.AsQueryable();
-                break;
-
-            case ErrorResult<List<Product>> errorResult:
-                await modal.ShowModal(errorResult);
-                break;
+            await modal.ShowModal(result);
+            return;
         }
+
+        products = result.Value.AsQueryable();
     }
 }

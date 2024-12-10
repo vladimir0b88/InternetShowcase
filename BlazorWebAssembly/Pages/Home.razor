@@ -196,16 +196,10 @@
     {
         var result = await productTypeService.GetAllAsync();
 
-        switch (result)
-        {
-            case SuccessResult<List<ProductType>> successResult:
-                productTypes = successResult.Data;
-                break;
-
-            case ErrorResult<List<ProductType>> errorResult:
-                productTypes = null;
-                break;
-        }
+        if (result.IsError)
+            productTypes = null;
+        else
+            productTypes = result.Value;
     }
 
     async Task GetProducts(int pageNumber, SortingMethods sortingMethod = SortingMethods.ByCostDesk)
@@ -218,16 +212,12 @@
 
         var result = await productService.GetByFilterAsync(filter);
 
-        switch (result)
+        if (result.IsError)
+            filteringResult = null;
+        else
         {
-            case SuccessResult<FilteringResult<Product>> successResult:
-                filteringResult = successResult.Data;
-                products = successResult.Data.Results;
-                break;
-
-            case ErrorResult<FilteringResult<Product>> errorResult:
-                filteringResult = null;
-                break;
+            filteringResult = result.Value;
+            products = result.Value.Result;
         }
     }
 

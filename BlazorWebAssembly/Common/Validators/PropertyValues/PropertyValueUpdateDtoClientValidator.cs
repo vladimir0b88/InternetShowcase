@@ -1,7 +1,7 @@
 ﻿using Application.Models;
 using FluentValidation;
 
-namespace BlazorWebAssembly.Validators
+namespace BlazorWebAssembly.Common
 {
     public class PropertyValueUpdateDtoClientValidator : AbstractValidator<PropertyValueUpdateDto>
     {

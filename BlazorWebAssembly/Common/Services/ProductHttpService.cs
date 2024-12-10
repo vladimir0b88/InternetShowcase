@@ -1,12 +1,11 @@
 ﻿using Application.Common;
 using Application.Models;
-using BlazorWebAssembly.Common;
 using Domain.Entities;
 using ErrorOr;
 using FluentValidation;
 using System.Net.Http.Json;
 
-namespace BlazorWebAssembly.Services
+namespace BlazorWebAssembly.Common
 {
     public class ProductHttpService(IHttpClientFactory httpClientFactory,
                                     IValidator<ProductAddDto> createValidator,
@@ -21,7 +20,7 @@ namespace BlazorWebAssembly.Services
         {
             var response = await httpClient.GetAsync(controllerUri);
 
-            var result = await HttpResponseHandler.GetResult<List<Product>>(response);
+            var result = await HttpResponseHandler.GetResultAsync<List<Product>>(response);
 
             await Task.Delay(Constant.ServiceDelay);
 
@@ -32,7 +31,7 @@ namespace BlazorWebAssembly.Services
         {
             var response = await httpClient.GetAsync($"{controllerUri}/ProductType/{productTypeId}");
 
-            var result = await HttpResponseHandler.GetResult<List<Product>>(response);
+            var result = await HttpResponseHandler.GetResultAsync<List<Product>>(response);
 
             await Task.Delay(Constant.ServiceDelay);
 
@@ -43,7 +42,7 @@ namespace BlazorWebAssembly.Services
         {
             var response = await httpClient.GetAsync($"{controllerUri}/{id}");
 
-            var result = await HttpResponseHandler.GetResult<Product>(response);
+            var result = await HttpResponseHandler.GetResultAsync<Product>(response);
 
             await Task.Delay(Constant.ServiceDelay);
 
@@ -55,28 +54,27 @@ namespace BlazorWebAssembly.Services
             var validationResult = await createValidator.ValidateAsync(productDto);
 
             if (!validationResult.IsValid)
-                return validationResult.Errors.ConvertAll(x => Error.Validation(code: x.PropertyName, description: x.ErrorMessage));
+                return validationResult.GetGeneralError();
 
             var response = await httpClient.PostAsJsonAsync(controllerUri, productDto);
 
-            var result = await HttpResponseHandler.GetResult(response);
+            var result = await HttpResponseHandler.GetResultAsync<Created>(response);
 
             await Task.Delay(Constant.ServiceDelay);
 
             return result;
         }
 
-        public async Task<ErrorOr> UpdateProduct(ProductUpdateDto updateDto)
+        public async Task<ErrorOr<Updated>> UpdateAsync(ProductUpdateDto updateDto)
         {
             var validationResult = await updateValidator.ValidateAsync(updateDto);
 
             if (!validationResult.IsValid)
-                return validationResult.Errors.ConvertAll(x => Error.Validation(code: x.PropertyName, description: x.ErrorMessage));
-
+                return validationResult.GetGeneralError();
 
             var response = await httpClient.PutAsJsonAsync(controllerUri, updateDto);
 
-            var result = await HttpResponseHandler.GetResult(response);
+            var result = await HttpResponseHandler.GetResultAsync<Updated>(response);
 
             await Task.Delay(Constant.ServiceDelay);
 
@@ -87,7 +85,7 @@ namespace BlazorWebAssembly.Services
         {
             var response = await httpClient.DeleteAsync($"{controllerUri}/{id}");
 
-            var result = await HttpResponseHandler.GetResult(response);
+            var result = await HttpResponseHandler.GetResultAsync<Deleted>(response);
 
             await Task.Delay(Constant.ServiceDelay);
 
@@ -99,11 +97,11 @@ namespace BlazorWebAssembly.Services
             var validationResult = await filterValidator.ValidateAsync(filter);
 
             if (!validationResult.IsValid)
-                return validationResult.Errors.ConvertAll(x => Error.Validation(code: x.PropertyName, description: x.ErrorMessage));
+                return validationResult.GetGeneralError();
 
             var response = await httpClient.PostAsJsonAsync($"{controllerUri}/Filter", filter);
 
-            var result = await HttpResponseHandler.GetResult<FilteringResult<Product>>(response);
+            var result = await HttpResponseHandler.GetResultAsync<FilteringResult<Product>>(response);
 
             await Task.Delay(Constant.ServiceDelay);
 

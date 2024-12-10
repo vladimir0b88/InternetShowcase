@@ -81,13 +81,13 @@
     {
         var result = await productService.GetByIdAsync(ProductId);
 
-        if (result is ErrorResult<Product> errorResult)
+        if(result.IsError)
         {
-            await modal.ShowModal(errorResult);
+            await modal.ShowModal(result);
             return;
         }
 
-        product = result.Data;
+        product = result.Value;
 
         updateDto = new ProductUpdateDto()
             {
@@ -103,9 +103,9 @@
     {
         var result = await productService.UpdateAsync(updateDto!);
 
-        if (result is ErrorResult errorResult)
+        if (result.IsError)
         {
-            await modal.ShowModal(errorResult);
+            await modal.ShowModal(result);
             return;
         }
 

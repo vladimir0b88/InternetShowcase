@@ -137,58 +137,48 @@ else
     {
         var result = await productTypeService.GetByIdAsync(TypeId);
 
-        switch (result)
+        if(result.IsError)
         {
-            case SuccessResult<ProductType> successResult:
-                productType = successResult.Data;
-                break;
-
-            case ErrorResult<ProductType> errorResult:
-                await modal.ShowModal(errorResult);
-                break;
+            await modal.ShowModal(result);
+            return;
         }
+
+        productType = result.Value;
     }
 
     async Task GetTypeProperties()
     {
         var result = await typePropertyService.GetByProductTypeIdAsync(TypeId);
 
-        switch (result)
+        if(result.IsError)
         {
-            case SuccessResult<List<TypeProperty>> successResult:
-                typeProperties = successResult.Data.AsQueryable();
-                break;
-            case ErrorResult<List<TypeProperty>> errorResult:
-                await modal.ShowModal(errorResult);
-                break;
+            await modal.ShowModal(result);
+            return;
         }
 
-
+        typeProperties = result.Value.AsQueryable();
     }
 
     async Task GetProducts()
     {
         var result = await productService.GetByProductTypeIdAsync(TypeId);
 
-        switch (result)
+        if(result.IsError)
         {
-            case SuccessResult<List<Product>> successResult:
-                products = successResult.Data.AsQueryable();
-                break;
-
-            case ErrorResult<List<Product>> errorResult:
-                await modal.ShowModal(errorResult);
-                break;
+            await modal.ShowModal(result);
+            return;
         }
+
+        products = result.Value.AsQueryable();
     }
 
     async Task DeleteTypePropertyById(long id)
     {
         var result = await typePropertyService.DeleteAsync(id);
 
-        if (result is ErrorResult errorResult)
+        if (result.IsError)
         {
-            await modal.ShowModal(errorResult);
+            await modal.ShowModal(result);
             return;
         }
 

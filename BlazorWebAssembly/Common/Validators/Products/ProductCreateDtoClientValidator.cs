@@ -1,14 +1,12 @@
 ﻿using Application.Models;
 using FluentValidation;
 
-namespace BlazorWebAssembly.Validators
+namespace BlazorWebAssembly.Common
 {
-    public class ProductUpdateDtoClientValidator : AbstractValidator<ProductUpdateDto>
+    public class ProductCreateDtoClientValidator : AbstractValidator<ProductAddDto>
     {
-        public ProductUpdateDtoClientValidator()
+        public ProductCreateDtoClientValidator()
         {
-            RuleFor(p => p.Id).NotEmpty();
-
             RuleFor(p => p.Name).NotEmpty().MaximumLength(30);
 
             RuleFor(p => p.Description).NotEmpty().MaximumLength(512);

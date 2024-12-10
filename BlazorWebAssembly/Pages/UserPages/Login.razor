@@ -38,16 +38,16 @@
     {
         var result = await userService.LoginAsync(loginDto);
 
-        if (result is ErrorResult<string> errorResult)
+        if (result.IsError)
         {
-            await modal.ShowModal(errorResult);
+            await modal.ShowModal(result);
             return;
-        }
+        }   
 
 
         var customStateProvider = (CustomAuthStateProvider)stateProvider;
 
-        await customStateProvider.UpdateAuthState(result.Data);
+        await customStateProvider.UpdateAuthState(result.Value);
 
         navManager.NavigateTo("/");
     }

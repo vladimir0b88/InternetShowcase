@@ -62,16 +62,12 @@
     {
         var result = await productService.GetByIdAsync(ProductId);
 
-        switch (result)
+        if (result.IsError)
+            await modal.ShowModal(result);
+        else
         {
-            case SuccessResult<Product> successResult:
-                product = successResult.Data;
-                addImageDto.ProductId = ProductId;
-                break;
-
-            case ErrorResult<Product> errorResult:
-                await modal.ShowModal(errorResult);
-                break;
+            product = result.Value;
+            addImageDto.ProductId = ProductId;
         }
     }
 
@@ -104,15 +100,10 @@
     {
         var result = await productImageService.AddAsync(addImageDto);
 
-        switch (result)
-        {
-            case SuccessResult:
-                navManager.NavigateTo($"Product/{product!.Id}");
-                break;
-            case ErrorResult error:
-                await modal.ShowModal(error);
-                break;
-        }
+        if (result.IsError)
+            await modal.ShowModal(result);
+        else
+            navManager.NavigateTo($"Product/{product!.Id}");
     }
 
 }

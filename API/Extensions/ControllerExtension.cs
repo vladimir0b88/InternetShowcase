@@ -9,7 +9,7 @@ namespace API
         {
             if (!result.IsError)
             {
-                return controller.Ok(result);
+                return controller.Ok(result.Value);
             }
 
             return result.FirstError.Type switch

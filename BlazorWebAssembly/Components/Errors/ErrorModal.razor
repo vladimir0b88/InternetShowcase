@@ -27,18 +27,10 @@
         await modal.HideAsync();
     }
 
-    public async Task ShowModal(ErrorResult errorResult)
+    public async Task ShowModal<T>(ErrorOr<T> errorResult)
     {
-        this.errorMessage = errorResult.Message;
+        this.errorMessage = errorResult.FirstError.Description;
         this.errorCodes = string.Join(", ",errorResult.Errors.Select(e => e.Code));
-
-        await modal.ShowAsync();
-    }
-
-    public async Task ShowModal<T>(ErrorResult<T> errorResult)
-    {
-        this.errorMessage = errorResult.Message;
-        this.errorCodes = string.Join(", ", errorResult.Errors.Select(e => e.Code));
 
         await modal.ShowAsync();
     }

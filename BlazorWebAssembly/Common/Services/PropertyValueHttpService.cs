@@ -1,11 +1,11 @@
 ﻿using Application.Common;
 using Application.Models;
-using BlazorWebAssembly.Common;
 using Domain.Entities;
+using ErrorOr;
 using FluentValidation;
 using System.Net.Http.Json;
 
-namespace BlazorWebAssembly.Services
+namespace BlazorWebAssembly.Common
 {
     public class PropertyValueHttpService(IHttpClientFactory httpClientFactory,
                                           IValidator<PropertyValueUpdateDto> updateValidator,
@@ -15,69 +15,65 @@ namespace BlazorWebAssembly.Services
 
         private const string _controllerUri = "api/PropertyValues";
 
-        public async Task<Result<List<PropertyValue>>> GetAllPropertyValues()
+        public async Task<ErrorOr<List<PropertyValue>>> GetAllAsync()
         {
             var response = await httpClient.GetAsync(_controllerUri);
 
-            var result = await HttpResponseHandler.GetResult<List<PropertyValue>>(response);
+            var result = await HttpResponseHandler.GetResultAsync<List<PropertyValue>>(response);
 
             await Task.Delay(Constant.ServiceDelay);
 
             return result;
         }
 
-        public async Task<Result<List<PropertyValue>>> GetPropertyValuesByProductId(long productId)
+        public async Task<ErrorOr<List<PropertyValue>>> GetByProductIdAsync(long productId)
         {
             var response = await httpClient.GetAsync($"{_controllerUri}/{productId}");
 
-            var result = await HttpResponseHandler.GetResult<List<PropertyValue>>(response);
+            var result = await HttpResponseHandler.GetResultAsync<List<PropertyValue>>(response);
 
             await Task.Delay(Constant.ServiceDelay);
 
             return result;
         }
 
-        public async Task<Result> UpdatePropertyValue(PropertyValueUpdateDto updateDto)
+        public async Task<ErrorOr<Updated>> UpdateAsync(PropertyValueUpdateDto updateDto)
         {
             var validationResult = await updateValidator.ValidateAsync(updateDto);
 
             if (!validationResult.IsValid)
-                return new ValidationErrorResult(message: "Значение свойства товара для изменения не прошло валидацию",
-                                                 errors: [ErrorList.FailedValidation],
-                                                 validationErrors: validationResult.Errors);
+                return validationResult.GetGeneralError();
 
             var response = await httpClient.PutAsJsonAsync(_controllerUri, updateDto);
 
-            var result = await HttpResponseHandler.GetResult(response);
+            var result = await HttpResponseHandler.GetResultAsync<Updated>(response);
 
             await Task.Delay(Constant.ServiceDelay);
 
             return result;
         }
 
-        public async Task<Result> UpdatePropertyValueList(PropertyValueUpdateDtoList updateDtoList)
+        public async Task<ErrorOr<Updated>> UpdateListAsync(PropertyValueUpdateDtoList updateDtoList)
         {
             var validationResult = await updateListValidator.ValidateAsync(updateDtoList);
 
             if (!validationResult.IsValid)
-                return new ValidationErrorResult(message: "Значения свойств товара для изменения не прошли валидацию",
-                                                 errors: [ErrorList.FailedValidation],
-                                                 validationErrors: validationResult.Errors);
+                return validationResult.GetGeneralError();
 
             var response = await httpClient.PutAsJsonAsync($"{_controllerUri}/List", updateDtoList);
 
-            var result = await HttpResponseHandler.GetResult(response);
+            var result = await HttpResponseHandler.GetResultAsync<Updated>(response);
 
             await Task.Delay(Constant.ServiceDelay);
 
             return result;
         }
 
-        public async Task<Result<List<UniquePropertyValues>>> GetUniquePropertyValues(long productTypeId)
+        public async Task<ErrorOr<List<UniquePropertyValues>>> GetUniquesByProductTypeIdAsync(long productTypeId)
         {
             var response = await httpClient.GetAsync($"{_controllerUri}/ProductType/{productTypeId}/UniqueValues");
 
-            var result = await HttpResponseHandler.GetResult<List<UniquePropertyValues>>(response);
+            var result = await HttpResponseHandler.GetResultAsync<List<UniquePropertyValues>>(response);
 
             return result;
         }

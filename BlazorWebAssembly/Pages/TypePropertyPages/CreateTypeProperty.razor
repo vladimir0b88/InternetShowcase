@@ -55,26 +55,23 @@ else
     {
         var result = await productTypeService.GetByIdAsync(TypeId);
 
-        switch (result)
+        if(result.IsError)
         {
-            case SuccessResult<ProductType> successResult:
-                productType = successResult.Data;
-                createDto.TypeId = productType.Id;
-                break;
-
-            case ErrorResult<ProductType> errorResult:
-                await modal.ShowModal(errorResult);
-                break;
+            await modal.ShowModal(result);
+            return;
         }
+
+        productType = result.Value;
+        createDto.TypeId = productType.Id;
     }
 
     async Task Submit()
     {
         var result = await typePropertyService.AddAsync(createDto);
 
-        if (result is ErrorResult errorResult)
+        if (result.IsError)
         {
-            await modal.ShowModal(errorResult);
+            await modal.ShowModal(result);
             return;
         }
 

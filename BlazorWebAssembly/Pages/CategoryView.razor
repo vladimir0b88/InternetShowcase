@@ -263,15 +263,13 @@
     {
         var result = await productTypeService.GetByIdAsync(TypeId);
 
-        switch (result)
+        if(result.IsError)
         {
-            case SuccessResult<ProductType> successResult:
-                productType = successResult.Data;
-                break;
-
-            case ErrorResult<ProductType> errorResult:
-                await modal.ShowModal(errorResult);
-                break;
+            await modal.ShowModal(result);
+        }
+        else
+        {
+            productType = result.Value;
         }
     }
 
@@ -279,14 +277,13 @@
     {
         var result = await propertyValueService.GetUniquesByProductTypeIdAsync(productType!.Id);
 
-        switch (result)
+        if(result.IsError)
         {
-            case SuccessResult<List<UniquePropertyValues>> successResult:
-                uniquePropertyValues = successResult.Data;
-                break;
-            case ErrorResult<List<UniquePropertyValues>> errorResult:
-                await modal.ShowModal(errorResult);
-                break;
+            await modal.ShowModal(result);
+        }
+        else
+        {
+            uniquePropertyValues = result.Value;
         }
     }
 
@@ -305,17 +302,15 @@
 
         var result = await productService.GetByFilterAsync(filter);
 
-        switch (result)
+        if(result.IsError)
         {
-            case SuccessResult<FilteringResult<Product>> successResult:
-                filteringResult = successResult.Data;
-                products = successResult.Data.Results;
-                break;
-
-            case ErrorResult<FilteringResult<Product>> errorResult:
-                filteringResult = null;
-                await modal.ShowModal(errorResult);
-                break;
+            filteringResult = null;
+            await modal.ShowModal(result);
+        }
+        else
+        {
+            filteringResult = result.Value;
+            products = result.Value.Result;
         }
     }
 

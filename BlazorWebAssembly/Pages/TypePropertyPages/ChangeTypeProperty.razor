@@ -42,9 +42,9 @@
     {
         var result = await typePropertyService.UpdateAsync(updateDto);
 
-        if (result is ErrorResult errorResult)
+        if (result.IsError)
         {
-            await modal.ShowModal(errorResult);
+            await modal.ShowModal(result);
             return;
         }
 
@@ -60,20 +60,17 @@
     {
         var result = await typePropertyService.GetByIdAsync(PropertyId);
 
-        switch (result)
+        if (result.IsError)
         {
-            case SuccessResult<TypeProperty> successResult:
-                TypeProperty typeProperty = successResult.Data!;
-                updateDto = new TypePropertyUpdateDto()
-                    {
-                        Id = typeProperty.Id,
-                        Name = typeProperty.Name,
-                    };
-                break;
-
-            case ErrorResult<TypeProperty> errorResult:
-                await modal.ShowModal(errorResult);
-                break;
+            await modal.ShowModal(result);
+            return;
         }
+
+        TypeProperty typeProperty = result.Value;
+        updateDto = new TypePropertyUpdateDto()
+            {
+                Id = typeProperty.Id,
+                Name = typeProperty.Name,
+            };
     }
 }

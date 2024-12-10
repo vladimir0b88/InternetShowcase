@@ -41,15 +41,12 @@ else
     {
         var result = await propertyValueService.GetAllAsync();
 
-        switch (result)
+        if(result.IsError)
         {
-            case SuccessResult<List<PropertyValue>> successResult:
-                propertyValues = successResult.Data.AsQueryable();
-                break;
-
-            case ErrorResult<List<PropertyValue>> errorResult:
-                await modal.ShowModal(errorResult);
-                break;
+            await modal.ShowModal(result);
+            return;
         }
+
+        propertyValues = result.Value.AsQueryable();
     }
 }

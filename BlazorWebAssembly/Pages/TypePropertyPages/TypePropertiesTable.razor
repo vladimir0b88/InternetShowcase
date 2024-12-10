@@ -39,15 +39,12 @@ else
     {
         var result = await typePropertyService.GetAllAsync();
 
-        switch (result)
+        if(result.IsError)
         {
-            case SuccessResult<List<TypeProperty>> successResult:
-                typeProperties = successResult.Data.AsQueryable();
-                break;
-
-            case ErrorResult<List<TypeProperty>> error:
-                await modal.ShowModal(error);
-                break;
+            await modal.ShowModal(result);
+            return;
         }
+
+        typeProperties = result.Value.AsQueryable();
     }
 }

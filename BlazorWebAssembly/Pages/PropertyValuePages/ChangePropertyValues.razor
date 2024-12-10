@@ -54,13 +54,13 @@ else
     {
         var result = await productService.GetByIdAsync(ProductId);
 
-        if (result is ErrorResult<Product> errorResult)
+        if (result.IsError)
         {
-            await modal.ShowModal(errorResult);
+            await modal.ShowModal(result);
             return;
         }
 
-        product = result.Data;
+        product = result.Value;
 
         var list = product.PropertyValues.Select(pv => new PropertyValueUpdateDto()
         {
@@ -78,9 +78,9 @@ else
     {
         var result = await propertyValueService.UpdateListAsync(updateList!);
 
-        if (result is ErrorResult errorResult)
+        if (result.IsError)
         {
-            await modal.ShowModal(errorResult);
+            await modal.ShowModal(result);
             return;
         }
 

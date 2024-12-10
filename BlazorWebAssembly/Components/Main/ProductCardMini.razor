@@ -51,16 +51,13 @@
         imageSrc = null;
         var result = await productImageService.GetFirstByProductIdAsync(Product!.Id);
 
-        switch (result)
+        if(result.IsError)
         {
-            case SuccessResult<ProductImage> successResult:
-                imageSrc = successResult.Data.GetImage()!;
-                break;
-
-            case ErrorResult<ProductImage> errorResult:
-                imageSrc = "NotFoundImage.jpg";
-                break;
+            imageSrc = "NotFoundImage.jpg";
         }
-
+        else
+        {
+            imageSrc = result.Value.GetImage()!;
+        }
     }
 }

@@ -109,31 +109,24 @@
     {
         var result = await productService.GetByIdAsync(ProductId);
 
-        switch (result)
+        if(result.IsError)
         {
-            case SuccessResult<Product> successResult:
-                product = successResult.Data;
-                break;
-
-            case ErrorResult<Product> errorResult:
-                await modal.ShowModal(errorResult);
-                break;
+            await modal.ShowModal(result);
+            return;
         }
+
+        product = result.Value;
     }
 
     async Task DeleteProduct()
     {
         var result = await productService.DeleteByIdAsync(product!.Id);
 
-        switch (result)
+        if(result.IsError)
         {
-            case SuccessResult<Product> successResult:
-                product = successResult.Data;
-                break;
-
-            case ErrorResult<Product> errorResult:
-                await modal.ShowModal(errorResult);
-                break;
+            await modal.ShowModal(result);
+            return;
         }
+
     }
 }

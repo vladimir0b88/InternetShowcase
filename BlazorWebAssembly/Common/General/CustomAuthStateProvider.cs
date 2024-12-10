@@ -1,6 +1,5 @@
-﻿using Application.Common;
-using BitzArt.Blazor.Cookies;
-using Blazored.LocalStorage;
+﻿using Blazored.LocalStorage;
+using ErrorOr;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
@@ -21,20 +20,20 @@ namespace BlazorWebAssembly.Common
 
             var result = GetClaims(token);
 
-            if (result is ErrorResult<CustomUserClaims>)
+            if (result.IsError)
                 return await AuthenticateAnonymous();
 
-            var claims = SetClaimPrincipal(result.Data);
+            var claims = SetClaimPrincipal(result.Value);
 
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(claims)));
 
             return new AuthenticationState(claims);
         }
 
-        private static Result<CustomUserClaims> GetClaims(string token)
+        private static ErrorOr<CustomUserClaims> GetClaims(string token)
         {
             if (string.IsNullOrEmpty(token))
-                return new ErrorResult<CustomUserClaims>(message: "Передан пустой токен");
+                return Error.Failure(description: "Передан пустой токен");
 
             var handler = new JwtSecurityTokenHandler();
 
@@ -48,7 +47,7 @@ namespace BlazorWebAssembly.Common
                 Role = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)!.Value,
             };
 
-            return new SuccessResult<CustomUserClaims>(claims);
+            return claims;
         }
 
         private async Task<AuthenticationState> AuthenticateAnonymous()
@@ -83,10 +82,10 @@ namespace BlazorWebAssembly.Common
             {
                 var result = GetClaims(token);
 
-                if (result is ErrorResult<CustomUserClaims>)
+                if (result.IsError)
                     return;
 
-                claims = SetClaimPrincipal(result.Data);
+                claims = SetClaimPrincipal(result.Value);
 
                 await storageService.SetItemAsStringAsync(_localStorageKey, token);
             }
