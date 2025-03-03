@@ -1,4 +1,5 @@
 ﻿using Application.Common;
+using Application.Extensions;
 using Domain.Entities;
 using ErrorOr;
 using FluentValidation;
@@ -38,11 +39,7 @@ namespace Application.Models
                 return validationResult.GetGeneralError();
 
 
-            PropertyValue propertyValue = new PropertyValue()
-            {
-                Id = updateDto.Id,
-                Value = updateDto.Value,
-            };
+            PropertyValue propertyValue = updateDto.ToEntity();
 
             var result = await propertyValueRepository.UpdateAsync(propertyValue);
 
@@ -61,11 +58,7 @@ namespace Application.Models
 
             foreach (var updateDto in updateDtoList.List)
             {
-                PropertyValue propertyValue = new()
-                {
-                    Id = updateDto.Id,
-                    Value = updateDto.Value,
-                };
+                PropertyValue propertyValue = updateDto.ToEntity();
 
                 var tempResult = await propertyValueRepository.UpdateAsync(propertyValue);
 

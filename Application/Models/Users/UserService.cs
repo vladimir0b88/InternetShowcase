@@ -1,4 +1,4 @@
-﻿using Application.Common;
+﻿using Application.Extensions;
 using Domain.Constants;
 using Domain.Entities;
 using ErrorOr;
@@ -44,13 +44,10 @@ namespace Application.Models
             if (!validationResult.IsValid)
                 return validationResult.GetGeneralError();
 
-            User user = new User()
-            {
-                UserName = createDto.UserName,
-                Email = createDto.Email,
-                PasswordHash = passHashService.Generate(createDto.Password),
-                Role = string.IsNullOrEmpty(createDto.Role) ? Roles.Guest : createDto.Role,
-            };
+            User user = createDto.ToEntity();
+
+            user.Role = Roles.Guest;
+            user.PasswordHash = passHashService.Generate(createDto.Password);
 
             var result = await userRepository.AddUserAsync(user);
 

@@ -1,5 +1,4 @@
-﻿using Application.Common;
-using Application.Models;
+﻿using Application.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

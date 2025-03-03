@@ -1,8 +1,8 @@
-﻿
-using Domain.Entities;
+﻿using Domain.Entities;
 using FluentValidation;
+using static Application.Models.ProductsFilteringResult;
 
-namespace Application.Common
+namespace Application.Models
 {
     public class ProductsFilter
     {
@@ -19,16 +19,8 @@ namespace Application.Common
 
         public List<PropertyFilter>? PropertyFilters { get; set; }
 
-        public SortingMethods SortingMethod { get; set; } = SortingMethods.ByNameAsk;
+        public ProductsSortingMethods SortingMethod { get; set; } = ProductsSortingMethods.ByNameAsk;
 
-        public enum SortingMethods
-        {
-            ByCostAsk,
-            ByCostDesk,
-
-            ByNameAsk,
-            ByNameDesk,
-        }
 
         public void AddPropertyFilterValue(long propertyId, string value)
         {
@@ -69,12 +61,12 @@ namespace Application.Common
                 PropertyFilters = null;
         }
 
-        public static IQueryable<Product> SortByMethod(IQueryable<Product> query, SortingMethods sortingMethod) => sortingMethod switch
+        public static IQueryable<Product> SortByMethod(IQueryable<Product> query, ProductsSortingMethods sortingMethod) => sortingMethod switch
         {
-            SortingMethods.ByNameDesk => query.OrderByDescending(p => p.Name),
-            SortingMethods.ByNameAsk => query.OrderBy(p => p.Name),
-            SortingMethods.ByCostDesk => query.OrderByDescending(p => p.Cost),
-            SortingMethods.ByCostAsk => query.OrderBy(p => p.Cost),
+            ProductsSortingMethods.ByNameDesk => query.OrderByDescending(p => p.Name),
+            ProductsSortingMethods.ByNameAsk => query.OrderBy(p => p.Name),
+            ProductsSortingMethods.ByCostDesk => query.OrderByDescending(p => p.Cost),
+            ProductsSortingMethods.ByCostAsk => query.OrderBy(p => p.Cost),
             _ => throw new NotImplementedException()
         };
     }

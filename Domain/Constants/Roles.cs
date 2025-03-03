@@ -2,9 +2,9 @@
 {
     public abstract class Roles
     {
-        public const string Administrator = nameof(Administrator);
+        public const string Administrator = "Administrator";
 
-        public const string Guest = nameof(Guest);
+        public const string Guest = "Guest";
 
         private static readonly IReadOnlyCollection<string> ListOfRoles = new List<string>()
         {

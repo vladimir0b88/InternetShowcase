@@ -13,9 +13,9 @@ namespace Application.Models
 
             RuleFor(u => u.Password).NotEmpty();
 
-            RuleFor(u => u.Role).Must(u => u is not null)
-                                .When(u => Roles.IsCorrectRole(u.Role))
-                                .WithMessage("Указана некорректная роль");
+            //RuleFor(u => u.Role).Must(u => u is not null)
+            //                    .When(u => Roles.IsCorrectRole(u.Role))
+            //                    .WithMessage("Указана некорректная роль");
         }
     }
 }

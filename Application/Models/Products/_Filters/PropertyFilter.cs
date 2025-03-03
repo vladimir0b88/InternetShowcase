@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Application.Common
+namespace Application.Models
 {
     public class PropertyFilter
     {

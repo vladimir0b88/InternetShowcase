@@ -1,4 +1,4 @@
-﻿using Application.Common;
+﻿using Application.Extensions;
 using Domain.Entities;
 using ErrorOr;
 using FluentValidation;
@@ -6,6 +6,7 @@ using FluentValidation;
 namespace Application.Models
 {
     public class ProductService(IProductRepository productRepository,
+                                ITypePropertyService typePropertyService,
                                 IValidator<ProductAddDto> createValidator,
                                 IValidator<ProductUpdateDto> updateValidator,
                                 IValidator<ProductsFilter> filterValidator) : IProductService
@@ -32,15 +33,21 @@ namespace Application.Models
                 return validationResult.GetGeneralError();
 
 
-            Product newProduct = new Product()
-            {
-                Name = productDto.Name,
-                Description = productDto.Description,
-                Cost = productDto.Cost,
-                TypeId = productDto.TypeId,
-            };
+            Product newProduct = productDto.ToEntity();
+               
+            var insertResult = await productRepository.InsertAsync(newProduct);
 
-            var result = await productRepository.InsertAsync(newProduct);
+            if (insertResult.IsError)
+                return insertResult.Errors;
+
+
+
+            newProduct = insertResult.Value;
+
+            if (newProduct.TypeId is null)
+                return Result.Created;
+
+            var result = await typePropertyService.AddPropertiesValuesForProductAsync(newProduct);
 
             return result;
         }
@@ -59,14 +66,7 @@ namespace Application.Models
             if (!validationResult.IsValid)
                 return validationResult.GetGeneralError();
 
-            Product product = new Product()
-            {
-                Id = updateDto.Id,
-                Name = updateDto.Name,
-                Description = updateDto.Description,
-                Cost = updateDto.Cost,
-                TypeId = updateDto.TypeId,
-            };
+            Product product = updateDto.ToEntity();
 
             var result = await productRepository.UpdateAsync(product);
 
@@ -80,7 +80,7 @@ namespace Application.Models
             return result;
         }
 
-        public async Task<ErrorOr<FilteringResult<Product>>> GetByFilterAsync(ProductsFilter filter)
+        public async Task<ErrorOr<ProductsFilteringResult>> GetByFilterAsync(ProductsFilter filter)
         {
             var validationResult = await filterValidator.ValidateAsync(filter);
 

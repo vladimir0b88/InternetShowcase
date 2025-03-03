@@ -1,7 +1,7 @@
 ﻿using ErrorOr;
 using FluentValidation.Results;
 
-namespace Application.Common
+namespace Application.Extensions
 {
     public static class ValidationResultExtension
     {

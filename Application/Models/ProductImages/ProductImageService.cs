@@ -1,4 +1,4 @@
-﻿using Application.Common;
+﻿using Application.Extensions;
 using Domain.Entities;
 using ErrorOr;
 using FluentValidation;

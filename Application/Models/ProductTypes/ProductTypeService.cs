@@ -1,4 +1,4 @@
-﻿using Application.Common;
+﻿using Application.Extensions;
 using Domain.Entities;
 using ErrorOr;
 using FluentValidation;
@@ -23,18 +23,15 @@ namespace Application.Models
             return result;
         }
 
-        public async Task<ErrorOr<Created>> AddAsync(ProductTypeAddDto dto)
+        public async Task<ErrorOr<Created>> AddAsync(ProductTypeAddDto addDto)
         {
-            var validationResult = await createDtoValidator.ValidateAsync(dto);
+            var validationResult = await createDtoValidator.ValidateAsync(addDto);
 
             if (!validationResult.IsValid)
                 return validationResult.GetGeneralError();
 
 
-            ProductType productType = new ProductType() 
-            {
-                Name = dto.Name,
-            };
+            ProductType productType = addDto.ToEntity();
 
             var result = await productTypeRepository.InsertAsync(productType);
 
@@ -49,19 +46,15 @@ namespace Application.Models
         }
 
 
-        public async Task<ErrorOr<Updated>> UpdateAsync(ProductTypeUpdateDto dto)
+        public async Task<ErrorOr<Updated>> UpdateAsync(ProductTypeUpdateDto updateDto)
         {
-            var validationResult = await updateDtoValidator.ValidateAsync(dto);
+            var validationResult = await updateDtoValidator.ValidateAsync(updateDto);
 
             if (!validationResult.IsValid)
                 return validationResult.GetGeneralError();
 
 
-            ProductType productType = new ProductType()
-            {
-                Id = dto.Id,
-                Name = dto.Name,
-            };
+            ProductType productType = updateDto.ToEntity();
 
             var result = await productTypeRepository.UpdateAsync(productType);
 

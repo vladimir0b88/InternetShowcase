@@ -1,5 +1,4 @@
-﻿using Application.Common;
-using Application.Models;
+﻿using Application.Models;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 

@@ -1,43 +1,40 @@
-﻿using Application.Common;
+﻿using Application.Extensions;
 using Domain.Entities;
 using ErrorOr;
 using FluentValidation;
 
 namespace Application.Models
 {
-    public class TypePropertyService(ITypePropertyRepository repository,
+    public class TypePropertyService(ITypePropertyRepository TypePropertyRepository,
+                                     IProductRepository productRepository,
                                      IValidator<TypePropertyAddDto> createValidator,
                                      IValidator<TypePropertyUpdateDto> updateValidator) : ITypePropertyService
     {
         public async Task<ErrorOr<List<TypeProperty>>> GetAllAsync()
         {
-            var result = await repository.GetAllAsync();
+            var result = await TypePropertyRepository.GetAllAsync();
 
             return result;
         }
 
-        public async Task<ErrorOr<Created>> AddAsync(TypePropertyAddDto createDto)
+        public async Task<ErrorOr<Created>> AddAsync(TypePropertyAddDto addDto)
         {
-            var validationResult = await createValidator.ValidateAsync(createDto);
+            var validationResult = await createValidator.ValidateAsync(addDto);
 
             if (!validationResult.IsValid)
                 return validationResult.GetGeneralError();
 
 
-            TypeProperty newProperty = new TypeProperty()
-            {
-                Name = createDto.Name,
-                TypeId = createDto.TypeId,
-            };
+            TypeProperty newProperty = addDto.ToEntity();
 
-            var result = await repository.InsertAsync(newProperty);
+            var result = await TypePropertyRepository.InsertAsync(newProperty);
 
             return result;
         }
 
         public async Task<ErrorOr<Deleted>> DeleteAsync(long propertyId)
         {
-            var result = await repository.DeleteAsync(propertyId);
+            var result = await TypePropertyRepository.DeleteAsync(propertyId);
 
             return result;
         }
@@ -45,7 +42,7 @@ namespace Application.Models
 
         public async Task<ErrorOr<List<TypeProperty>>> GetByProductTypeIdAsync(long typeId)
         {
-            var result = await repository.GetByTypeIdAsync(typeId);
+            var result = await TypePropertyRepository.GetByTypeIdAsync(typeId);
 
             return result;
         }
@@ -58,22 +55,29 @@ namespace Application.Models
                 return validationResult.GetGeneralError();
 
 
-            TypeProperty property = new TypeProperty()
-            {
-                Id = updateDto.Id,
-                Name = updateDto.Name
-            };
+            TypeProperty property = updateDto.ToEntity();
 
-            var result = await repository.UpdateAsync(property);
+            var result = await TypePropertyRepository.UpdateAsync(property);
 
             return result;
         }
 
         public async Task<ErrorOr<TypeProperty>> GetByIdAsync(long propertyId)
         {
-            var result = await repository.GetByIdAsync(propertyId);
+            var result = await TypePropertyRepository.GetByIdAsync(propertyId);
 
             return result;
+        }
+
+        public async Task<ErrorOr<Created>> AddPropertiesValuesForProductAsync(Product product)
+        {
+            if (product.Id == 0 ||
+                product.TypeId is null)
+                return Error.Validation(description: "Ошибка добавления характеристик продукту. " +
+                                                     "Указан пустой тип продукта или передан продукт без Id");
+
+            throw new();
+
         }
     }
 }

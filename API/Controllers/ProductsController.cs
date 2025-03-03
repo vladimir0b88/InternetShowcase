@@ -65,7 +65,7 @@ namespace API.Controllers
         }
 
         [HttpPost("Filter")]
-        public async Task<ActionResult<FilteringResult<Product>>> GetProductsByFilter([FromBody]ProductsFilter filter)
+        public async Task<ActionResult<ProductsFilteringResult>> GetProductsByFilter([FromBody]ProductsFilter filter)
         {
             var result = await productService.GetByFilterAsync(filter);
 

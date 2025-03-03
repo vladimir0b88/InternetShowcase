@@ -1,5 +1,4 @@
-﻿using Application.Common;
-using Domain.Entities;
+﻿using Domain.Entities;
 using ErrorOr;
 
 namespace Application.Models
@@ -18,6 +17,6 @@ namespace Application.Models
 
         Task<ErrorOr<List<Product>>> GetByProductTypeIdAsync(long productTypeId);
 
-        Task<ErrorOr<FilteringResult<Product>>> GetByFilterAsync(ProductsFilter filter);
+        Task<ErrorOr<ProductsFilteringResult>> GetByFilterAsync(ProductsFilter filter);
     }
 }

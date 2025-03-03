@@ -98,5 +98,10 @@ namespace Persistence.Repositories
 
             return Result.Updated;
         }
+
+        public Task<ErrorOr<Created>> AddPropertiesValuesForProductAsync()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

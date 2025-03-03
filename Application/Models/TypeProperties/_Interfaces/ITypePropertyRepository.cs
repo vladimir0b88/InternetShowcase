@@ -16,5 +16,7 @@ namespace Application.Models
         Task<ErrorOr<Deleted>> DeleteAsync(long propertyId);
 
         Task<ErrorOr<Updated>> UpdateAsync(TypeProperty property);
+
+        Task<ErrorOr<Created>> AddPropertiesValuesForProductAsync();
     }
 }

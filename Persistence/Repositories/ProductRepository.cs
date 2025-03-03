@@ -3,7 +3,6 @@ using Application.Models;
 using Domain.Entities;
 using ErrorOr;
 using Microsoft.EntityFrameworkCore;
-using static Application.Common.ProductsFilter;
 
 namespace Persistence.Repositories
 {
@@ -39,7 +38,7 @@ namespace Persistence.Repositories
             return Result.Deleted;
         }
 
-        public async Task<ErrorOr<Created>> InsertAsync(Product product)
+        public async Task<ErrorOr<Product>> InsertAsync(Product product)
         {
             if (product is null)
                 return Error.Validation(description: "Нельзя добавить пустой продукт");
@@ -48,26 +47,26 @@ namespace Persistence.Repositories
             await context.Products.AddAsync(product);
             await context.SaveChangesAsync();
 
-            if (product.TypeId is not null)
-            {
-                List<long> propertiesId = await context.TypeProperties.AsNoTracking()
-                                                                      .Where(tp => tp.TypeId == product.TypeId)
-                                                                      .Select(tp => tp.Id)
-                                                                      .ToListAsync();
+            //if (product.TypeId is not null)
+            //{
+            //    List<long> propertiesId = await context.TypeProperties.AsNoTracking()
+            //                                                          .Where(tp => tp.TypeId == product.TypeId)
+            //                                                          .Select(tp => tp.Id)
+            //                                                          .ToListAsync();
 
-                foreach (long id in propertiesId)
-                {
-                    await context.PropertyValues.AddAsync(new PropertyValue()
-                    {
-                        ProductId = product.Id,
-                        PropertyId = id,
-                        Value = ""
-                    });
-                }
-            }
-            await context.SaveChangesAsync();
+            //    foreach (long id in propertiesId)
+            //    {
+            //        await context.PropertyValues.AddAsync(new PropertyValue()
+            //        {
+            //            ProductId = product.Id,
+            //            PropertyId = id,
+            //            Value = ""
+            //        });
+            //    }
+            //}
+            //await context.SaveChangesAsync();
 
-            return Result.Created;
+            return product;
         }
 
         public async Task<ErrorOr<List<Product>>> GetAllAsync()
@@ -115,7 +114,7 @@ namespace Persistence.Repositories
             return list;
         }
 
-        public async Task<ErrorOr<FilteringResult<Product>>> GetByFilterAsync(ProductsFilter filter)
+        public async Task<ErrorOr<ProductsFilteringResult>> GetByFilterAsync(ProductsFilter filter)
         {
             if (filter is null)
                 return Error.Validation(description: "Фильтр не может быть пустым");
@@ -155,7 +154,7 @@ namespace Persistence.Repositories
                                                                                       propertyFilter.Values!.Contains(pv.Value!)));
                 }
 
-            productQuery = SortByMethod(productQuery, filter.SortingMethod);
+            productQuery = ProductsFilter.SortByMethod(productQuery, filter.SortingMethod);
 
             int totalItems = productQuery.Count();
             int totalPages = totalItems / filter.ItemsOnPage;
@@ -172,7 +171,7 @@ namespace Persistence.Repositories
                                                        .Take(filter.ItemsOnPage)
                                                        .ToListAsync();
 
-            FilteringResult<Product> result = new()
+            ProductsFilteringResult result = new()
             {
                 Result        = products,
                 SortingMethod = filter.SortingMethod,

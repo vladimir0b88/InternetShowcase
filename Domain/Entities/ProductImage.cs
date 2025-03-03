@@ -12,18 +12,6 @@
 
         public virtual Product Product { get; set; } = null!;
 
-
-        public static string GetImage(ProductImage? image)
-        {
-            if (image is null || image.Image is null)
-                return "/img/emptyImage.jpg";
-
-
-            string img = Convert.ToBase64String(image.Image, 0, image.Image.Length);
-
-            return $"data:{image.Format};base64,{img}";
-        }
-
         public string? GetImage()
         {
             if (Image == null)
