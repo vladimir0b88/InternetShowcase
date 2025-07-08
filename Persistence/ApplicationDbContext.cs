@@ -12,7 +12,7 @@ namespace Persistence
 
         public DbSet<User> Users { get; set; }
 
-        public DbSet<TypeProperty> TypeProperties { get; set; }
+        public DbSet<ProductTypeProperty> TypeProperties { get; set; }
 
         public DbSet<PropertyValue> PropertyValues { get; set; }
 

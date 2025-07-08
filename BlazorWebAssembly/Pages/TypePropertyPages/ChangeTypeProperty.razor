@@ -4,7 +4,7 @@
 
 @attribute [Authorize(Roles = Roles.Administrator)]
 
-@inject ITypePropertyService typePropertyService
+@inject IPropertyService typePropertyService
 @inject NavigationManager navManager
 
 <ErrorModal @ref="modal"></ErrorModal>
@@ -40,7 +40,7 @@
 
     async Task Submit()
     {
-        var result = await typePropertyService.UpdateAsync(updateDto);
+        var result = await typePropertyService.UpdatePropertyAsync(updateDto);
 
         if (result.IsError)
         {
@@ -58,7 +58,7 @@
 
     async Task GetUpdateDto()
     {
-        var result = await typePropertyService.GetByIdAsync(PropertyId);
+        var result = await typePropertyService.GetPropertyByIdAsync(PropertyId);
 
         if (result.IsError)
         {
@@ -66,7 +66,7 @@
             return;
         }
 
-        TypeProperty typeProperty = result.Value;
+        ProductTypeProperty typeProperty = result.Value;
         updateDto = new TypePropertyUpdateDto()
             {
                 Id = typeProperty.Id,

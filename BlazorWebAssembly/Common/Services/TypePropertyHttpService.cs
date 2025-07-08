@@ -9,23 +9,23 @@ namespace BlazorWebAssembly.Common
 {
     public class TypePropertyHttpService(IHttpClientFactory httpClientFactory,
                                          IValidator<TypePropertyAddDto> createValidator,
-                                         IValidator<TypePropertyUpdateDto> updateValidator) : ITypePropertyService
+                                         IValidator<TypePropertyUpdateDto> updateValidator) : IPropertyService
     {
         private readonly HttpClient httpClient = httpClientFactory.CreateClient("WebApi");
 
         private const string _controllerUri = "api/TypeProperties";
 
-        public async Task<ErrorOr<List<TypeProperty>>> GetByProductTypeIdAsync(long typeId)
+        public async Task<ErrorOr<List<ProductTypeProperty>>> GetPropertyByProductTypeIdAsync(long typeId)
         {
             var response = await httpClient.GetAsync($"{_controllerUri}/ProductType/{typeId}");
 
-            var result = await HttpResponseHandler.GetResultAsync<List<TypeProperty>>(response);
+            var result = await HttpResponseHandler.GetResultAsync<List<ProductTypeProperty>>(response);
 
             await Task.Delay(Constant.ServiceDelay);
 
             return result;
         }
-        public async Task<ErrorOr<Created>> AddAsync(TypePropertyAddDto createDto)
+        public async Task<ErrorOr<Created>> AddPropertyAsync(TypePropertyAddDto createDto)
         {
             var validationResult = await createValidator.ValidateAsync(createDto);
 
@@ -40,7 +40,7 @@ namespace BlazorWebAssembly.Common
 
             return result;
         }
-        public async Task<ErrorOr<Updated>> UpdateAsync(TypePropertyUpdateDto updateDto)
+        public async Task<ErrorOr<Updated>> UpdatePropertyAsync(TypePropertyUpdateDto updateDto)
         {
             var validationResult = await updateValidator.ValidateAsync(updateDto);
 
@@ -56,7 +56,7 @@ namespace BlazorWebAssembly.Common
             return result;
         }
 
-        public async Task<ErrorOr<Deleted>> DeleteAsync(long propertyId)
+        public async Task<ErrorOr<Deleted>> DeletePropertyAsync(long propertyId)
         {
             var response = await httpClient.DeleteAsync($"{_controllerUri}/{propertyId}");
 
@@ -67,22 +67,22 @@ namespace BlazorWebAssembly.Common
             return result;
         }
 
-        public async Task<ErrorOr<List<TypeProperty>>> GetAllAsync()
+        public async Task<ErrorOr<List<ProductTypeProperty>>> GetAllPropertiesAsync()
         {
             var response = await httpClient.GetAsync(_controllerUri);
 
-            var result = await HttpResponseHandler.GetResultAsync<List<TypeProperty>>(response);
+            var result = await HttpResponseHandler.GetResultAsync<List<ProductTypeProperty>>(response);
 
             await Task.Delay(Constant.ServiceDelay);
 
             return result;
         }
 
-        public async Task<ErrorOr<TypeProperty>> GetByIdAsync(long propertyId)
+        public async Task<ErrorOr<ProductTypeProperty>> GetPropertyByIdAsync(long propertyId)
         {
             var response = await httpClient.GetAsync($"{_controllerUri}/{propertyId}");
 
-            var result = await HttpResponseHandler.GetResultAsync<TypeProperty>(response);
+            var result = await HttpResponseHandler.GetResultAsync<ProductTypeProperty>(response);
 
             await Task.Delay(Constant.ServiceDelay);
 

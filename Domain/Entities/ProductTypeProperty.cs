@@ -1,7 +1,7 @@
 ﻿
 namespace Domain.Entities
 {
-    public class TypeProperty
+    public class ProductTypeProperty
     {
         public long Id { get; set; }
         public string Name { get; set; } = null!;

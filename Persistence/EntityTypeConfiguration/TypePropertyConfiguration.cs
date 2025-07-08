@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Persistence.EnityTypeConfiguration
 {
-    internal class TypePropertyConfiguration : IEntityTypeConfiguration<TypeProperty>
+    internal class TypePropertyConfiguration : IEntityTypeConfiguration<ProductTypeProperty>
     {
-        public void Configure(EntityTypeBuilder<TypeProperty> builder)
+        public void Configure(EntityTypeBuilder<ProductTypeProperty> builder)
         {
             builder.ToTable("TypeProperties");
 

@@ -5,7 +5,7 @@
 
 @inject IProductTypeService productTypeService
 @inject IProductService productService
-@inject ITypePropertyService typePropertyService
+@inject IPropertyService typePropertyService
 @inject NavigationManager navManager
 
 <ErrorModal @ref="modal"></ErrorModal>
@@ -120,7 +120,7 @@ else
 
     private ErrorModal modal = new();
 
-    private IQueryable<TypeProperty>? typeProperties = null;
+    private IQueryable<ProductTypeProperty>? typeProperties = null;
 
     private IQueryable<Product>? products = null;
 
@@ -148,7 +148,7 @@ else
 
     async Task GetTypeProperties()
     {
-        var result = await typePropertyService.GetByProductTypeIdAsync(TypeId);
+        var result = await typePropertyService.GetPropertyByProductTypeIdAsync(TypeId);
 
         if(result.IsError)
         {
@@ -174,7 +174,7 @@ else
 
     async Task DeleteTypePropertyById(long id)
     {
-        var result = await typePropertyService.DeleteAsync(id);
+        var result = await typePropertyService.DeletePropertyAsync(id);
 
         if (result.IsError)
         {

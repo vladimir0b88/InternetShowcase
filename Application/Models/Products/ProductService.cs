@@ -6,7 +6,7 @@ using FluentValidation;
 namespace Application.Models
 {
     public class ProductService(IProductRepository productRepository,
-                                ITypePropertyService typePropertyService,
+                                IPropertyService typePropertyService,
                                 IValidator<ProductAddDto> createValidator,
                                 IValidator<ProductUpdateDto> updateValidator,
                                 IValidator<ProductsFilter> filterValidator) : IProductService
@@ -39,8 +39,6 @@ namespace Application.Models
 
             if (insertResult.IsError)
                 return insertResult.Errors;
-
-
 
             newProduct = insertResult.Value;
 

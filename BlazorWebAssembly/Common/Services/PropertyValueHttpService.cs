@@ -15,7 +15,7 @@ namespace BlazorWebAssembly.Common
 
         private const string _controllerUri = "api/PropertyValues";
 
-        public async Task<ErrorOr<List<PropertyValue>>> GetAllAsync()
+        public async Task<ErrorOr<List<PropertyValue>>> GetAllPropertyValuesAsync()
         {
             var response = await httpClient.GetAsync(_controllerUri);
 
@@ -26,7 +26,7 @@ namespace BlazorWebAssembly.Common
             return result;
         }
 
-        public async Task<ErrorOr<List<PropertyValue>>> GetByProductIdAsync(long productId)
+        public async Task<ErrorOr<List<PropertyValue>>> GetPropertyValuesByProductIdAsync(long productId)
         {
             var response = await httpClient.GetAsync($"{_controllerUri}/{productId}");
 
@@ -37,7 +37,7 @@ namespace BlazorWebAssembly.Common
             return result;
         }
 
-        public async Task<ErrorOr<Updated>> UpdateAsync(PropertyValueUpdateDto updateDto)
+        public async Task<ErrorOr<Updated>> UpdatePropertyValueAsync(PropertyValueUpdateDto updateDto)
         {
             var validationResult = await updateValidator.ValidateAsync(updateDto);
 
@@ -53,7 +53,7 @@ namespace BlazorWebAssembly.Common
             return result;
         }
 
-        public async Task<ErrorOr<Updated>> UpdateListAsync(PropertyValueUpdateDtoList updateDtoList)
+        public async Task<ErrorOr<Updated>> UpdatePropertyValuesListAsync(PropertyValueUpdateDtoList updateDtoList)
         {
             var validationResult = await updateListValidator.ValidateAsync(updateDtoList);
 
@@ -69,7 +69,7 @@ namespace BlazorWebAssembly.Common
             return result;
         }
 
-        public async Task<ErrorOr<List<UniquePropertyValues>>> GetUniquesByProductTypeIdAsync(long productTypeId)
+        public async Task<ErrorOr<List<UniquePropertyValues>>> GetUniquesPropertyValuesByProductTypeIdAsync(long productTypeId)
         {
             var response = await httpClient.GetAsync($"{_controllerUri}/ProductType/{productTypeId}/UniqueValues");
 

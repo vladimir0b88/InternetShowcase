@@ -1,8 +1,29 @@
-﻿using Application.Common;
+﻿
+using Domain.Entities;
 using FluentValidation;
 
 namespace Application.Models
 {
+    public class TypePropertyAddDto
+    {
+        public string Name { get; set; } = string.Empty;
+        public long? TypeId { get; set; }
+    }
+
+
+    public static class TypePropertyAddMapper
+    {
+        public static ProductTypeProperty ToEntity(this TypePropertyAddDto dto)
+        {
+            return new ProductTypeProperty
+            {
+                Name = dto.Name,
+                TypeId = dto.TypeId,
+            };
+        }
+
+    }
+
     public class TypePropertyAddDtoValidator : AbstractValidator<TypePropertyAddDto>
     {
         public TypePropertyAddDtoValidator(IProductTypeRepository productTypeRepository)

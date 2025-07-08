@@ -1,5 +1,5 @@
-﻿
-using Domain.Entities;
+﻿using Domain.Entities;
+using FluentValidation;
 
 namespace Application.Models
 {
@@ -18,6 +18,17 @@ namespace Application.Models
                 Id = dto.Id,
                 Value = dto.Value,
             };
+        }
+    }
+
+
+    public class PropertyValueUpdateDtoValidator : AbstractValidator<PropertyValueUpdateDto>
+    {
+        public PropertyValueUpdateDtoValidator()
+        {
+            RuleFor(pv => pv.Id).NotEmpty();
+
+            RuleFor(pv => pv.Value).MaximumLength(64);
         }
     }
 }

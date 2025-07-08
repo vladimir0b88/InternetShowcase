@@ -29,7 +29,7 @@ builder.Services.AddAuthorizationCore();
 #region Services
 builder.Services.AddScoped<IProductService, ProductHttpService>();
 builder.Services.AddScoped<IProductTypeService, ProductTypeHttpService>();
-builder.Services.AddScoped<ITypePropertyService, TypePropertyHttpService>();
+builder.Services.AddScoped<IPropertyService, TypePropertyHttpService>();
 builder.Services.AddScoped<IPropertyValueService, PropertyValueHttpService>();
 builder.Services.AddScoped<IUserService, UserHttpService>();
 builder.Services.AddScoped<IProductImageService, ProductImageHttpService>();

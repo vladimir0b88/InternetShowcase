@@ -7,7 +7,7 @@ namespace Persistence.Repositories
 {
     public class TypePropertyRepository(ApplicationDbContext context) : ITypePropertyRepository
     {
-        public async Task<ErrorOr<Created>> InsertAsync(TypeProperty property)
+        public async Task<ErrorOr<Created>> InsertAsync(ProductTypeProperty property)
         {
             if (property is null)
                 return Error.Validation(description: "Свойство типа продукта не может быть пустым");
@@ -36,7 +36,7 @@ namespace Persistence.Repositories
 
         public async Task<ErrorOr<Deleted>> DeleteAsync(long id)
         {
-            TypeProperty? property = await context.TypeProperties.FirstOrDefaultAsync(p => p.Id == id);
+            ProductTypeProperty? property = await context.TypeProperties.FirstOrDefaultAsync(p => p.Id == id);
 
             if (property is null)
                 return Error.NotFound(description: $"Свойство типа продукта с id: {id} не найдено");
@@ -47,15 +47,15 @@ namespace Persistence.Repositories
             return Result.Deleted;
         }
 
-        public async Task<ErrorOr<List<TypeProperty>>> GetAllAsync()
+        public async Task<ErrorOr<List<ProductTypeProperty>>> GetAllAsync()
         {
-            List<TypeProperty> list = await context.TypeProperties.AsNoTracking()
+            List<ProductTypeProperty> list = await context.TypeProperties.AsNoTracking()
                                                                   .ToListAsync();
 
             return list;
         }
 
-        public async Task<ErrorOr<List<TypeProperty>>> GetByTypeIdAsync(long productTypeId)
+        public async Task<ErrorOr<List<ProductTypeProperty>>> GetByTypeIdAsync(long productTypeId)
         {
             ProductType? productType = await context.ProductTypes.AsNoTracking()
                                                                  .FirstOrDefaultAsync(pt => pt.Id == productTypeId);
@@ -63,16 +63,16 @@ namespace Persistence.Repositories
             if (productType is null)
                 return Error.NotFound(description: $"Не найден тип продукта с id: {productTypeId}");
 
-            List<TypeProperty> list = await context.TypeProperties.AsNoTracking()
+            List<ProductTypeProperty> list = await context.TypeProperties.AsNoTracking()
                                                                   .Where(p => p.TypeId == productTypeId)
                                                                   .ToListAsync();
 
             return list;
         }
 
-        public async Task<ErrorOr<TypeProperty>> GetByIdAsync(long propertyId)
+        public async Task<ErrorOr<ProductTypeProperty>> GetByIdAsync(long propertyId)
         {
-            TypeProperty? typeProperty = await context.TypeProperties.AsNoTracking()
+            ProductTypeProperty? typeProperty = await context.TypeProperties.AsNoTracking()
                                                                      .FirstOrDefaultAsync (tp => tp.Id == propertyId);
 
             if(typeProperty is null)
@@ -81,12 +81,12 @@ namespace Persistence.Repositories
             return typeProperty;
         }
 
-        public async Task<ErrorOr<Updated>> UpdateAsync(TypeProperty property)
+        public async Task<ErrorOr<Updated>> UpdateAsync(ProductTypeProperty property)
         {
             if(property is null)
                 return Error.Validation(description: "Свойство типа продукта для изменения не может быть пустым");
 
-            TypeProperty? modifyingProperty = await context.TypeProperties.FirstOrDefaultAsync(p => p.Id == property.Id);
+            ProductTypeProperty? modifyingProperty = await context.TypeProperties.FirstOrDefaultAsync(p => p.Id == property.Id);
 
             if(modifyingProperty is null)
                 return Error.NotFound(description: $"Свойство типа товара для изменения с id: {property.Id} не было найдено");
@@ -99,9 +99,38 @@ namespace Persistence.Repositories
             return Result.Updated;
         }
 
-        public Task<ErrorOr<Created>> AddPropertiesValuesForProductAsync()
+        public async Task<ErrorOr<Created>> AddPropertiesValuesForProductAsync(Product product)
         {
-            throw new NotImplementedException();
+            Product? productInDb = await context.Products.AsNoTracking()
+                                                         .Include(p => p.Type)
+                                                         .Where(p => p.Id == product.Id)
+                                                         .FirstOrDefaultAsync();
+
+            if (productInDb is null)
+                return Error.Validation(description: "Нельзя добавить пустые значения характеристик несуществующему продукту");
+
+
+            if (productInDb.TypeId is null)
+                return Error.Validation(description: "Ошибка добавления значения характеристик продукту. У продукта отсутствует тип продукта");
+
+
+            List<long> propertiesId = await context.TypeProperties.AsNoTracking()
+                                                                  .Where(tp => tp.TypeId == productInDb.TypeId)
+                                                                  .Select(tp => tp.Id)
+                                                                  .ToListAsync();
+
+            foreach (long id in propertiesId)
+            {
+                await context.PropertyValues.AddAsync(new PropertyValue()
+                {
+                    ProductId = product.Id,
+                    PropertyId = id,
+                    Value = ""
+                });
+            }
+            await context.SaveChangesAsync();
+
+            return Result.Created;
         }
     }
 }

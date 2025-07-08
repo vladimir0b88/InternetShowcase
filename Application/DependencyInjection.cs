@@ -13,8 +13,8 @@ namespace Application
             #region Services
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IProductTypeService, ProductTypeService>();
-            services.AddScoped<ITypePropertyService, TypePropertyService>();
-            services.AddScoped<IPropertyValueService, PropertyValueService>();
+            services.AddScoped<IPropertyService, PropertyService>();
+            //services.AddScoped<IPropertyValueService, PropertyValueService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IProductImageService, ProductImageService>();
 

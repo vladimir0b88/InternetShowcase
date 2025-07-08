@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using FluentValidation;
 
 namespace Application.Models
 {
@@ -19,6 +20,16 @@ namespace Application.Models
                 Id = dto.Id,
                 Name = dto.Name,
             };
+        }
+    }
+
+    public class ProductTypeUpdateDtoValidator : AbstractValidator<ProductTypeUpdateDto>
+    {
+        public ProductTypeUpdateDtoValidator()
+        {
+            RuleFor(p => p.Id).NotEmpty();
+
+            RuleFor(p => p.Name).NotEmpty().MaximumLength(64);
         }
     }
 }

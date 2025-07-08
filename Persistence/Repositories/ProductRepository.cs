@@ -1,5 +1,4 @@
-﻿using Application.Common;
-using Application.Models;
+﻿using Application.Models;
 using Domain.Entities;
 using ErrorOr;
 using Microsoft.EntityFrameworkCore;
@@ -47,6 +46,8 @@ namespace Persistence.Repositories
             await context.Products.AddAsync(product);
             await context.SaveChangesAsync();
 
+            // Ранее именно тут при наличии типа у продукта
+            // создавались пустые значения характеристик этого типа
             //if (product.TypeId is not null)
             //{
             //    List<long> propertiesId = await context.TypeProperties.AsNoTracking()
@@ -78,23 +79,23 @@ namespace Persistence.Repositories
             return list;
         }
 
-        public async Task<ErrorOr<Updated>> UpdateAsync(Product product)
+        public async Task<ErrorOr<Updated>> UpdateAsync(Product updatedProduct)
         {
-            if (product is null)
+            if (updatedProduct is null)
                 return Error.Validation(description: "Продукт для изменения не может быть пустым");
 
 
-            Product? modifyingProduct = await context.Products.FirstOrDefaultAsync(p => p.Id == product.Id);
+            Product? productInDb = await context.Products.FirstOrDefaultAsync(p => p.Id == updatedProduct.Id);
 
-            if (modifyingProduct is null)
-                return Error.NotFound(description: $"Продукт для изменения с id: {product.Id} не был найден");
+            if (productInDb is null)
+                return Error.NotFound(description: $"Продукт для изменения с id: {updatedProduct.Id} не был найден");
 
-            modifyingProduct.Name        = product.Name;
-            modifyingProduct.Description = product.Description;
-            modifyingProduct.Cost        = product.Cost;
-            modifyingProduct.TypeId      = product.TypeId;
+            productInDb.Name = updatedProduct.Name;
+            productInDb.Description = updatedProduct.Description;
+            productInDb.Cost = updatedProduct.Cost;
+            productInDb.TypeId = updatedProduct.TypeId;
 
-            context.Update(modifyingProduct);
+            context.Update(productInDb);
             await context.SaveChangesAsync();
 
             return Result.Updated;
@@ -156,6 +157,7 @@ namespace Persistence.Repositories
 
             productQuery = ProductsFilter.SortByMethod(productQuery, filter.SortingMethod);
 
+
             int totalItems = productQuery.Count();
             int totalPages = totalItems / filter.ItemsOnPage;
 
@@ -173,12 +175,12 @@ namespace Persistence.Repositories
 
             ProductsFilteringResult result = new()
             {
-                Result        = products,
+                Result = products,
                 SortingMethod = filter.SortingMethod,
-                ItemsOnPage   = filter.ItemsOnPage,
-                CurrentPage   = filter.PageNumber,
-                TotalPages    = totalPages,
-                TotalItems    = totalItems
+                ItemsOnPage = filter.ItemsOnPage,
+                CurrentPage = filter.PageNumber,
+                TotalPages = totalPages,
+                TotalItems = totalItems
             };
 
             return result;

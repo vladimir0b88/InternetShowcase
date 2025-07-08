@@ -1,9 +1,7 @@
-﻿using Application.Common;
-using Application.Models;
+﻿using Application.Models;
 using Domain.Entities;
 using ErrorOr;
 using Microsoft.EntityFrameworkCore;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Persistence.Repositories
 {

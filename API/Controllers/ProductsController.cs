@@ -1,5 +1,4 @@
-﻿using Application.Common;
-using Application.Models;
+﻿using Application.Models;
 using Domain.Constants;
 using Domain.Entities;
 using ErrorOr;
@@ -41,6 +40,8 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<Created>> AddProduct([FromBody] ProductAddDto createDto)
         {
+            HttpContext context = HttpContext;
+
             var result = await productService.AddAsync(createDto);
 
             return this.SendResponse(result);

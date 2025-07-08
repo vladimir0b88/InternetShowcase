@@ -275,7 +275,7 @@
 
     async Task GetUniquePropertyValues()
     {
-        var result = await propertyValueService.GetUniquesByProductTypeIdAsync(productType!.Id);
+        var result = await propertyValueService.GetUniquesPropertyValuesByProductTypeIdAsync(productType!.Id);
 
         if(result.IsError)
         {

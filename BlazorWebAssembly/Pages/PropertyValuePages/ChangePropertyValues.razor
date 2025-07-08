@@ -76,7 +76,7 @@ else
 
     private async Task UpdatePropertyValues()
     {
-        var result = await propertyValueService.UpdateListAsync(updateList!);
+        var result = await propertyValueService.UpdatePropertyValuesListAsync(updateList!);
 
         if (result.IsError)
         {

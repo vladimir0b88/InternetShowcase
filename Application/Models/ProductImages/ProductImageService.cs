@@ -16,13 +16,8 @@ namespace Application.Models
                 return validationResult.GetGeneralError();
 
 
-            ProductImage productImage = new ProductImage()
-            {
-                ProductId = addDto.ProductId,
-                Format = addDto.Format,
-                Image = addDto.Image,
-            };
-
+            ProductImage productImage = addDto.ToEntity();
+            
             var result = await repository.InsertAsync(productImage);
 
             return result;

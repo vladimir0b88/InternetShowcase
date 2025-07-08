@@ -1,7 +1,5 @@
-﻿
-using Domain.Constants;
-using Domain.Entities;
-using ErrorOr;
+﻿using Domain.Entities;
+using FluentValidation;
 
 namespace Application.Models
 {
@@ -22,6 +20,23 @@ namespace Application.Models
                 UserName = dto.UserName,
                 Email = dto.Email,
             };
+        }
+    }
+
+
+    public class UserRegisterDtoValidator : AbstractValidator<UserRegisterDto>
+    {
+        public UserRegisterDtoValidator()
+        {
+            RuleFor(u => u.UserName).NotEmpty().MaximumLength(30);
+
+            RuleFor(u => u.Email).NotEmpty().MaximumLength(60);
+
+            RuleFor(u => u.Password).NotEmpty();
+
+            //RuleFor(u => u.Role).Must(u => u is not null)
+            //                    .When(u => Roles.IsCorrectRole(u.Role))
+            //                    .WithMessage("Указана некорректная роль");
         }
     }
 }

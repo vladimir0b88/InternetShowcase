@@ -3,7 +3,7 @@
 
 @attribute [Authorize(Roles = Roles.Administrator)]
 
-@inject ITypePropertyService typePropertyService
+@inject IPropertyService typePropertyService
 
 <ErrorModal @ref="modal"></ErrorModal>
 
@@ -25,7 +25,7 @@ else
 }
 
 @code {
-    private IQueryable<TypeProperty>? typeProperties = null;
+    private IQueryable<ProductTypeProperty>? typeProperties = null;
 
     private ErrorModal modal = new();
 
@@ -37,7 +37,7 @@ else
 
     async Task GetTypeProperties()
     {
-        var result = await typePropertyService.GetAllAsync();
+        var result = await typePropertyService.GetAllPropertiesAsync();
 
         if(result.IsError)
         {

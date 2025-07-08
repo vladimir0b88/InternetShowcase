@@ -8,6 +8,6 @@ namespace Domain.Entities
         public long ProductId {  get; set; }
         public long PropertyId {  get; set; }
         public virtual Product Product { get; set; } = null!;
-        public virtual TypeProperty TypeProperty { get; set; } = null!;
+        public virtual ProductTypeProperty TypeProperty { get; set; } = null!;
     }
 }

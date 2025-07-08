@@ -4,7 +4,7 @@
 @attribute [Authorize(Roles = Roles.Administrator)]
 
 @inject IProductTypeService productTypeService
-@inject ITypePropertyService typePropertyService
+@inject IPropertyService typePropertyService
 @inject NavigationManager navManager
 
 <ErrorModal @ref="modal"></ErrorModal>
@@ -67,7 +67,7 @@ else
 
     async Task Submit()
     {
-        var result = await typePropertyService.AddAsync(createDto);
+        var result = await typePropertyService.AddPropertyAsync(createDto);
 
         if (result.IsError)
         {

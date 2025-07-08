@@ -8,6 +8,6 @@ namespace Domain.Entities
 
         public virtual IList<Product> Products { get; set; } = new List<Product>();
 
-        public virtual IList<TypeProperty> Properties { get; set; } = new List<TypeProperty>();
+        public virtual IList<ProductTypeProperty> Properties { get; set; } = new List<ProductTypeProperty>();
     }
 }
